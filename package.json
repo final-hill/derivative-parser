@@ -1,0 +1,61 @@
+{
+  "name": "derivative-parser",
+  "version": "0.0.0",
+  "description": "A library for the implementation of lexers and parsers utilizing derivatives",
+  "main": "dist/index.js",
+  "scripts": {
+    "prebuild": "npm run clean && npm run lint",
+    "build": "webpack",
+    "prebuild-nofix": "npm run clean && npm run lint-nofix",
+    "build-nofix": "webpack",
+    "clean": "rimraf ./dist, ./coverage",
+    "clean-full": "rimraf ./dist, ./coverage, ./.cache, ./node_modules",
+    "debug": "node --debug-brk --inspect ./node_modules/jest/bin/jest -i",
+    "prelint": "npm run type-check",
+    "lint": "eslint src/ --ext .ts --fix",
+    "prelint-nofix": "npm run type-check",
+    "lint-nofix": "eslint src/ --ext .ts",
+    "test": "jest --coverage",
+    "type-check": "tsc -p tsconfig.json --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/final-hill/derivative-parser.git"
+  },
+  "keywords": [
+    "Parser",
+    "Lexer",
+    "Tokenizer",
+    "Derivative",
+    "Pattern Matching",
+    "Regular Expression",
+    "Regular Language"
+  ],
+  "author": "Michael L. Haufe",
+  "license": "AGPL-3.0-only",
+  "bugs": {
+    "url": "https://github.com/final-hill/derivative-parser/issues"
+  },
+  "homepage": "https://github.com/final-hill/derivative-parser#readme",
+  "devDependencies": {
+    "@types/jest": "^25.2.3",
+    "@types/node": "^14.0.5",
+    "@typescript-eslint/eslint-plugin": "^3.0.1",
+    "@typescript-eslint/eslint-plugin-tslint": "^3.0.1",
+    "@typescript-eslint/parser": "^3.0.1",
+    "eslint": "^7.1.0",
+    "eslint-plugin-header": "^3.0.0",
+    "eslint-plugin-import": "^2.20.2",
+    "jest": "^26.0.1",
+    "jest-junit": "^10.0.0",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^26.0.0",
+    "ts-loader": "^7.0.5",
+    "typescript": "^3.9.3",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
+  },
+  "files": [
+    "dist"
+  ]
+}
