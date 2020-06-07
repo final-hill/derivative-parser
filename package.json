@@ -15,7 +15,8 @@
     "lint": "eslint src/ --ext .ts --fix",
     "prelint-nofix": "npm run type-check",
     "lint-nofix": "eslint src/ --ext .ts",
-    "test": "jest --coverage",
+    "real-test": "jest --coverage",
+    "test": "",
     "type-check": "tsc -p tsconfig.json --noEmit"
   },
   "repository": {
