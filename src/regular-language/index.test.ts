@@ -7,6 +7,20 @@
 
 import re from './';
 import { MSG_CHAR_EXPECTED } from './Char';
+import RegularLanguage from './RegularLanguage';
+import { MSG_NOT_IMPLEMENTED } from '../Messages';
+import Alt from './Alt';
+import Cat from './Cat';
+
+describe('Abstract RegularLanguage usage', () => {
+    const r = new RegularLanguage();
+    test('toString() throws', () => {
+        expect(() => r.toString()).toThrow(MSG_NOT_IMPLEMENTED);
+        expect(() => r.deriv('a')).toThrow(MSG_NOT_IMPLEMENTED);
+        expect(r.isAtomic()).toBe(false);
+        expect(() => r.nilOrEmpty()).toThrow(MSG_NOT_IMPLEMENTED);
+    });
+});
 
 describe('Every expression should have a string representation', () => {
     test('Nil', () => {
@@ -59,5 +73,47 @@ describe('Every expression should have a string representation', () => {
         expect(re.Star(
             re.Alt(re.Nil(),re.Empty())
         ).toString()).toBe('(∅|ε)*');
+    });
+});
+
+describe('It must be possible to take the derivative of a language', () => {
+    test('Alt', () => {
+        expect(
+            re.Alt(
+                re.Char('a'),
+                re.Char('b')
+            ).deriv('a')
+        ).toEqual(re.Alt(
+            re.Char('a').deriv('a'),
+            re.Char('b').deriv('a')
+        ));
+    });
+    test('Cat', () => {
+        const l1 = re.Alt(re.Char('a'), re.Empty()),
+              l2 = re.Char('b');
+        expect(
+            re.Cat(l1, l2).deriv('a')
+        ).toEqual(new Alt(
+            re.Cat(l1.deriv('a'),l2),
+            new Cat(l1.nilOrEmpty(), l2.deriv('a'))
+        ));
+    });
+    test('Char', () => {
+        expect(re.Char('a').deriv('a')).toEqual(re.Empty());
+        expect(re.Char('a').deriv('b')).toEqual(re.Nil());
+    });
+    test('Empty', () => {
+        expect(re.Empty().deriv('a')).toEqual(re.Nil());
+    });
+    test('Nil', () => {
+        expect(re.Nil().deriv('a')).toEqual(re.Nil());
+    });
+    test('Star', () => {
+        const L = re.Char('a');
+        expect(
+            re.Star(L).deriv('a')
+        ).toEqual(
+            re.Cat(L.deriv('a'),re.Star(L))
+        );
     });
 });

@@ -7,8 +7,12 @@
 
 import RegularLanguage from './RegularLanguage';
 import Contracts from '@final-hill/decorator-contracts';
+import {MSG_CHAR_EXPECTED} from '../Messages';
+import re from './';
 
-const {override} = new Contracts(true);
+const contracts = new Contracts(true),
+    {override} = contracts,
+    assert: typeof contracts.assert = contracts.assert;
 
 /**
  * Represents the union of two languages
@@ -20,6 +24,19 @@ class Alt extends RegularLanguage {
         readonly right: RegularLanguage
     ) { super(); }
 
+
+    // Dc(L1 ∪ L2) = Dc(L1) ∪ Dc(L2)
+    @override
+    deriv(c: string): RegularLanguage {
+        assert(typeof c == 'string' && c.length == 1, MSG_CHAR_EXPECTED);
+
+        return re.Alt(this.left.deriv(c), this.right.deriv(c));
+    }
+
+    @override
+    nilOrEmpty(): RegularLanguage {
+        return re.Alt(this.left.nilOrEmpty(), this.right.nilOrEmpty());
+    }
 
     @override
     toString(): string {

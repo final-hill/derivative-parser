@@ -7,8 +7,12 @@
 
 import RegularLanguage from './RegularLanguage';
 import Contracts from '@final-hill/decorator-contracts';
+import {MSG_CHAR_EXPECTED} from '../Messages';
+import re from './';
 
-const {override} = new Contracts(true);
+const contracts = new Contracts(true),
+    {override} = contracts,
+    assert: Contracts['assert'] = contracts.assert;
 
 /**
  * Represents the Kleene star of the given language
@@ -16,6 +20,17 @@ const {override} = new Contracts(true);
  */
 class Star extends RegularLanguage {
     constructor(readonly language: RegularLanguage) { super(); }
+
+    // Dc(L*) = Dc(L) ◦ L*
+    @override
+    deriv(c: string): RegularLanguage {
+        assert(typeof c == 'string' && c.length == 1, MSG_CHAR_EXPECTED);
+
+        return re.Cat(this.language.deriv(c), this);
+    }
+
+    @override
+    nilOrEmpty(): RegularLanguage { return re.Empty(); }
 
     @override
     toString(): string {

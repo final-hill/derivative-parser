@@ -24,7 +24,7 @@ class RegularLanguageFactory {
      * @see Alt
      * @param {RegularLanguage} left -
      * @param {RegularLanguage} right -
-     * @returns {Alt} -
+     * @returns {Alt} Alt
      */
     Alt(left: RegularLanguage, right: RegularLanguage): Alt { return new Alt(left, right); }
 
@@ -35,7 +35,7 @@ class RegularLanguageFactory {
      * @see Cat
      * @param {RegularLanguage} first -
      * @param {RegularLanguage} second -
-     * @returns {Cat} -
+     * @returns {Cat} Cat
      */
     Cat(first: RegularLanguage, second: RegularLanguage): Cat { return new Cat(first, second); }
 
@@ -46,7 +46,7 @@ class RegularLanguageFactory {
      * @see Char
      * @param {string} value - A character
      * @throws Throws an error if the provided string is not length == 1
-     * @returns {Char} -
+     * @returns {Char} Char
      */
     Char(value: string): Char { return new Char(value); }
 
@@ -54,7 +54,7 @@ class RegularLanguageFactory {
      * Represents the Empty language ε consisting of a single empty string
      * ε = {""}
      * @see Empty
-     * @returns {Empty} -
+     * @returns {Empty} Empty
      */
     Empty(): Empty { return EMPTY; }
 
@@ -62,7 +62,7 @@ class RegularLanguageFactory {
      * Represents the Nil Language ∅. A language with no strings
      * ∅ = {}
      * @see Nil
-     * @returns {Nil} -
+     * @returns {Nil} Nil
      */
     Nil(): Nil { return NIL; }
 
@@ -71,7 +71,7 @@ class RegularLanguageFactory {
      * L*
      * @see Star
      * @param {RegularLanguage} language -
-     * @returns {Star} -
+     * @returns {Star} Star
      */
     Star(language: RegularLanguage): Star { return new Star(language); }
 }
