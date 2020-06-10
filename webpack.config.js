@@ -9,11 +9,12 @@ const path = require('path');
 
 module.exports = {
   entry: './src/index.ts',
+  devtool: 'source-map',
   mode: 'production',
   module: {
     rules: [
       {
-        test: /\.ts?$/,
+        test: /\.ts$/,
         use: 'ts-loader',
         exclude: /node_modules/,
       },
@@ -24,6 +25,10 @@ module.exports = {
   },
   output: {
     filename: 'index.js',
+    library: 'Parser',
+    libraryExport: 'default',
+    libraryTarget: 'umd',
+    globalObject: 'this',
     path: path.resolve(__dirname, 'dist'),
-  },
+  }
 };

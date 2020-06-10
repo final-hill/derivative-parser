@@ -5,4 +5,6 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-'Hello World';
+import re from './regular-language';
+
+export default re;
