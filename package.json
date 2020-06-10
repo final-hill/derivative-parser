@@ -58,6 +58,6 @@
     "dist"
   ],
   "dependencies": {
-    "@final-hill/decorator-contracts": "file:../final-hill-decorator-contracts-0.18.1.tgz"
+    "@final-hill/decorator-contracts": "^0.18.1"
   }
 }
