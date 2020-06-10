@@ -6,6 +6,7 @@
  */
 
 import Contracts from '@final-hill/decorator-contracts';
+import { MSG_NOT_IMPLEMENTED } from '../Messages';
 
 const {invariant, override} = new Contracts(true);
 
@@ -21,7 +22,20 @@ class RegularLanguage {
      * Returns a string representation of the expression
      */
     @override
-    toString(): string { throw new TypeError('Not implemented'); }
+    toString(): string { throw new TypeError(MSG_NOT_IMPLEMENTED); }
+
+    /**
+     * Computes the derivative of a regular language with respect to a character c.
+     * The derivative is a new language where all strings that start with the character
+     * are retained. The prefix character is then removed.
+     *
+     * @param {string} c - A character
+     * @throws Throw an error if the provided string is not length == 1
+     */
+    deriv(
+        // @ts-ignore
+        c: string
+    ): RegularLanguage { throw new TypeError(MSG_NOT_IMPLEMENTED); }
 
     /**
      * Determine if the current expression is an instance of Char | Empty | Nil
@@ -29,6 +43,14 @@ class RegularLanguage {
      * @returns {boolean} -
      */
     isAtomic(): boolean { return false; }
+
+    /**
+     * Returns Nil or Empty depending on whether Empty
+     * exists in the current expression.
+     * δ(L) = ∅ if ε notIn L
+     * δ(L) = ε if ε in L
+     */
+    nilOrEmpty(): RegularLanguage { throw new TypeError(MSG_NOT_IMPLEMENTED); }
 }
 
 export default RegularLanguage;
