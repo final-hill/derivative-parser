@@ -36,6 +36,11 @@ class Cat extends RegularLanguage {
     }
 
     @override
+    containsEmpty(): boolean {
+        return this.first.containsEmpty() && this.second.containsEmpty();
+    }
+
+    @override
     nilOrEmpty(): RegularLanguage { return re.Cat(this.first.nilOrEmpty(), this.second.nilOrEmpty()); }
 
     @override

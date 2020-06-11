@@ -117,3 +117,43 @@ describe('It must be possible to take the derivative of a language', () => {
         );
     });
 });
+
+describe('It must be possible to test if a string matches a regular language', () => {
+    test('Alt', () => {
+        const l = re.Alt(re.Char('a'), re.Char('b'));
+        expect(l.matches('')).toBe(false);
+        expect(l.matches('a')).toBe(true);
+        expect(l.matches('b')).toBe(true);
+        expect(l.matches('c')).toBe(false);
+    });
+    test('Cat', () => {
+        const l = re.Cat(re.Char('a'), re.Char('b'));
+        expect(l.matches('')).toBe(false);
+        expect(l.matches('a')).toBe(false);
+        expect(l.matches('b')).toBe(false);
+        expect(l.matches('ab')).toBe(true);
+        expect(l.matches('ba')).toBe(false);
+    });
+    test('Char', () => {
+        const l = re.Char('a');
+        expect(l.matches('a')).toBe(true);
+        expect(l.matches('b')).toBe(false);
+    });
+    test('Empty', () => {
+        const l = re.Empty();
+        expect(l.matches('')).toBe(true);
+        expect(l.matches('a')).toBe(false);
+    });
+    test('Nil', () => {
+        const l = re.Nil();
+        expect(l.matches('')).toBe(false);
+        expect(l.matches('a')).toBe(false);
+    });
+    test('Star', () => {
+        const l = re.Star(re.Char('a'));
+        expect(l.matches('')).toBe(true);
+        expect(l.matches('a')).toBe(true);
+        expect(l.matches('aaa')).toBe(true);
+        expect(l.matches('b')).toBe(false);
+    });
+});

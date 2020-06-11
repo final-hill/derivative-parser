@@ -30,6 +30,9 @@ class Empty extends RegularLanguage {
     isAtomic(): boolean { return true; }
 
     @override
+    containsEmpty(): boolean { return true; }
+
+    @override
     nilOrEmpty(): RegularLanguage { return re.Empty(); }
 
     @override

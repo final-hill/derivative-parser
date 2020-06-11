@@ -6,9 +6,11 @@
  */
 
 import Contracts from '@final-hill/decorator-contracts';
-import { MSG_NOT_IMPLEMENTED } from '../Messages';
+import { MSG_NOT_IMPLEMENTED, MSG_STRING_EXPECTED } from '../Messages';
 
-const {invariant, override} = new Contracts(true);
+const contracts = new Contracts(true),
+     {invariant, override} = contracts,
+     assert: typeof contracts.assert = contracts.assert;
 
 /**
  * A Regular Language is a Language that can be described non-recursively
@@ -33,16 +35,38 @@ class RegularLanguage {
      * @throws Throw an error if the provided string is not length == 1
      */
     deriv(
-        // @ts-ignore
+        // @ts-ignore: unused
         c: string
     ): RegularLanguage { throw new TypeError(MSG_NOT_IMPLEMENTED); }
 
     /**
      * Determine if the current expression is an instance of Char | Empty | Nil
      *
-     * @returns {boolean} -
+     * @returns {boolean} - The result of the test
      */
     isAtomic(): boolean { return false; }
+
+    /**
+     * Determines if the current language contains Empty
+     *
+     * @returns {boolean} - The result of the test
+     */
+    containsEmpty(): boolean { return false; }
+
+    /**
+     * Determines if the provided text matches the current expression
+     *
+     * @param {string} text - The text to test
+     * @returns {boolean} - The result of the test
+     * @throws - If text is not a string
+     */
+    matches(text: string): boolean {
+        assert(typeof text == 'string', MSG_STRING_EXPECTED);
+
+        return text.length == 0 ?
+            this.containsEmpty() :
+            this.deriv(text[0]).matches(text.substr(1));
+    }
 
     /**
      * Returns Nil or Empty depending on whether Empty
@@ -51,6 +75,8 @@ class RegularLanguage {
      * δ(L) = ε if ε in L
      */
     nilOrEmpty(): RegularLanguage { throw new TypeError(MSG_NOT_IMPLEMENTED); }
+
+
 }
 
 export default RegularLanguage;
