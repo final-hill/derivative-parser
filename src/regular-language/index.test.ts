@@ -117,3 +117,21 @@ describe('It must be possible to take the derivative of a language', () => {
         );
     });
 });
+
+describe('It must be possible to test if a string matches a regular language', () => {
+    //test('Alt',() => {});
+    //test('Cat',() => {});
+    test('Char',() => {
+        expect(re.Char('a').matches('a')).toBe(true);
+        expect(re.Char('a').matches('b')).toBe(false);
+    });
+    test('Empty',() => {
+        expect(re.Empty().matches('')).toBe(true);
+        expect(re.Empty().matches('a')).toBe(false);
+    });
+    test('Nil',() => {
+        expect(re.Nil().matches('')).toBe(false);
+        expect(re.Nil().matches('a')).toBe(false);
+    });
+    //test('Star',() => {});
+});

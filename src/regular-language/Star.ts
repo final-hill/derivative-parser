@@ -30,6 +30,9 @@ class Star extends RegularLanguage {
     }
 
     @override
+    isAtomic(): boolean { return true; }
+
+    @override
     nilOrEmpty(): RegularLanguage { return re.Empty(); }
 
     @override

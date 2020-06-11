@@ -34,6 +34,11 @@ class Alt extends RegularLanguage {
     }
 
     @override
+    isAtomic(): boolean {
+        return this.left.isEmpty() || this.right.isEmpty();
+    }
+
+    @override
     nilOrEmpty(): RegularLanguage {
         return re.Alt(this.left.nilOrEmpty(), this.right.nilOrEmpty());
     }
