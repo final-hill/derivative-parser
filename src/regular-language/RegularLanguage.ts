@@ -47,11 +47,11 @@ class RegularLanguage {
     isAtomic(): boolean { return false; }
 
     /**
-     * Determines if the current language is Empty
+     * Determines if the current language contains Empty
      *
      * @returns {boolean} - The result of the test
      */
-    isEmpty(): boolean { return false; }
+    containsEmpty(): boolean { return false; }
 
     /**
      * Determines if the provided text matches the current expression
@@ -64,7 +64,7 @@ class RegularLanguage {
         assert(typeof text == 'string', MSG_STRING_EXPECTED);
 
         return text.length == 0 ?
-            this.isEmpty() :
+            this.containsEmpty() :
             this.deriv(text[0]).matches(text.substr(1));
     }
 

@@ -36,8 +36,8 @@ class Cat extends RegularLanguage {
     }
 
     @override
-    isAtomic(): boolean {
-        return this.first.isEmpty() && this.second.isEmpty();
+    containsEmpty(): boolean {
+        return this.first.containsEmpty() && this.second.containsEmpty();
     }
 
     @override

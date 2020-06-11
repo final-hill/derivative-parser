@@ -34,8 +34,8 @@ class Alt extends RegularLanguage {
     }
 
     @override
-    isAtomic(): boolean {
-        return this.left.isEmpty() || this.right.isEmpty();
+    containsEmpty(): boolean {
+        return this.left.containsEmpty() || this.right.containsEmpty();
     }
 
     @override
