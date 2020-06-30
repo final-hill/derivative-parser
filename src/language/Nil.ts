@@ -5,10 +5,10 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import RegularLanguage from './RegularLanguage';
+import Language from './Language';
 import Contracts from '@final-hill/decorator-contracts';
 import {MSG_CHAR_EXPECTED} from '../Messages';
-import re from '.';
+import lang from '.';
 
 const contracts = new Contracts(true),
     {override} = contracts,
@@ -18,24 +18,30 @@ const contracts = new Contracts(true),
  * Represents the Nil Language ∅. A language with no strings.
  * ∅ = {}
  */
-class Nil extends RegularLanguage {
+export default class Nil extends Language {
+    constructor() { super(0); }
 
     // Dc(∅) = ∅
     @override
-    deriv(c: string): RegularLanguage {
+    deriv(c: string): Language {
         assert(typeof c == 'string' && c.length == 1, MSG_CHAR_EXPECTED);
 
-        return re.Nil();
+        return lang.Nil();
     }
+
+    @override
+    equals(other: Language): boolean { return other.isNil(); }
 
     @override
     isAtomic(): boolean { return true; }
 
     @override
-    nilOrEmpty(): RegularLanguage { return re.Nil(); }
+    isNil(): this is Nil { return true; }
+
+    // δ(∅) = ∅
+    @override
+    nilOrEmpty(): Language { return lang.Nil(); }
 
     @override
     toString(): string { return '∅'; }
 }
-
-export default Nil;

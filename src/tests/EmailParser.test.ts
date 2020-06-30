@@ -5,6 +5,7 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import lang from './language';
+ // @see https://stackoverflow.com/a/201378/153209
+describe('Parse Email', () => {
 
-export default lang;
+});
