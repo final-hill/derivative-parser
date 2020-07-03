@@ -5,9 +5,9 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import Language from './Language';
+import RegularLanguage from './RegularLanguage';
 import Contracts from '@final-hill/decorator-contracts';
-import factory from './';
+import factory from '.';
 import { MSG_CHAR_EXPECTED } from '../Messages';
 
 const contracts = new Contracts(true),
@@ -17,7 +17,7 @@ const contracts = new Contracts(true),
 /**
  * [a-b]
  */
-export default class Range extends Language {
+export default class Range extends RegularLanguage {
     constructor(
         readonly from: string,
         readonly to: string
@@ -29,7 +29,7 @@ export default class Range extends Language {
     }
 
     @override
-    deriv(c: string): Language {
+    deriv(c: string): RegularLanguage {
         assert(typeof c == 'string' && c.length == 1, MSG_CHAR_EXPECTED);
 
         const d = this.from == this.to ? factory.Char(this.from) :
@@ -48,7 +48,7 @@ export default class Range extends Language {
     isRange(): this is Range { return true; }
 
     @override
-    nilOrEmpty(): Language { return factory.Nil(); }
+    nilOrEmpty(): RegularLanguage { return factory.Nil(); }
 
     @override
     toString(): string { return `[${this.from}-${this.to}]`; }

@@ -17,7 +17,8 @@ import OneOf from './OneOf';
 import Opt from './Opt';
 import Range from './Range';
 import Plus from './Plus';
-
+import Seq from './Seq';
+import Token from './Token';
 
 const contracts = new Contracts(true),
      {invariant, override} = contracts,
@@ -30,7 +31,7 @@ const contracts = new Contracts(true),
  * @see https://en.wikipedia.org/wiki/Regular_language#Equivalent_formalisms
  */
 @invariant
-export default class Language {
+export default class RegularLanguage {
     constructor(
         /**
          * The height of the expression tree. This is used for simplification.
@@ -56,15 +57,15 @@ export default class Language {
     deriv(
         // @ts-ignore: unused
         c: string
-    ): Language { throw new TypeError(MSG_NOT_IMPLEMENTED); }
+    ): RegularLanguage { throw new TypeError(MSG_NOT_IMPLEMENTED); }
 
     /**
      * Determines if the current RegularLanguage is structurally equal the provided one
      *
-     * @param {Language} other  - The Language to compare with
+     * @param {RegularLanguage} other  - The Language to compare with
      * @returns {boolean} - The result of the test
      */
-    equals(other: Language): boolean { return other === this; }
+    equals(other: RegularLanguage): boolean { return other === this; }
 
     /**
      * Determine if the current expression is an instance of Alt
@@ -174,7 +175,7 @@ export default class Language {
      * δ(L) = ∅ if ε notIn L
      * δ(L) = ε if ε in L
      */
-    nilOrEmpty(): Language { throw new TypeError(MSG_NOT_IMPLEMENTED); }
+    nilOrEmpty(): RegularLanguage { throw new TypeError(MSG_NOT_IMPLEMENTED); }
 
     /**
      * Converts the current RegularLanguage to simplest form where possible
@@ -182,7 +183,7 @@ export default class Language {
      * Additionally, this method will refactor the expression so that other
      * methods will be more likely to short-circuit.
      *
-     * @returns {Language} - The simplified language
+     * @returns {RegularLanguage} - The simplified language
      */
-    simplify(): Language { return this; }
+    simplify(): RegularLanguage { return this; }
 }

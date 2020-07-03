@@ -5,7 +5,10 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import re from './re';
-import lexer from './lexer';
+import State from './State';
 
-export {re, lexer};
+const lexer = Object.assign(Object.create(null), {
+    State() { return new State(); }
+});
+
+export default lexer;

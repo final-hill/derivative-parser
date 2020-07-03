@@ -5,7 +5,7 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import Language from './Language';
+import RegularLanguage from './RegularLanguage';
 import Alt from './Alt';
 import Char from './Char';
 import Empty from './Empty';
@@ -19,10 +19,14 @@ import Range from './Range';
 import Seq from './Seq';
 import Token from './Token';
 
-class LanguageFactory {
+class RegularLanguageFactory {
+    /** a-z | A-Z */
     readonly ALPHA = this.Alt(this.Range('a', 'z'), this.Range('A', 'Z'));
+    /** a-z | A-Z | 0-9 */
     readonly ALPHA_NUM = this.OneOf(this.Range('a', 'z'), this.Range('A', 'Z'), this.Range('0', '9'));
+    /** A-Z */
     readonly ALPHA_UPPER = this.Range('A', 'Z');
+    /** a-z */
     readonly ALPHA_LOWER = this.Range('a', 'z');
     /** Carriage Return */
     readonly CR = this.Char('\r');
@@ -39,6 +43,7 @@ class LanguageFactory {
     readonly FF = this.Char('\f');
     /** Line Feed */
     readonly LF = this.Char('\n');
+    /** The Nil Language ∅. A language with no members. */
     readonly NIL = new Nil();
     /** The NUL character */
     readonly NUL = this.Char('\0');
@@ -56,22 +61,22 @@ class LanguageFactory {
      * L1 ∪ L2 = {foo} ∪ {bar} = {foo, bar}
      *
      * @see Alt
-     * @param {Language} left -
-     * @param {Language} right -
+     * @param {RegularLanguage} left -
+     * @param {RegularLanguage} right -
      * @returns {Alt} Alt
      */
-    Alt(left: Language, right: Language): Alt { return new Alt(left, right); }
+    Alt(left: RegularLanguage, right: RegularLanguage): Alt { return new Alt(left, right); }
 
     /**
      * Represents the concatenation of two languages
      * L1 ◦ L2
      *
      * @see Cat
-     * @param {Language} first -
-     * @param {Language} second -
+     * @param {RegularLanguage} first -
+     * @param {RegularLanguage} second -
      * @returns {Cat} Cat
      */
-    Cat(first: Language, second: Language): Cat { return new Cat(first, second); }
+    Cat(first: RegularLanguage, second: RegularLanguage): Cat { return new Cat(first, second); }
 
     /**
      * Represents the language of a single character
@@ -87,25 +92,25 @@ class LanguageFactory {
     /**
      * Represents the Empty language ε consisting of a single empty string
      * ε = {""}
-     * @see Empty
      * @returns {Empty} Empty
      */
     Empty(): Empty { return this.EMPTY; }
 
     /**
-     * Represents the Nil Language ∅. A language with no strings
+     * Represents the Nil Language ∅. A language with no members.
      * ∅ = {}
-     * @see Nil
      * @returns {Nil} Nil
      */
     Nil(): Nil { return this.NIL; }
 
     /**
+     * Language extension.
      * L1 | L2 | ... | Ln
+     * @returns {OneOf} -
      */
-    OneOf(...languages: (Language | string)[]): OneOf {
+    OneOf(...languages: (RegularLanguage | string)[]): OneOf {
         return new OneOf(...languages.map(lang =>
-            lang instanceof Language ? lang :
+            lang instanceof RegularLanguage ? lang :
             lang.length == 0 ? this.Empty() :
             lang.length == 1 ? this.Char(lang) :
             this.Token(lang)
@@ -113,23 +118,33 @@ class LanguageFactory {
     }
 
     /**
+     * The Opt language.
      * L?
+     * Language extension.
+     * @param {RegularLanguage} language - The optional language
+     * @returns {Opt} -
      */
-    Opt(language: Language): Language {
+    Opt(language: RegularLanguage): RegularLanguage {
         return new Opt(language);
     }
 
     /**
+     * Language extension. The Plus language
      * L+
+     * @param {RegularLanguage} language - The language
+     * @returns {Plus} -
      */
-    Plus(language: Language): Language {
+    Plus(language: RegularLanguage): RegularLanguage {
         return new Plus(language);
     }
 
     /**
      * [a-b]
+     * @param {string} from -
+     * @param {string} to -
+     * @returns {RegularLanguage} -
      */
-    Range(from: string, to: string): Language {
+    Range(from: string, to: string): RegularLanguage {
         return from === to ? this.Char(from) :
             from < to ? new Range(from, to) :
             new Range(to, from);
@@ -137,10 +152,12 @@ class LanguageFactory {
 
     /**
      * L1,L2,...,Ln
+     * @param {(RegularLanguage | string)[]} languages -
+     * @returns {RegularLanguage} -
      */
-    Seq(...languages: (Language | string)[]): Language {
+    Seq(...languages: (RegularLanguage | string)[]): RegularLanguage {
         return new Seq(...languages.map(lang =>
-            lang instanceof Language ? lang :
+            lang instanceof RegularLanguage ? lang :
             lang.length == 0 ? this.Empty() :
             lang.length == 1 ? this.Char(lang) :
             this.Token(lang)
@@ -151,22 +168,22 @@ class LanguageFactory {
      * Represents the Kleene star of the given language
      * L*
      * @see Star
-     * @param {Language} language -
+     * @param {RegularLanguage} language -
      * @returns {Star} Star
      */
-    Star(language: Language): Star { return new Star(language); }
+    Star(language: RegularLanguage): Star { return new Star(language); }
 
     /**
      * "Foo"
-     * @param value
+     * @param {string} value - The string representing the token
+     * @returns {RegularLanguage} - The Token language
      */
-    Token(value: string): Language {
+    Token(value: string): RegularLanguage {
         return new Token(value);
     }
 }
 
-const lang = new LanguageFactory();
+const re = new RegularLanguageFactory();
 
-
-export default lang;
-export { LanguageFactory, Language };
+export default re;
+export { RegularLanguageFactory, RegularLanguage };

@@ -5,7 +5,7 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import Language from './Language';
+import RegularLanguage from './RegularLanguage';
 import Contracts from '@final-hill/decorator-contracts';
 import {MSG_CHAR_EXPECTED} from '../Messages';
 import factory from '.';
@@ -18,22 +18,22 @@ const contracts = new Contracts(true),
  * Represents the Kleene star of the given language
  * L*
  */
-export default class Star extends Language {
-    constructor(readonly language: Language) { super(1 + language.height); }
+export default class Star extends RegularLanguage {
+    constructor(readonly language: RegularLanguage) { super(1 + language.height); }
 
     @override
     containsEmpty(): boolean { return true; }
 
     // Dc(L*) = Dc(L) ◦ L*
     @override
-    deriv(c: string): Language {
+    deriv(c: string): RegularLanguage {
         assert(typeof c == 'string' && c.length == 1, MSG_CHAR_EXPECTED);
 
         return factory.Cat(this.language.deriv(c), this);
     }
 
     @override
-    equals(other: Language): boolean {
+    equals(other: RegularLanguage): boolean {
         return other.isStar() && this.language.equals(other.language);
     }
 
@@ -48,19 +48,19 @@ export default class Star extends Language {
      * @override
      */
     @override
-    nilOrEmpty(): Language { return factory.Empty(); }
+    nilOrEmpty(): RegularLanguage { return factory.Empty(); }
 
     // L** → L*
     // ∅* → Ɛ
     // Ɛ* → Ɛ
     @override
-    simplify(): Language {
+    simplify(): RegularLanguage {
         const lang = this.language.simplify();
 
         if (lang.isStar()) { return factory.Star(lang.language); }
         if (lang.isNil()) { return factory.Empty(); }
         // FIXME: TypeScript 3.4.5 inference bug?
-        if ((lang as Language).isEmpty()) { return factory.Empty(); }
+        if ((lang as RegularLanguage).isEmpty()) { return factory.Empty(); }
 
         return factory.Star(lang);
     }

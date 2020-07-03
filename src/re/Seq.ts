@@ -5,9 +5,9 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import Language from './Language';
+import RegularLanguage from './RegularLanguage';
 import Contracts from '@final-hill/decorator-contracts';
-import factory from './';
+import factory from '.';
 import { MSG_CHAR_EXPECTED } from '../Messages';
 
 const contracts = new Contracts(true),
@@ -17,10 +17,10 @@ const contracts = new Contracts(true),
 /**
  * L1,L2,...,Ln
  */
-export default class Seq extends Language {
-    readonly languages: Language[];
+export default class Seq extends RegularLanguage {
+    readonly languages: RegularLanguage[];
 
-    constructor(...languages: Language[]) {
+    constructor(...languages: RegularLanguage[]) {
         super(1 + Math.max(...languages.map(lang => lang.height)));
         this.languages = languages.slice();
         assert(languages.length > 0, 'Languages can not be empty');
@@ -30,7 +30,7 @@ export default class Seq extends Language {
     containsEmpty(): boolean { return this.languages.some(lang => lang.containsEmpty()); }
 
     @override
-    deriv(c: string): Language {
+    deriv(c: string): RegularLanguage {
         assert(typeof c == 'string' && c.length == 1, MSG_CHAR_EXPECTED);
         const lifted = this.languages.length == 1 ? this.languages[0] :
             factory.Cat(this.languages[0], factory.Seq(...this.languages.slice(1)));
@@ -42,7 +42,7 @@ export default class Seq extends Language {
     isSeq(): this is Seq { return true; }
 
     @override
-    nilOrEmpty(): Language { return factory.Seq(...this.languages.map(lang => lang.nilOrEmpty())); }
+    nilOrEmpty(): RegularLanguage { return factory.Seq(...this.languages.map(lang => lang.nilOrEmpty())); }
 
     @override
     toString(): string { return `(${this.languages.join(')(')})`; }
