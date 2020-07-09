@@ -18,6 +18,7 @@ import Plus from './Plus';
 import Range from './Range';
 import Seq from './Seq';
 import Token from './Token';
+import Any from './Any';
 
 class RegularLanguageFactory {
     /** a-z | A-Z */
@@ -66,6 +67,18 @@ class RegularLanguageFactory {
      * @returns {Alt} Alt
      */
     Alt(left: RegularLanguage, right: RegularLanguage): Alt { return new Alt(left, right); }
+
+    /**
+     * Represents any single character. A wildcard.
+     * '.'
+     *
+     * @see Any
+     * @returns {Any} Any
+     */
+    Any(): Any {
+        // TODO: not using a constant here due to the lack of an equality definition
+        return new Any();
+    }
 
     /**
      * Represents the concatenation of two languages
