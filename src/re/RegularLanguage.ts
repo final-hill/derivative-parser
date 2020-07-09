@@ -19,6 +19,7 @@ import Range from './Range';
 import Plus from './Plus';
 import Seq from './Seq';
 import Token from './Token';
+import Any from './Any';
 
 const contracts = new Contracts(true),
      {invariant, override} = contracts,
@@ -72,6 +73,12 @@ export default class RegularLanguage {
      * @returns {boolean} - The result
      */
     isAlt(): this is Alt { return false; }
+
+    /**
+     * Determine if the current expressions is an instance of Any
+     * @returns {boolean} - The result
+     */
+    isAny(): this is Any { return false; }
 
     /**
      * Determine if the current expression is an instance of Char | Empty | Nil
