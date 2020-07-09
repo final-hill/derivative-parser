@@ -36,7 +36,8 @@ export default class Plus extends RegularLanguage {
     nilOrEmpty(): RegularLanguage { return factory.Cat(this.language, factory.Star(this.language)).nilOrEmpty(); }
 
     // TODO: simplify()
-    // TODO: L+ → LL* → L*L   (Is this actually simpler? Maybe the reverse?)
+    // TODO: L+ → LL* → L*L   (Is this actually simpler? Maybe the reverse in order to containsEmpty faster?)
+    // TODO: L++ → L+
 
     @override
     toString(): string { return this.language.isAtomic() ? `${this.language}+` : `(${this.language})+`; }

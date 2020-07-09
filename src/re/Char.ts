@@ -52,7 +52,6 @@ export default class Char extends RegularLanguage {
     @override
     nilOrEmpty(): RegularLanguage { return re.Nil(); }
 
-
     @override
     toString(): string { return `'${this.value}'`; }
 }
