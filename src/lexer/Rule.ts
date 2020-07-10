@@ -6,9 +6,7 @@
  */
 
 import { RegularLanguage } from '../re';
-import State from './State';
-
-type Action = (match: string[], rest: string, state: typeof State) => void;
+import { Action } from './Action';
 
 class Rule {
     constructor(
@@ -17,7 +15,9 @@ class Rule {
     ) {}
 
     match(input: string): boolean {
-        return this.regex.matches(input);
+        let i = 0,
+            m = this.regex.deriv(input[i]);
+        while(input[i] && !m.isNil())
     }
 }
 

@@ -7,6 +7,10 @@
 
 import { RegularLanguage } from '../re';
 import Rule from './Rule';
+import { Action } from './Action';
+import Contracts from '@final-hill/decorator-contracts';
+
+const assert: Contracts['assert'] = new Contracts(true).assert;
 
 class State {
     #rules: Rule[] = [];
@@ -16,7 +20,7 @@ class State {
      * @param {RegularLanguage} regex - The pattern used to test the input
      * @param {Action} action - The action to use when the pattern matches
      */
-    rule(regex: RegularLanguage, action: Action) {
+    rule(regex: RegularLanguage, action: Action): void {
         this.#rules.push(new Rule(regex,action));
     }
 
@@ -25,17 +29,13 @@ class State {
      * @param {string} input
      */
     lex(input: string) {
-        this.run(input);
-    }
+        const [longestMatchedRule, longestMatch, longestMatchLength] = this.#rules.reduce((result, nextRule) => {
+            const m = nextRule.match(input);
+        }, [null,null,-1]);
 
-    /**
-     *
-     * @param {string} input
-     */
-    run(input: string) {
-        this.#rules.forEach(rule => {
-            const match = rule.match(input);
-        });
+        assert(longestMatchedRule != undefined, `No match for input: ${input}`);
+
+        return longestMatchedRule.action(longestMatch, input.substring(longestMatchLength));
     }
 }
 
