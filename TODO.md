@@ -1,20 +1,10 @@
 # TODO
 
-Digit()    [0-9]
-
-.equals()
-
-
 Many()    L+
 
 .oneOf()    t1 | t2 | … | tn
 
-Opt()    L?0
-
-Range()    [n-m]
-
 rep(n)    L{n}
-
 
 simplify()
    	M ∪ L → L ∪ M
@@ -32,8 +22,9 @@ simplify()
     L+ → LL* → L*L
     L** → L*
 
-.token(text: string)
-
-
 NOT patterns
 lang.not(lang.digit())
+
+
+array access faster than charCodeAt
+https://mrale.ph/blog/2018/02/03/maybe-you-dont-need-rust-to-speed-up-your-js.html
