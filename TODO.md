@@ -1,13 +1,11 @@
 # TODO
 
-Many()    L+
-
-.oneOf()    t1 | t2 | … | tn
-
 rep(n)    L{n}
 
+Rename Plus to Many?
+
 simplify()
-   	M ∪ L → L ∪ M
+    M ∪ L → L ∪ M
     (L ∪ M) ∪ N → L ∪ (M ∪ N)
     ∅ ∪ L → L ∪ ∅ → L
     L+ ∪ Ɛ → L*
@@ -25,6 +23,7 @@ simplify()
 NOT patterns
 lang.not(lang.digit())
 
-
 array access faster than charCodeAt
-https://mrale.ph/blog/2018/02/03/maybe-you-dont-need-rust-to-speed-up-your-js.html
+<https://mrale.ph/blog/2018/02/03/maybe-you-dont-need-rust-to-speed-up-your-js.html>
+
+replace simplify with Smart Constructor usage
