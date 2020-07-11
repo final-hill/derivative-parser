@@ -15,9 +15,13 @@ class Rule {
     ) {}
 
     match(input: string): boolean {
-        let i = 0,
+        const i = 0,
             m = this.regex.deriv(input[i]);
-        while(input[i] && !m.isNil())
+        while(input[i] && !m.isNil()) {
+            // TODO
+        }
+
+        return false;
     }
 }
 

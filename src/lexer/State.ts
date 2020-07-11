@@ -29,7 +29,7 @@ class State {
      * @param {string} input
      */
     lex(input: string) {
-        const [longestMatchedRule, longestMatch, longestMatchLength] = this.#rules.reduce((result, nextRule) => {
+        const [longestMatchedRule, longestMatch, longestMatchLength]  = this.#rules.reduce((result, nextRule) => {
             const m = nextRule.match(input);
         }, [null,null,-1]);
 
