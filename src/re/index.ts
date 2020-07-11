@@ -118,9 +118,11 @@ class RegularLanguageFactory {
     Nil(): Nil { return this.NIL; }
 
     /**
-     * Represents the Not Language. A language that will not
-     * match when then provided language does
-     * @param language
+     * The complement language.
+     * Matches anything that is not the provided language
+     *
+     * @param {RegularLanguage} language - The language to not match
+     * @returns {Not} Not
      */
     Not(language: RegularLanguage): Not { return new Not(language); }
 

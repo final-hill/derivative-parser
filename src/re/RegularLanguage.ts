@@ -20,6 +20,7 @@ import Plus from './Plus';
 import Seq from './Seq';
 import Token from './Token';
 import Any from './Any';
+import Not from './Not';
 
 const contracts = new Contracts(true),
      {invariant, override} = contracts,
@@ -109,7 +110,13 @@ export default class RegularLanguage {
      * Determine if the current expression is an instance of Nil
      * @returns {boolean} - The result
      */
-    isNil(): this is Nil{ return false;}
+    isNil(): this is Nil { return false;}
+
+    /**
+     * Determins if the current expression is an instance of Not
+     * @returns {boolean} - The result
+     */
+    isNot(): this is Not { return false; }
 
     /**
      * Determine if the current expression is an instance of Star
