@@ -5,7 +5,6 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import re from '.';
 
 describe('Seq', () => {
     test('Seq.deriv(c)', () => {

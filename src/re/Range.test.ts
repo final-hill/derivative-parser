@@ -5,8 +5,6 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import re from '.';
-
 describe('Range', () => {
     test('Range.deriv(c)', () => {
         // TODO
