@@ -179,7 +179,7 @@ export default class RegularLanguage {
 
         return text.length == 0 ?
             this.containsEmpty() :
-            this.deriv(text[0]).matches(text.substr(1));
+            this.simplify().deriv(text[0]).matches(text.substr(1));
     }
 
     /**
