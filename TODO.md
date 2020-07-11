@@ -20,10 +20,5 @@ simplify()
     L+ → LL* → L*L
     L** → L*
 
-NOT patterns
-lang.not(lang.digit())
-
 array access faster than charCodeAt
 <https://mrale.ph/blog/2018/02/03/maybe-you-dont-need-rust-to-speed-up-your-js.html>
-
-replace simplify with Smart Constructor usage
