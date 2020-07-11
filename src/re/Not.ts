@@ -14,6 +14,9 @@ class Not extends RegularLanguage {
     constructor(readonly language: RegularLanguage) {
         super(1 + language.height);
     }
+
+    // TODO: toString
+    // TODO
 }
 
 export default Not;

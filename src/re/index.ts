@@ -19,6 +19,7 @@ import Range from './Range';
 import Seq from './Seq';
 import Token from './Token';
 import Any from './Any';
+import Not from './Not';
 
 class RegularLanguageFactory {
     /** a-z | A-Z */
@@ -115,6 +116,13 @@ class RegularLanguageFactory {
      * @returns {Nil} Nil
      */
     Nil(): Nil { return this.NIL; }
+
+    /**
+     * Represents the Not Language. A language that will not
+     * match when then provided language does
+     * @param language
+     */
+    Not(language: RegularLanguage): Not { return new Not(language); }
 
     /**
      * Language extension.
