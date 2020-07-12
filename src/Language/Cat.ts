@@ -5,10 +5,10 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import RegularLanguage from './RegularLanguage';
+import Language from './Language';
 import Contracts from '@final-hill/decorator-contracts';
 import {MSG_CHAR_EXPECTED} from '../Messages';
-import re from '.';
+import l from '.';
 
 const contracts = new Contracts(true),
     {override} = contracts,
@@ -18,10 +18,10 @@ const contracts = new Contracts(true),
  * Represents the concatenation of two languages
  * L1 ◦ L2
  */
-export default class Cat extends RegularLanguage {
+export default class Cat extends Language {
     constructor(
-        readonly first: RegularLanguage,
-        readonly second: RegularLanguage
+        readonly first: Language,
+        readonly second: Language
     ){ super(1 + Math.max(first.height, second.height)); }
 
     /**
@@ -35,17 +35,17 @@ export default class Cat extends RegularLanguage {
 
     // Dc(L1◦L2) = (Dc(L1)◦L2) ∪ (δ(L1)◦Dc(L2))
     @override
-    deriv(c: string): RegularLanguage {
+    deriv(c: string): Language {
         assert(typeof c == 'string' && c.length == 1, MSG_CHAR_EXPECTED);
 
-        return re.Alt(
-            re.Cat(this.first.deriv(c), this.second),
-            re.Cat(this.first.nilOrEmpty(), this.second.deriv(c))
-        );
+        return l.Alt(
+            l.Cat(this.first.deriv(c), this.second),
+            l.Cat(this.first.nilOrEmpty(), this.second.deriv(c))
+        ).simplify();
     }
 
     @override
-    equals(other: RegularLanguage): boolean {
+    equals(other: Language): boolean {
         return other.isCat() && this.first.equals(other.first) && this.second.equals(other.second);
     }
 
@@ -53,7 +53,7 @@ export default class Cat extends RegularLanguage {
     isCat(): this is Cat { return true; }
 
     @override
-    nilOrEmpty(): RegularLanguage { return re.Cat(this.first.nilOrEmpty(), this.second.nilOrEmpty()); }
+    nilOrEmpty(): Language { return l.Cat(this.first.nilOrEmpty(), this.second.nilOrEmpty()); }
 
     // LƐ → ƐL → L
     // ∅L → L∅ → ∅
@@ -61,15 +61,15 @@ export default class Cat extends RegularLanguage {
     // Unused: L(M ∪ N) → LM ∪ LN  (Is this actually simpler? Maybe the other direction?)
     // Unused: (M ∪ N)L → ML ∪ NL  (Is this actually simpler? Maybe the other direction?)
     @override
-    simplify(): RegularLanguage {
+    simplify(): Language {
         const fst = this.first.simplify(),
               snd = this.second.simplify();
 
         return fst.isEmpty() ? snd :
                snd.isEmpty() ? fst :
                // TODO: TypeScript inference bug
-               (fst as RegularLanguage).isNil() ? fst :
-               (snd as RegularLanguage).isNil() ? snd :
+               (fst as Language).isNil() ? fst :
+               (snd as Language).isNil() ? snd :
                this;
     }
 

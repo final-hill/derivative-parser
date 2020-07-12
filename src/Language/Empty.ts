@@ -5,10 +5,10 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import RegularLanguage from './RegularLanguage';
+import Language from './Language';
 import Contracts from '@final-hill/decorator-contracts';
 import {MSG_CHAR_EXPECTED} from '../Messages';
-import re from '.';
+import l from '.';
 
 const contracts = new Contracts(true),
     {override} = contracts,
@@ -18,7 +18,7 @@ const contracts = new Contracts(true),
  * Represents the Empty language ε consisting of a single empty string
  * ε = {""}
  */
-export default class Empty extends RegularLanguage {
+export default class Empty extends Language {
     constructor() { super(0); }
 
     @override
@@ -26,14 +26,14 @@ export default class Empty extends RegularLanguage {
 
     // Dc(ε) = ∅
     @override
-    deriv(c: string): RegularLanguage {
+    deriv(c: string): Language {
         assert(typeof c == 'string' && c.length == 1, MSG_CHAR_EXPECTED);
 
-        return re.Nil();
+        return l.Nil();
     }
 
     @override
-    equals(other: RegularLanguage): boolean {
+    equals(other: Language): boolean {
         return other.isEmpty();
     }
 
@@ -48,7 +48,7 @@ export default class Empty extends RegularLanguage {
      * @override
      */
     @override
-    nilOrEmpty(): RegularLanguage { return re.Empty(); }
+    nilOrEmpty(): Language { return l.Empty(); }
 
     @override
     toString(): string { return 'ε'; }

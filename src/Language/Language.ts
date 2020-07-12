@@ -33,7 +33,7 @@ const contracts = new Contracts(true),
  * @see https://en.wikipedia.org/wiki/Regular_language#Equivalent_formalisms
  */
 @invariant
-export default class RegularLanguage {
+export default class Language {
     constructor(
         /**
          * The height of the expression tree. This is used for simplification.
@@ -46,7 +46,9 @@ export default class RegularLanguage {
      * Returns a string representation of the expression
      */
     @override
-    toString(): string { throw new TypeError(MSG_NOT_IMPLEMENTED); }
+    toString(): string {
+        throw new TypeError(MSG_NOT_IMPLEMENTED);
+    }
 
     /**
      * Computes the derivative of a regular language with respect to a character c.
@@ -59,15 +61,15 @@ export default class RegularLanguage {
     deriv(
         // @ts-ignore: unused
         c: string
-    ): RegularLanguage { throw new TypeError(MSG_NOT_IMPLEMENTED); }
+    ): Language { throw new TypeError(MSG_NOT_IMPLEMENTED); }
 
     /**
      * Determines if the current RegularLanguage is structurally equal the provided one
      *
-     * @param {RegularLanguage} other  - The Language to compare with
+     * @param {Language} other  - The Language to compare with
      * @returns {boolean} - The result of the test
      */
-    equals(other: RegularLanguage): boolean { return other === this; }
+    equals(other: Language): boolean { return other === this; }
 
     /**
      * Determine if the current expression is an instance of Alt
@@ -179,7 +181,7 @@ export default class RegularLanguage {
 
         return text.length == 0 ?
             this.containsEmpty() :
-            this.simplify().deriv(text[0]).matches(text.substr(1));
+            this.deriv(text[0]).matches(text.substr(1));
     }
 
     /**
@@ -189,7 +191,7 @@ export default class RegularLanguage {
      * δ(L) = ∅ if ε notIn L
      * δ(L) = ε if ε in L
      */
-    nilOrEmpty(): RegularLanguage { throw new TypeError(MSG_NOT_IMPLEMENTED); }
+    nilOrEmpty(): Language { throw new TypeError(MSG_NOT_IMPLEMENTED); }
 
     /**
      * Converts the current RegularLanguage to simplest form where possible
@@ -197,7 +199,7 @@ export default class RegularLanguage {
      * Additionally, this method will refactor the expression so that other
      * methods will be more likely to short-circuit.
      *
-     * @returns {RegularLanguage} - The simplified language
+     * @returns {Language} - The simplified language
      */
-    simplify(): RegularLanguage { return this; }
+    simplify(): Language { return this; }
 }

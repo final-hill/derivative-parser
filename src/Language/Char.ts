@@ -5,10 +5,10 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import RegularLanguage from './RegularLanguage';
+import Language from './Language';
 import Contracts from '@final-hill/decorator-contracts';
 import {MSG_CHAR_EXPECTED} from '../Messages';
-import re from '.';
+import l from '.';
 
 const contracts = new Contracts(true),
     {override} = contracts,
@@ -19,7 +19,7 @@ const contracts = new Contracts(true),
  * c = {...,'a','b',...}
  * @throws Throws an error if the provided string is not length == 1
  */
-export default class Char extends RegularLanguage {
+export default class Char extends Language {
     constructor(readonly value: string){
         super(0);
         assert(typeof value == 'string' && value.length == 1, MSG_CHAR_EXPECTED);
@@ -28,14 +28,14 @@ export default class Char extends RegularLanguage {
     // Dc(c) = ε
     // Dc(c') = ∅
     @override
-    deriv(c: string): RegularLanguage {
+    deriv(c: string): Language {
         assert(typeof c == 'string' && c.length == 1, MSG_CHAR_EXPECTED);
 
-        return c === this.value ? re.Empty() : re.Nil();
+        return c === this.value ? l.Empty() : l.Nil();
     }
 
     @override
-    equals(other: RegularLanguage): boolean {
+    equals(other: Language): boolean {
         return other.isChar() && this.value === other.value;
     }
 
@@ -50,7 +50,7 @@ export default class Char extends RegularLanguage {
      * @override
      */
     @override
-    nilOrEmpty(): RegularLanguage { return re.Nil(); }
+    nilOrEmpty(): Language { return l.Nil(); }
 
     @override
     toString(): string { return `'${this.value}'`; }

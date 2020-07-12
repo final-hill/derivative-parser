@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
-import RegularLanguage from './RegularLanguage';
+import Language from './Language';
 import Contracts from '@final-hill/decorator-contracts';
-import factory from '.';
+import l from '.';
 import { MSG_CHAR_EXPECTED } from '../Messages';
 
 const contracts = new Contracts(true),
@@ -16,8 +16,8 @@ const contracts = new Contracts(true),
 /**
  * L+
  */
-export default class Plus extends RegularLanguage {
-    constructor(readonly language: RegularLanguage) { super(1 + language.height); }
+export default class Plus extends Language {
+    constructor(readonly language: Language) { super(1 + language.height); }
 
     @override
     isPlus(): this is Plus{ return true; }
@@ -26,14 +26,14 @@ export default class Plus extends RegularLanguage {
     containsEmpty(): boolean { return this.language.containsEmpty(); }
 
     @override
-    deriv(c: string): RegularLanguage {
+    deriv(c: string): Language {
         assert(typeof c == 'string' && c.length == 1, MSG_CHAR_EXPECTED);
 
-        return factory.Cat(this.language, factory.Star(this.language)).deriv(c);
+        return l.Cat(this.language, l.Star(this.language)).deriv(c).simplify();
     }
 
     @override
-    nilOrEmpty(): RegularLanguage { return factory.Cat(this.language, factory.Star(this.language)).nilOrEmpty(); }
+    nilOrEmpty(): Language { return l.Cat(this.language, l.Star(this.language)).nilOrEmpty(); }
 
     // TODO: simplify()
     // TODO: L+ → LL* → L*L   (Is this actually simpler? Maybe the reverse in order to containsEmpty faster?)

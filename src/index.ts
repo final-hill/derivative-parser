@@ -5,7 +5,6 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import re from './re';
-import lexer from './lexer';
+import l from './Language';
 
-export {re, lexer};
+export {l};

@@ -5,9 +5,9 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import RegularLanguage from './RegularLanguage';
+import Language from './Language';
 import Contracts from '@final-hill/decorator-contracts';
-import re from './';
+import l from '.';
 import { MSG_CHAR_EXPECTED } from '../Messages';
 
 const contracts = new Contracts(true),
@@ -18,8 +18,8 @@ const contracts = new Contracts(true),
  * The complement language.
  * Matches anything that is not the provided language
  */
-class Not extends RegularLanguage {
-    constructor(readonly language: RegularLanguage) {
+class Not extends Language {
+    constructor(readonly language: Language) {
         super(1 + language.height);
     }
 
@@ -30,14 +30,14 @@ class Not extends RegularLanguage {
 
     // Dc(¬L) = ¬Dc(L)
     @override
-    deriv(c: string): RegularLanguage {
+    deriv(c: string): Language {
         assert(typeof c == 'string' && c.length == 1, MSG_CHAR_EXPECTED);
 
-        return re.Not(this.language.deriv(c));
+        return l.Not(this.language.deriv(c)).simplify();
     }
 
     @override
-    equals(other: RegularLanguage): boolean {
+    equals(other: Language): boolean {
         return other.isNot() && this.language.equals(other.language);
     }
 
@@ -47,18 +47,18 @@ class Not extends RegularLanguage {
     // δ(¬L) = ε if δ(L) = ∅
     // δ(¬L) = ∅ if δ(L) = ε
     @override
-    nilOrEmpty(): RegularLanguage {
+    nilOrEmpty(): Language {
         const nilOrEmpty = this.language.nilOrEmpty();
 
-        return nilOrEmpty.isNil() ? re.EMPTY : re.NIL;
+        return nilOrEmpty.isNil() ? l.EMPTY : l.NIL;
     }
 
     // ¬¬L → L
     @override
-    simplify(): RegularLanguage {
-        const l = this.language.simplify();
+    simplify(): Language {
+        const lang = this.language.simplify();
 
-        return l.isNot() ? l.language : re.Not(l);
+        return lang.isNot() ? lang.language : l.Not(lang);
     }
 
     @override

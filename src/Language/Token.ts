@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
-import RegularLanguage from './RegularLanguage';
+import Language from './Language';
 import Contracts from '@final-hill/decorator-contracts';
 import {MSG_CHAR_EXPECTED, MSG_NON_EMPTY} from '../Messages';
-import factory from '.';
+import l from '.';
 
 const contracts = new Contracts(true),
     {override} = contracts,
@@ -16,7 +16,7 @@ const contracts = new Contracts(true),
 /*
  * "Foo"
  */
-export default class Token extends RegularLanguage {
+export default class Token extends Language {
     constructor(readonly value: string) {
         super(0);
         assert(typeof value == 'string' && value.length > 0, MSG_NON_EMPTY);
@@ -26,19 +26,19 @@ export default class Token extends RegularLanguage {
     containsEmpty(): boolean { return false; }
 
     @override
-    deriv(c: string): RegularLanguage {
+    deriv(c: string): Language {
         assert(typeof c == 'string' && c.length == 1, MSG_CHAR_EXPECTED);
-        const transform = this.value.length == 1 ? factory.Char(this.value) :
-            factory.Cat(factory.Char(this.value[0]), factory.Token(this.value.substring(1)));
+        const transform = this.value.length == 1 ? l.Char(this.value) :
+            l.Cat(l.Char(this.value[0]), l.Token(this.value.substring(1)));
 
-        return transform.deriv(c);
+        return transform.deriv(c).simplify();
     }
 
     @override
     isToken(): this is Token { return true; }
 
     @override
-    nilOrEmpty(): RegularLanguage { return factory.Nil(); }
+    nilOrEmpty(): Language { return l.Nil(); }
 
     @override
     toString(): string { return JSON.stringify(this.value); }

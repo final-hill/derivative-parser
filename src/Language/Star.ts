@@ -5,10 +5,10 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import RegularLanguage from './RegularLanguage';
+import Language from './Language';
 import Contracts from '@final-hill/decorator-contracts';
 import {MSG_CHAR_EXPECTED} from '../Messages';
-import factory from '.';
+import l from '.';
 
 const contracts = new Contracts(true),
     {override} = contracts,
@@ -18,22 +18,22 @@ const contracts = new Contracts(true),
  * Represents the Kleene star of the given language
  * L*
  */
-export default class Star extends RegularLanguage {
-    constructor(readonly language: RegularLanguage) { super(1 + language.height); }
+export default class Star extends Language {
+    constructor(readonly language: Language) { super(1 + language.height); }
 
     @override
     containsEmpty(): boolean { return true; }
 
     // Dc(L*) = Dc(L) ◦ L*
     @override
-    deriv(c: string): RegularLanguage {
+    deriv(c: string): Language {
         assert(typeof c == 'string' && c.length == 1, MSG_CHAR_EXPECTED);
 
-        return factory.Cat(this.language.deriv(c), this);
+        return l.Cat(this.language.deriv(c), this).simplify();
     }
 
     @override
-    equals(other: RegularLanguage): boolean {
+    equals(other: Language): boolean {
         return other.isStar() && this.language.equals(other.language);
     }
 
@@ -48,21 +48,21 @@ export default class Star extends RegularLanguage {
      * @override
      */
     @override
-    nilOrEmpty(): RegularLanguage { return factory.Empty(); }
+    nilOrEmpty(): Language { return l.Empty(); }
 
     // L** → L*
     // ∅* → Ɛ
     // Ɛ* → Ɛ
     @override
-    simplify(): RegularLanguage {
+    simplify(): Language {
         const lang = this.language.simplify();
 
-        if (lang.isStar()) { return factory.Star(lang.language); }
-        if (lang.isNil()) { return factory.Empty(); }
+        if (lang.isStar()) { return l.Star(lang.language); }
+        if (lang.isNil()) { return l.Empty(); }
         // FIXME: TypeScript 3.4.5 inference bug?
-        if ((lang as RegularLanguage).isEmpty()) { return factory.Empty(); }
+        if ((lang as Language).isEmpty()) { return l.Empty(); }
 
-        return factory.Star(lang);
+        return l.Star(lang);
     }
 
     @override

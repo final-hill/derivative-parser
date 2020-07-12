@@ -5,10 +5,10 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import RegularLanguage from './RegularLanguage';
+import Language from './Language';
 import Contracts from '@final-hill/decorator-contracts';
 import { MSG_CHAR_EXPECTED } from '../Messages';
-import factory from '.';
+import l from '.';
 
 const contracts = new Contracts(true),
     {override} = contracts,
@@ -17,24 +17,24 @@ const contracts = new Contracts(true),
 /**
  * L?
  */
-export default class Opt extends RegularLanguage {
-    constructor(readonly language: RegularLanguage) { super(1 + language.height); }
+export default class Opt extends Language {
+    constructor(readonly language: Language) { super(1 + language.height); }
 
     @override
     containsEmpty(): boolean { return true; }
 
     @override
-    deriv(c: string): RegularLanguage {
+    deriv(c: string): Language {
         assert(typeof c == 'string' && c.length == 1, MSG_CHAR_EXPECTED);
 
-        return factory.Alt(this.language, factory.Empty()).deriv(c);
+        return l.Alt(this.language, l.Empty()).deriv(c).simplify();
     }
 
     @override
     isOpt(): this is Opt { return true; }
 
     @override
-    nilOrEmpty(): RegularLanguage { return factory.Empty(); }
+    nilOrEmpty(): Language { return l.Empty(); }
 
     @override
     toString(): string { return this.language.isAtomic() ? `${this.language}?` : `(${this.language})?`; }

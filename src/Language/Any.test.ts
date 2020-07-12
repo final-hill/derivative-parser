@@ -5,19 +5,19 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import re from '.';
+import l from '.';
 
 describe('Any', () => {
     test('Any.deriv(c)', () => {
-        const pattern = re.Any();
+        const pattern = l.Any();
 
-        expect(pattern.deriv('a')).toEqual(re.EMPTY);
-        expect(pattern.deriv('c')).toEqual(re.EMPTY);
-        expect(pattern.deriv(' ')).toEqual(re.EMPTY);
+        expect(pattern.deriv('a')).toEqual(l.EMPTY);
+        expect(pattern.deriv('c')).toEqual(l.EMPTY);
+        expect(pattern.deriv(' ')).toEqual(l.EMPTY);
     });
 
     test('Any.matches(c)', () => {
-        const pattern = re.Any();
+        const pattern = l.Any();
 
         expect(pattern.matches('a')).toBe(true);
         expect(pattern.matches('c')).toBe(true);
@@ -27,7 +27,7 @@ describe('Any', () => {
     });
 
     test('Any.toString()', () => {
-        const pattern = re.Any();
+        const pattern = l.Any();
 
         expect(pattern.toString()).toBe('.');
     });

@@ -5,10 +5,10 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import RegularLanguage from './RegularLanguage';
+import Language from './Language';
 import Contracts from '@final-hill/decorator-contracts';
 import {MSG_CHAR_EXPECTED} from '../Messages';
-import re from '.';
+import l from '.';
 import Plus from './Plus';
 
 const contracts = new Contracts(true),
@@ -19,10 +19,10 @@ const contracts = new Contracts(true),
  * Represents the union of two languages
  * L1 ∪ L2 = {foo} ∪ {bar} = {foo, bar}
  */
-export default class Alt extends RegularLanguage {
+export default class Alt extends Language {
     constructor(
-        readonly left: RegularLanguage,
-        readonly right: RegularLanguage
+        readonly left: Language,
+        readonly right: Language
     ) { super(1 + Math.max(left.height, right.height)); }
 
     /**
@@ -36,14 +36,14 @@ export default class Alt extends RegularLanguage {
 
     // Dc(L1 ∪ L2) = Dc(L1) ∪ Dc(L2)
     @override
-    deriv(c: string): RegularLanguage {
+    deriv(c: string): Language {
         assert(typeof c == 'string' && c.length == 1, MSG_CHAR_EXPECTED);
 
-        return re.Alt(this.left.deriv(c), this.right.deriv(c));
+        return l.Alt(this.left.deriv(c), this.right.deriv(c)).simplify();
     }
 
     @override
-    equals(other: RegularLanguage): boolean {
+    equals(other: Language): boolean {
         return other.isAlt() && this.left.equals(other.left) && this.right.equals(other.right);
     }
 
@@ -51,8 +51,8 @@ export default class Alt extends RegularLanguage {
     isAlt(): this is Alt { return true; }
 
     @override
-    nilOrEmpty(): RegularLanguage {
-        return re.Alt(this.left.nilOrEmpty(), this.right.nilOrEmpty());
+    nilOrEmpty(): Language {
+        return l.Alt(this.left.nilOrEmpty(), this.right.nilOrEmpty());
     }
 
     // L ∪ L → L
@@ -62,29 +62,29 @@ export default class Alt extends RegularLanguage {
     // (L ∪ M) ∪ N → L ∪ (M ∪ N)
     // L+ ∪ Ɛ → L*
     @override
-    simplify(): RegularLanguage {
-        let l = this.left.simplify(),
-            r = this.right.simplify();
+    simplify(): Language {
+        let left = this.left.simplify(),
+            right = this.right.simplify();
 
-        if(l.height > r.height) {
-            [l, r] = [r, l];
+        if(left.height > right.height) {
+            [left, right] = [right, left];
         }
 
-        if(l.isAlt()) {
-            [l,r] = [l.left, re.Alt(l.right, r)];
+        if(left.isAlt()) {
+            [left,right] = [left.left, l.Alt(left.right, right)];
         }
 
-        if(l.equals(r)) {
-             return l;
-        } else if(l.isNil()){
-            return r;
-        } else if(r.isNil()){
-            return l;
-        } else if((l as RegularLanguage).isPlus() && (r as RegularLanguage).isEmpty()) {
-            return re.Star((l as Plus).language);
+        if(left.equals(right)) {
+             return left;
+        } else if(left.isNil()){
+            return right;
+        } else if(right.isNil()){
+            return left;
+        } else if((left as Language).isPlus() && (right as Language).isEmpty()) {
+            return l.Star((left as Plus).language);
         }
 
-        return re.Alt(l, r);
+        return l.Alt(left, right);
     }
 
     @override

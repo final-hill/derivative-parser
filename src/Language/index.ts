@@ -5,7 +5,7 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import RegularLanguage from './RegularLanguage';
+import Language from './Language';
 import Alt from './Alt';
 import Char from './Char';
 import Empty from './Empty';
@@ -21,7 +21,7 @@ import Token from './Token';
 import Any from './Any';
 import Not from './Not';
 
-class RegularLanguageFactory {
+class LanguageFactory {
     /** a-z | A-Z */
     readonly ALPHA = this.Alt(this.Range('a', 'z'), this.Range('A', 'Z'));
     /** a-z | A-Z | 0-9 */
@@ -63,11 +63,11 @@ class RegularLanguageFactory {
      * L1 ∪ L2 = {foo} ∪ {bar} = {foo, bar}
      *
      * @see Alt
-     * @param {RegularLanguage} left -
-     * @param {RegularLanguage} right -
+     * @param {Language} left -
+     * @param {Language} right -
      * @returns {Alt} Alt
      */
-    Alt(left: RegularLanguage, right: RegularLanguage): Alt { return new Alt(left, right); }
+    Alt(left: Language, right: Language): Alt { return new Alt(left, right); }
 
     /**
      * Represents any single character. A wildcard.
@@ -86,11 +86,11 @@ class RegularLanguageFactory {
      * L1 ◦ L2
      *
      * @see Cat
-     * @param {RegularLanguage} first -
-     * @param {RegularLanguage} second -
+     * @param {Language} first -
+     * @param {Language} second -
      * @returns {Cat} Cat
      */
-    Cat(first: RegularLanguage, second: RegularLanguage): Cat { return new Cat(first, second); }
+    Cat(first: Language, second: Language): Cat { return new Cat(first, second); }
 
     /**
      * Represents the language of a single character
@@ -121,19 +121,19 @@ class RegularLanguageFactory {
      * The complement language.
      * Matches anything that is not the provided language
      *
-     * @param {RegularLanguage} language - The language to not match
+     * @param {Language} language - The language to not match
      * @returns {Not} Not
      */
-    Not(language: RegularLanguage): Not { return new Not(language); }
+    Not(language: Language): Not { return new Not(language); }
 
     /**
      * Language extension.
      * L1 | L2 | ... | Ln
      * @returns {OneOf} -
      */
-    OneOf(...languages: (RegularLanguage | string)[]): OneOf {
+    OneOf(...languages: (Language | string)[]): OneOf {
         return new OneOf(...languages.map(lang =>
-            lang instanceof RegularLanguage ? lang :
+            lang instanceof Language ? lang :
             lang.length == 0 ? this.Empty() :
             lang.length == 1 ? this.Char(lang) :
             this.Token(lang)
@@ -144,20 +144,20 @@ class RegularLanguageFactory {
      * The Opt language.
      * L?
      * Language extension.
-     * @param {RegularLanguage} language - The optional language
+     * @param {Language} language - The optional language
      * @returns {Opt} -
      */
-    Opt(language: RegularLanguage): RegularLanguage {
+    Opt(language: Language): Language {
         return new Opt(language);
     }
 
     /**
      * Language extension. The Plus language
      * L+
-     * @param {RegularLanguage} language - The language
+     * @param {Language} language - The language
      * @returns {Plus} -
      */
-    Plus(language: RegularLanguage): RegularLanguage {
+    Plus(language: Language): Language {
         return new Plus(language);
     }
 
@@ -165,9 +165,9 @@ class RegularLanguageFactory {
      * [a-b]
      * @param {string} from -
      * @param {string} to -
-     * @returns {RegularLanguage} -
+     * @returns {Language} -
      */
-    Range(from: string, to: string): RegularLanguage {
+    Range(from: string, to: string): Language {
         return from === to ? this.Char(from) :
             from < to ? new Range(from, to) :
             new Range(to, from);
@@ -175,12 +175,12 @@ class RegularLanguageFactory {
 
     /**
      * L1,L2,...,Ln
-     * @param {(RegularLanguage | string)[]} languages -
-     * @returns {RegularLanguage} -
+     * @param {(Language | string)[]} languages -
+     * @returns {Language} -
      */
-    Seq(...languages: (RegularLanguage | string)[]): RegularLanguage {
+    Seq(...languages: (Language | string)[]): Language {
         return new Seq(...languages.map(lang =>
-            lang instanceof RegularLanguage ? lang :
+            lang instanceof Language ? lang :
             lang.length == 0 ? this.Empty() :
             lang.length == 1 ? this.Char(lang) :
             this.Token(lang)
@@ -191,22 +191,22 @@ class RegularLanguageFactory {
      * Represents the Kleene star of the given language
      * L*
      * @see Star
-     * @param {RegularLanguage} language -
+     * @param {Language} language -
      * @returns {Star} Star
      */
-    Star(language: RegularLanguage): Star { return new Star(language); }
+    Star(language: Language): Star { return new Star(language); }
 
     /**
      * "Foo"
      * @param {string} value - The string representing the token
-     * @returns {RegularLanguage} - The Token language
+     * @returns {Language} - The Token language
      */
-    Token(value: string): RegularLanguage {
+    Token(value: string): Language {
         return new Token(value);
     }
 }
 
-const re = new RegularLanguageFactory();
+const l = new LanguageFactory();
 
-export default re;
-export { RegularLanguageFactory, RegularLanguage };
+export default l;
+export { LanguageFactory, Language };
