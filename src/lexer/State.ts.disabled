@@ -6,8 +6,8 @@
  */
 
 import { RegularLanguage } from '../re';
-import Rule from './Rule';
-import { Action } from './Action';
+import Rule from './Rule.ts.disabled';
+import { Action } from './Action.ts.disabled';
 import Contracts from '@final-hill/decorator-contracts';
 
 const assert: Contracts['assert'] = new Contracts(true).assert;
@@ -29,9 +29,11 @@ class State {
      * @param {string} input
      */
     lex(input: string) {
-        const [longestMatchedRule, longestMatch, longestMatchLength]  = this.#rules.reduce((result, nextRule) => {
-            const m = nextRule.match(input);
-        }, [null,null,-1]);
+        const [ longestMatchedRule, longestMatch, longestMatchLength]: [Rule, string, number] =
+            this.#rules.reduce((result, nextRule) => {
+                const m = nextRule.match(input);
+
+            }, [null,null,-1]);
 
         assert(longestMatchedRule != undefined, `No match for input: ${input}`);
 

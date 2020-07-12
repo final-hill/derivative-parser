@@ -5,7 +5,7 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import State from './State';
+import State from './State.ts.disabled';
 
 const lexer = Object.assign(Object.create(null), {
     State() { return new State(); }

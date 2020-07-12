@@ -6,7 +6,7 @@
  */
 
 import { RegularLanguage } from '../re';
-import { Action } from './Action';
+import { Action } from './Action.ts.disabled';
 
 class Rule {
     constructor(
