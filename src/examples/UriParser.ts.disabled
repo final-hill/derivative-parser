@@ -1,0 +1,23 @@
+/*!
+ * @license
+ * Copyright (C) 2020 Michael L Haufe
+ * SPDX-License-Identifier: AGPL-3.0-only
+ * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
+ */
+
+
+ /**
+ * @see https://en.wikipedia.org/wiki/URL#Syntax
+ */
+/*
+const uriGrammar = [
+    ['uri', 'scheme:[//authority]path[?query][#fragment]'],
+    ['scheme', "alpha(alphanum | '+' | '.' | '-')*"],
+    ['authority', "[userinfo'@']host[':'port]"],
+    ['userinfo', "username[':'password]",
+    ['username', ]
+    ['PATH'],
+    ['QUERY'],
+    ['FRAGMENT']
+];
+*/
