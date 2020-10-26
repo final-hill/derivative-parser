@@ -53,8 +53,8 @@ export default class OneOf extends Language {
     toString(): string {
         return `(${
             this.languages.map(
-                l => l.isAtomic() ? l.toString() : `(${l.toString()})`
-            ).join(' | ')
+                l => l.isAtomic() || l.isRange() ? l.toString() : `(${l.toString()})`
+            ).join('|')
         })`;
     }
 }

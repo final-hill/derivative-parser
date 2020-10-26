@@ -81,7 +81,7 @@ export default class Cat extends Language {
     @override
     toString(): string {
         const fst = this.first.isAtomic() ? `${this.first}` : `(${this.first})`,
-            snd = this.second.isAtomic() ? `${this.second}` : `(${this.second})`;
+              snd = this.second.isAtomic() ? `${this.second}` : `(${this.second})`;
 
         return `${fst}${snd}`;
     }

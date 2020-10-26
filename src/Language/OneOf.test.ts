@@ -12,10 +12,10 @@ describe('OneOf', () => {
         const l1 = l.OneOf('a','b','c'),
               l2 = l.OneOf(l.Char('a'), l.Char('b'), l.Char('c'));
 
-        expect(l1.deriv('a').toString()).toEqual("'b' | 'c'");
-        expect(l2.deriv('a').toString()).toEqual("'b' | 'c'");
+        expect(l1.deriv('a').toString()).toEqual("'b'|'c'");
+        expect(l2.deriv('a').toString()).toEqual("'b'|'c'");
 
-        expect(l2.deriv('b').toString()).toEqual("'a' | 'c'");
+        expect(l2.deriv('b').toString()).toEqual("'a'|'c'");
 
         expect(() => l1.deriv('')).toThrow();
         expect(() => l2.deriv('')).toThrow();
@@ -32,7 +32,7 @@ describe('OneOf', () => {
     });
 
     test('OneOf.toString()', () => {
-        expect(l.OneOf('a','b','c').toString()).toBe("''a' | 'b' | 'c'");
-        expect(l.ALPHA_NUM.toString()).toBe('a-z | A-Z | 0-9');
+        expect(l.OneOf('a','b','c').toString()).toBe(`('a'|'b'|'c')`);
+        expect(l.ALPHA_NUM.toString()).toBe(`([a-z]|[A-Z]|[0-9])`);
     });
 });

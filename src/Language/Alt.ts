@@ -95,7 +95,7 @@ export default class Alt extends Language {
     @override
     toString(): string {
         const leftString = this.left.isAtomic() ? `${this.left}` : `(${this.left})`,
-            rightString = this.right.isAtomic() ? `${this.right}` : `(${this.right})`;
+              rightString = this.right.isAtomic() ? `${this.right}` : `(${this.right})`;
 
         return `${leftString}|${rightString}`;
     }

@@ -42,11 +42,11 @@ export default class Language {
 
     /**
      * Returns a string representation of the expression
+     *
+     * @returns {string} - The string representation
      */
     @override
-    toString(): string {
-        throw new TypeError(MSG_NOT_IMPLEMENTED);
-    }
+    toString(): string { return '∅'; }
 
     /**
      * Computes the derivative of a regular language with respect to a character c.

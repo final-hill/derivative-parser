@@ -62,7 +62,7 @@ export default class Star extends Language {
 
         if (lang.isStar()) { return l.Star(lang.language); }
         if (lang.isNil()) { return l.Empty(); }
-        // FIXME: TypeScript 3.4.5 inference bug?
+        // FIXME: cast required due to TypeScript 3.4.5 inference bug?
         if ((lang as Language).isEmpty()) { return l.Empty(); }
 
         return l.Star(lang);

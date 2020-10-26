@@ -32,10 +32,7 @@ describe('Alt', () => {
         expect(l.Alt(l.Empty(),l.Nil()).toString()).toBe('ε|∅');
         expect(l.Alt(
             l.Empty(),
-            l.Alt(
-                l.Nil(),
-                l.Empty()
-            )
+            l.Alt(l.Nil(),l.Empty())
         ).toString()).toBe('ε|(∅|ε)');
         expect(l.Alt(
             l.Alt(
