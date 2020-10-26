@@ -34,13 +34,11 @@ const contracts = new Contracts(true),
  */
 @invariant
 export default class Language {
-    constructor(
-        /**
-         * The height of the expression tree. This is used for simplification.
-         * @see this.simplify()
-         */
-        readonly height: number
-    ) {}
+    /**
+     * The height of the expression tree. This is used for simplification.
+     * @see this.simplify()
+     */
+    get height(): number { return 0; }
 
     /**
      * Returns a string representation of the expression
@@ -115,7 +113,7 @@ export default class Language {
     isNil(): this is Nil { return false;}
 
     /**
-     * Determins if the current expression is an instance of Not
+     * Determines if the current expression is an instance of Not
      * @returns {boolean} - The result
      */
     isNot(): this is Not { return false; }

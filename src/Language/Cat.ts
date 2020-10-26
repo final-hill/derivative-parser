@@ -22,7 +22,12 @@ export default class Cat extends Language {
     constructor(
         readonly first: Language,
         readonly second: Language
-    ){ super(1 + Math.max(first.height, second.height)); }
+    ){ super(); }
+
+    @override
+    get height(): number {
+        return 1 + Math.max(this.first.height, this.second.height);
+    }
 
     /**
      * δ(L1 L2) = δ(L1) δ(L2)

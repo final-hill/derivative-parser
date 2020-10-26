@@ -23,7 +23,12 @@ export default class Alt extends Language {
     constructor(
         readonly left: Language,
         readonly right: Language
-    ) { super(1 + Math.max(left.height, right.height)); }
+    ) { super(); }
+
+    @override
+    get height(): number {
+        return 1 + Math.max(this.left.height, this.right.height);
+    }
 
     /**
      * δ(L1 | L2) = δ(L1) | δ(L2)
