@@ -21,8 +21,13 @@ const contracts = new Contracts(true),
  */
 export default class Char extends Language {
     constructor(readonly value: string){
-        super(0);
+        super();
         assert(typeof value == 'string' && value.length == 1, MSG_CHAR_EXPECTED);
+    }
+
+    @override
+    get height(): number {
+        return 0;
     }
 
     // Dc(c) = ε

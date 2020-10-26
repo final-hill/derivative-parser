@@ -20,9 +20,14 @@ export default class OneOf extends Language {
     readonly languages: Language[];
 
     constructor(...languages: Language[]) {
-        super(1 + Math.max(...languages.map(lang => lang.height)));
+        super();
         assert(languages.length > 0, 'Languages can not be empty');
         this.languages = languages.slice();
+    }
+
+    @override
+    get height(): number {
+        return 1 + Math.max(...this.languages.map(lang => lang.height));
     }
 
     @override

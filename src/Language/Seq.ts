@@ -21,10 +21,13 @@ export default class Seq extends Language {
     readonly languages: Language[];
 
     constructor(...languages: Language[]) {
-        super(1 + Math.max(...languages.map(lang => lang.height)));
+        super();
         this.languages = languages.slice();
         assert(languages.length > 0, 'Languages can not be empty');
     }
+
+    @override
+    get height(): number { return 1 + Math.max(...this.languages.map(lang => lang.height)); }
 
     @override
     containsEmpty(): boolean { return this.languages.some(lang => lang.containsEmpty()); }

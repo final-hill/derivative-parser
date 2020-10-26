@@ -19,8 +19,9 @@ const contracts = new Contracts(true),
  * '.'
  */
 class Any extends Language {
-    constructor() {
-        super(0);
+    @override
+    get height(): number {
+        return 0;
     }
 
     // D(.) = ε

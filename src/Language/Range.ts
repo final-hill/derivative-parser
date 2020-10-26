@@ -22,11 +22,14 @@ export default class Range extends Language {
         readonly from: string,
         readonly to: string
     ) {
-        super(0);
+        super();
         assert(typeof from == 'string' && from.length == 1, MSG_CHAR_EXPECTED);
         assert(typeof to == 'string' && to.length == 1, MSG_CHAR_EXPECTED);
         assert(from <= to, 'Assertion failed: Range.from <= Range.to');
     }
+
+    @override
+    get height(): number { return 0; }
 
     @override
     deriv(c: string): Language {

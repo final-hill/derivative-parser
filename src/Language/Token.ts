@@ -18,9 +18,12 @@ const contracts = new Contracts(true),
  */
 export default class Token extends Language {
     constructor(readonly value: string) {
-        super(0);
+        super();
         assert(typeof value == 'string' && value.length > 0, MSG_NON_EMPTY);
     }
+
+    @override
+    get height(): number { return 0; }
 
     @override
     containsEmpty(): boolean { return false; }

@@ -18,7 +18,12 @@ const contracts = new Contracts(true),
  * L?
  */
 export default class Opt extends Language {
-    constructor(readonly language: Language) { super(1 + language.height); }
+    constructor(
+        readonly language: Language
+    ) { super(); }
+
+    @override
+    get height(): number { return 1 + this.language.height; }
 
     @override
     containsEmpty(): boolean { return true; }

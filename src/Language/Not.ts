@@ -19,8 +19,13 @@ const contracts = new Contracts(true),
  * Matches anything that is not the provided language
  */
 class Not extends Language {
-    constructor(readonly language: Language) {
-        super(1 + language.height);
+    constructor(
+        readonly language: Language
+    ) { super(); }
+
+    @override
+    get height(): number {
+        return 1 + this.language.height;
     }
 
     @override

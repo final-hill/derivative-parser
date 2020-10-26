@@ -19,7 +19,10 @@ const contracts = new Contracts(true),
  * ε = {""}
  */
 export default class Empty extends Language {
-    constructor() { super(0); }
+    @override
+    get height(): number {
+        return 0;
+    }
 
     @override
     containsEmpty(): boolean { return true; }

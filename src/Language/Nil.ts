@@ -19,7 +19,8 @@ const contracts = new Contracts(true),
  * ∅ = {}
  */
 export default class Nil extends Language {
-    constructor() { super(0); }
+    @override
+    get height(): number { return 0; }
 
     // Dc(∅) = ∅
     @override
