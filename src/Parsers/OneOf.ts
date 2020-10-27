@@ -4,22 +4,22 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
-import Language from './Language';
+import {Parser} from './';
 import Contracts from '@final-hill/decorator-contracts';
-import { MSG_CHAR_EXPECTED } from '../Messages';
-import l from '.';
 
 const contracts = new Contracts(true),
     {override} = contracts,
     assert: typeof contracts.assert = contracts.assert;
 
+// TODO: combine with Alt?
 /**
+ * The choice parser.
  * L1 | L2 | ... | Ln
  */
-export default class OneOf extends Language {
-    readonly languages: Language[];
+export default class OneOf extends Parser {
+    readonly languages: Parser[];
 
-    constructor(...languages: Language[]) {
+    constructor(...languages: Parser[]) {
         super();
         assert(languages.length > 0, 'Languages can not be empty');
         this.languages = languages.slice();
@@ -34,10 +34,9 @@ export default class OneOf extends Language {
     containsEmpty(): boolean { return this.languages.some(lang => lang.containsEmpty()); }
 
     @override
-    deriv(c: string): Language {
-        assert(typeof c == 'string' && c.length == 1, MSG_CHAR_EXPECTED);
+    deriv(c: string): Parser {
         const lifted = this.languages.length == 1 ? this.languages[0] :
-            l.Alt(this.languages[0], l.OneOf(...this.languages.slice(1)));
+            this.languages[0].or(this.oneOf(...this.languages.slice(1)));
 
         return lifted.deriv(c).simplify();
     }
@@ -47,7 +46,7 @@ export default class OneOf extends Language {
 
     // TODO: test. Should this be reduced to Alt?
     @override
-    nilOrEmpty(): Language { return l.OneOf(...this.languages.map(lang => lang.nilOrEmpty())); }
+    nilOrEmpty(): Parser { return this.oneOf(...this.languages.map(lang => lang.nilOrEmpty())); }
 
     @override
     toString(): string {

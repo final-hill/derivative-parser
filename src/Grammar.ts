@@ -5,6 +5,8 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import Grammar from './Grammar';
+import {Parser} from "./Parsers/";
 
-export {Grammar};
+class Grammar extends Parser {}
+
+export default Grammar;

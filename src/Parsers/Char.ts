@@ -5,42 +5,37 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import Language from './Language';
+import {Parser} from './';
 import Contracts from '@final-hill/decorator-contracts';
 import {MSG_CHAR_EXPECTED} from '../Messages';
-import l from '.';
 
 const contracts = new Contracts(true),
     {override} = contracts,
     assert: Contracts['assert'] = contracts.assert;
 
 /**
- * Represents the language of a single character
+ * Represents the parser of a single character
  * c = {...,'a','b',...}
  * @throws Throws an error if the provided string is not length == 1
  */
-export default class Char extends Language {
+export default class Char extends Parser {
     constructor(readonly value: string){
         super();
         assert(typeof value == 'string' && value.length == 1, MSG_CHAR_EXPECTED);
     }
 
     @override
-    get height(): number {
-        return 0;
-    }
+    get height(): number { return 0; }
 
     // Dc(c) = ε
     // Dc(c') = ∅
     @override
-    deriv(c: string): Language {
-        assert(typeof c == 'string' && c.length == 1, MSG_CHAR_EXPECTED);
-
-        return c === this.value ? l.Empty() : l.Nil();
+    deriv(c: string): Parser {
+        return c === this.value ? this.empty() : this.nil();
     }
 
     @override
-    equals(other: Language): boolean {
+    equals(other: Parser): boolean {
         return other.isChar() && this.value === other.value;
     }
 
@@ -55,7 +50,7 @@ export default class Char extends Language {
      * @override
      */
     @override
-    nilOrEmpty(): Language { return l.Nil(); }
+    nilOrEmpty(): Parser { return this.nil(); }
 
     @override
     toString(): string { return `'${this.value}'`; }

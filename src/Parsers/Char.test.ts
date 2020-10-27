@@ -5,22 +5,24 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import l from '.';
 import { MSG_CHAR_EXPECTED } from '../Messages';
+import {Parser} from './';
 
 describe('Char', () => {
+    const p = new Parser();
+
     test('Char.toString()', () => {
-        expect(l.Char('a').toString()).toBe('\'a\'');
-        expect(() => l.Char('abc')).toThrow(MSG_CHAR_EXPECTED);
+        expect(p.char('a').toString()).toBe('\'a\'');
+        expect(() => p.char('abc')).toThrow(MSG_CHAR_EXPECTED);
     });
 
     test('Char.deriv(c)', () => {
-        expect(l.Char('a').deriv('a')).toEqual(l.Empty());
-        expect(l.Char('a').deriv('b')).toEqual(l.Nil());
+        expect(p.char('a').deriv('a')).toEqual(p.empty());
+        expect(p.char('a').deriv('b')).toEqual(p.nil());
     });
 
     test('Char.matches(c)', () => {
-        const lang = l.Char('a');
+        const lang = p.char('a');
         expect(lang.matches('a')).toBe(true);
         expect(lang.matches('b')).toBe(false);
     });

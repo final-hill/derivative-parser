@@ -5,20 +5,21 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import l from '.';
+import {Parser} from "./";
 
 describe('Empty', () => {
+    const p = new Parser();
+
     test('Empty.deriv(c)', () => {
-        expect(l.Empty().deriv('a')).toEqual(l.Nil());
+        expect(p.empty().deriv('a')).toEqual(p.nil());
     });
 
     test('Empty.matches(c)', () => {
-        const lang = l.Empty();
-        expect(lang.matches('')).toBe(true);
-        expect(lang.matches('a')).toBe(false);
+        expect(p.empty().matches('')).toBe(true);
+        expect(p.empty().matches('a')).toBe(false);
     });
 
     test('Empty.toString()', () => {
-        expect(l.Empty().toString()).toBe('ε');
+        expect(p.empty().toString()).toBe('ε');
     });
 });

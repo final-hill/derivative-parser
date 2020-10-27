@@ -5,18 +5,19 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import l from '.';
+import {Parser} from "./";
 
 describe('Nil', () => {
+    const p = new Parser();
+
     test('Nil.deriv(c)', () => {
-        expect(l.Nil().deriv('a')).toEqual(l.Nil());
+        expect(p.nil().deriv('a')).toEqual(p.nil());
     });
     test('Nil.matches(c)', () => {
-        const lang = l.Nil();
-        expect(lang.matches('')).toBe(false);
-        expect(lang.matches('a')).toBe(false);
+        expect(p.nil().matches('')).toBe(false);
+        expect(p.nil().matches('a')).toBe(false);
     });
     test('Nil.toString()', () => {
-        expect(l.Nil().toString()).toBe('∅');
+        expect(p.nil().toString()).toBe('∅');
     });
 });

@@ -5,9 +5,8 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import Language from './Language';
+import {Parser} from './';
 import Contracts from '@final-hill/decorator-contracts';
-import l from '.';
 import { MSG_CHAR_EXPECTED } from '../Messages';
 
 const contracts = new Contracts(true),
@@ -17,7 +16,7 @@ const contracts = new Contracts(true),
 /**
  * [a-b]
  */
-export default class Range extends Language {
+export default class Range extends Parser {
     constructor(
         readonly from: string,
         readonly to: string
@@ -32,16 +31,11 @@ export default class Range extends Language {
     get height(): number { return 0; }
 
     @override
-    deriv(c: string): Language {
-        assert(typeof c == 'string' && c.length == 1, MSG_CHAR_EXPECTED);
-
-        const d = this.from == this.to ? l.Char(this.from) :
-            l.Alt(
-                l.Char(this.from),
-                l.Range(
-                    String.fromCharCode(this.from.charCodeAt(0) + 1),
-                    this.to
-                )
+    deriv(c: string): Parser {
+        const d = this.from == this.to ? this.char(this.from) :
+            this.char(this.from).or(
+                this.range(String.fromCharCode(this.from.charCodeAt(0) + 1),
+                this.to)
             );
 
         return d.deriv(c).simplify();
@@ -51,7 +45,7 @@ export default class Range extends Language {
     isRange(): this is Range { return true; }
 
     @override
-    nilOrEmpty(): Language { return l.Nil(); }
+    nilOrEmpty(): Parser { return this.nil(); }
 
     @override
     toString(): string { return `[${this.from}-${this.to}]`; }

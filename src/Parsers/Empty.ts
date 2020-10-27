@@ -5,38 +5,32 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import Language from './Language';
+import {Parser} from './';
 import Contracts from '@final-hill/decorator-contracts';
-import {MSG_CHAR_EXPECTED} from '../Messages';
-import l from '.';
 
 const contracts = new Contracts(true),
-    {override} = contracts,
-    assert: Contracts['assert'] = contracts.assert;
+    {override} = contracts;
 
 /**
- * Represents the Empty language ε consisting of a single empty string
+ * Represents the Empty parser which matches the empty string
  * ε = {""}
  */
-export default class Empty extends Language {
+export default class Empty extends Parser {
     @override
-    get height(): number {
-        return 0;
-    }
+    get height(): number { return 0; }
 
     @override
     containsEmpty(): boolean { return true; }
 
     // Dc(ε) = ∅
     @override
-    deriv(c: string): Language {
-        assert(typeof c == 'string' && c.length == 1, MSG_CHAR_EXPECTED);
-
-        return l.Nil();
+    // @ts-ignore: unused variable
+    deriv(c: string): Parser {
+        return this.nil();
     }
 
     @override
-    equals(other: Language): boolean {
+    equals(other: Parser): boolean {
         return other.isEmpty();
     }
 
@@ -51,7 +45,7 @@ export default class Empty extends Language {
      * @override
      */
     @override
-    nilOrEmpty(): Language { return l.Empty(); }
+    nilOrEmpty(): Empty { return this; }
 
     @override
     toString(): string { return 'ε'; }

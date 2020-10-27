@@ -5,20 +5,17 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import Language from './Language';
+import {Parser} from './';
 import Contracts from '@final-hill/decorator-contracts';
-import { MSG_CHAR_EXPECTED } from '../Messages';
-import l from '.';
 
 const contracts = new Contracts(true),
-    {override} = contracts,
-    assert: typeof contracts.assert = contracts.assert;
+    {override} = contracts;
 
 /**
  * Represents any single character. A wildcard.
  * '.'
  */
-class Any extends Language {
+class Any extends Parser {
     @override
     get height(): number {
         return 0;
@@ -26,14 +23,13 @@ class Any extends Language {
 
     // D(.) = ε
     @override
-    deriv(c: string): Language {
-        assert(typeof c == 'string' && c.length == 1, MSG_CHAR_EXPECTED);
-
-        return l.Empty();
+    // @ts-ignore: unused variable
+    deriv(c: string): Parser {
+        return this.empty();
     }
 
     @override
-    equals(other: Language): boolean {
+    equals(other: Parser): boolean {
         return other === this; // TODO: can this be improved?
     }
 
@@ -48,7 +44,7 @@ class Any extends Language {
      * @override
      */
     @override
-    nilOrEmpty(): Language { return l.Nil(); }
+    nilOrEmpty(): Parser { return this.nil(); }
 
     @override
     toString(): string { return '.'; }

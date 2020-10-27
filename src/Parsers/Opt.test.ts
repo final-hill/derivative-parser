@@ -5,19 +5,21 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import l from '.';
+import {Parser} from "./";
 
 describe('Opt', () => {
+    const p = new Parser();
+
     test('Opt.deriv(c)', () => {
-        const lang = l.Opt(l.Char('a'));
-        expect(lang.deriv('a').toString()).toBe(l.EMPTY.toString());
+        const p1 = p.char('a').opt();
+        expect(p1.deriv('a').toString()).toBe(p.empty().toString());
         // TODO
     });
 
     test('Opt.matches(c)', () => {
-        const lang = l.Opt(l.Char('a'));
+        const p1 = p.char('a').opt();
 
-        expect(lang.matches('a')).toBe(true);
+        expect(p1.matches('a')).toBe(true);
 
     });
 

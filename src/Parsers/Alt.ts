@@ -5,24 +5,20 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import Language from './Language';
 import Contracts from '@final-hill/decorator-contracts';
-import {MSG_CHAR_EXPECTED} from '../Messages';
-import l from '.';
-import Plus from './Plus';
+import {Parser, Plus} from './';
 
 const contracts = new Contracts(true),
-    {override} = contracts,
-    assert: typeof contracts.assert = contracts.assert;
+    {override} = contracts;
 
 /**
- * Represents the union of two languages
- * L1 ∪ L2 = {foo} ∪ {bar} = {foo, bar}
+ * Represents the union of two parsers
+ * P1 ∪ P2
  */
-export default class Alt extends Language {
+export default class Alt extends Parser {
     constructor(
-        readonly left: Language,
-        readonly right: Language
+        readonly left: Parser,
+        readonly right: Parser
     ) { super(); }
 
     @override
@@ -41,14 +37,12 @@ export default class Alt extends Language {
 
     // Dc(L1 ∪ L2) = Dc(L1) ∪ Dc(L2)
     @override
-    deriv(c: string): Language {
-        assert(typeof c == 'string' && c.length == 1, MSG_CHAR_EXPECTED);
-
-        return l.Alt(this.left.deriv(c), this.right.deriv(c)).simplify();
+    deriv(c: string): Parser {
+        return this.left.deriv(c).or(this.right.deriv(c)).simplify();
     }
 
     @override
-    equals(other: Language): boolean {
+    equals(other: Parser): boolean {
         return other.isAlt() && this.left.equals(other.left) && this.right.equals(other.right);
     }
 
@@ -56,8 +50,8 @@ export default class Alt extends Language {
     isAlt(): this is Alt { return true; }
 
     @override
-    nilOrEmpty(): Language {
-        return l.Alt(this.left.nilOrEmpty(), this.right.nilOrEmpty());
+    nilOrEmpty(): Parser {
+        return this.left.nilOrEmpty().or(this.right.nilOrEmpty());
     }
 
     // L ∪ L → L
@@ -67,7 +61,7 @@ export default class Alt extends Language {
     // (L ∪ M) ∪ N → L ∪ (M ∪ N)
     // L+ ∪ Ɛ → L*
     @override
-    simplify(): Language {
+    simplify(): Parser {
         let left = this.left.simplify(),
             right = this.right.simplify();
 
@@ -76,7 +70,7 @@ export default class Alt extends Language {
         }
 
         if(left.isAlt()) {
-            [left,right] = [left.left, l.Alt(left.right, right)];
+            [left,right] = [left.left, new Alt(left.right, right)];
         }
 
         if(left.equals(right)) {
@@ -85,11 +79,12 @@ export default class Alt extends Language {
             return right;
         } else if(right.isNil()){
             return left;
-        } else if((left as Language).isPlus() && (right as Language).isEmpty()) {
-            return l.Star((left as Plus).language);
+        // FIXME: casting required due to bug in TypeScript
+        } else if((left as Parser).isPlus() && (right as Parser).isEmpty()) {
+            return (left as Plus).parser.star();
         }
 
-        return l.Alt(left, right);
+        return new Alt(left, right);
     }
 
     @override

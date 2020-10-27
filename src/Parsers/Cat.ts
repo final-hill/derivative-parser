@@ -5,23 +5,20 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import Language from './Language';
+import {Parser} from './';
 import Contracts from '@final-hill/decorator-contracts';
-import {MSG_CHAR_EXPECTED} from '../Messages';
-import l from '.';
 
 const contracts = new Contracts(true),
-    {override} = contracts,
-    assert: typeof contracts.assert = contracts.assert;
+    {override} = contracts;
 
 /**
- * Represents the concatenation of two languages
- * L1 ◦ L2
+ * Represents the concatenation of two parsers
+ * P1 ◦ P2
  */
-export default class Cat extends Language {
+export default class Cat extends Parser {
     constructor(
-        readonly first: Language,
-        readonly second: Language
+        readonly first: Parser,
+        readonly second: Parser
     ){ super(); }
 
     @override
@@ -30,7 +27,7 @@ export default class Cat extends Language {
     }
 
     /**
-     * δ(L1 L2) = δ(L1) δ(L2)
+     * δ(P1◦P2) = δ(P1)◦δ(P2)
      * @override
      */
     @override
@@ -38,19 +35,16 @@ export default class Cat extends Language {
         return this.first.containsEmpty() && this.second.containsEmpty();
     }
 
-    // Dc(L1◦L2) = (Dc(L1)◦L2) ∪ (δ(L1)◦Dc(L2))
+    // Dc(P1◦P2) = (Dc(P1)◦P2) ∪ (δ(P1)◦Dc(P2))
     @override
-    deriv(c: string): Language {
-        assert(typeof c == 'string' && c.length == 1, MSG_CHAR_EXPECTED);
+    deriv(c: string): Parser {
+        const [f,s] = [this.first,this.second];
 
-        return l.Alt(
-            l.Cat(this.first.deriv(c), this.second),
-            l.Cat(this.first.nilOrEmpty(), this.second.deriv(c))
-        ).simplify();
+        return f.deriv(c).then(s).or(f.nilOrEmpty().then(s.deriv(c))).simplify();
     }
 
     @override
-    equals(other: Language): boolean {
+    equals(other: Parser): boolean {
         return other.isCat() && this.first.equals(other.first) && this.second.equals(other.second);
     }
 
@@ -58,23 +52,25 @@ export default class Cat extends Language {
     isCat(): this is Cat { return true; }
 
     @override
-    nilOrEmpty(): Language { return l.Cat(this.first.nilOrEmpty(), this.second.nilOrEmpty()); }
+    nilOrEmpty(): Parser {
+        return this.first.nilOrEmpty().then(this.second.nilOrEmpty());
+    }
 
-    // LƐ → ƐL → L
-    // ∅L → L∅ → ∅
-    // Unused: (LM)N → L(MN)
-    // Unused: L(M ∪ N) → LM ∪ LN  (Is this actually simpler? Maybe the other direction?)
-    // Unused: (M ∪ N)L → ML ∪ NL  (Is this actually simpler? Maybe the other direction?)
+    // PƐ → ƐP → P
+    // ∅P → P∅ → ∅
+    // Unused: (PQ)R → P(QR)
+    // Unused: P(Q ∪ R) → PQ ∪ PR  (Is this actually simpler? Maybe the other direction?)
+    // Unused: (Q ∪ R)P → QP ∪ RP  (Is this actually simpler? Maybe the other direction?)
     @override
-    simplify(): Language {
+    simplify(): Parser {
         const fst = this.first.simplify(),
               snd = this.second.simplify();
 
         return fst.isEmpty() ? snd :
                snd.isEmpty() ? fst :
                // TODO: TypeScript inference bug
-               (fst as Language).isNil() ? fst :
-               (snd as Language).isNil() ? snd :
+               (fst as Parser).isNil() ? fst :
+               (snd as Parser).isNil() ? snd :
                this;
     }
 
