@@ -40,7 +40,7 @@ export default class Cat extends Parser {
     deriv(c: string): Parser {
         const [f,s] = [this.first,this.second];
 
-        return f.deriv(c).then(s).or(f.nilOrEmpty().then(s.deriv(c))).simplify();
+        return f.deriv(c).then(s).or(f.nilOrEmpty().then(s.deriv(c)));
     }
 
     @override

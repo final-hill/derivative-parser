@@ -27,7 +27,7 @@ export default class Star extends Parser {
     // Dc(L*) = Dc(L) ◦ L*
     @override
     deriv(c: string): Parser {
-        return this.parser.deriv(c).then(this).simplify();
+        return this.parser.deriv(c).then(this);
     }
 
     @override

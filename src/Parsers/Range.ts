@@ -38,7 +38,7 @@ export default class Range extends Parser {
                 this.to)
             );
 
-        return d.deriv(c).simplify();
+        return d.deriv(c);
     }
 
     @override

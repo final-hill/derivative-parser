@@ -6,7 +6,7 @@
  */
 
 import Contracts from '@final-hill/decorator-contracts';
-import {Parser, Plus} from './';
+import {Parser} from './';
 
 const contracts = new Contracts(true),
     {override} = contracts;
@@ -38,7 +38,7 @@ export default class Alt extends Parser {
     // Dc(L1 ∪ L2) = Dc(L1) ∪ Dc(L2)
     @override
     deriv(c: string): Parser {
-        return this.left.deriv(c).or(this.right.deriv(c)).simplify();
+        return this.left.deriv(c).or(this.right.deriv(c));
     }
 
     @override
@@ -59,7 +59,6 @@ export default class Alt extends Parser {
     // ∅ ∪ L → L
     // L ∪ ∅ → L
     // (L ∪ M) ∪ N → L ∪ (M ∪ N)
-    // L+ ∪ Ɛ → L*
     @override
     simplify(): Parser {
         let left = this.left.simplify(),
@@ -79,9 +78,6 @@ export default class Alt extends Parser {
             return right;
         } else if(right.isNil()){
             return left;
-        // FIXME: casting required due to bug in TypeScript
-        } else if((left as Parser).isPlus() && (right as Parser).isEmpty()) {
-            return (left as Plus).parser.star();
         }
 
         return new Alt(left, right);

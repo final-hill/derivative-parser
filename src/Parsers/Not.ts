@@ -29,7 +29,7 @@ class Not extends Parser {
     // Dc(¬P) = ¬Dc(P)
     @override
     deriv(c: string): Parser {
-        return this.parser.deriv(c).not().simplify();
+        return this.parser.deriv(c).not();
     }
 
     @override

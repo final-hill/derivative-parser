@@ -7,7 +7,7 @@
 
 import Contracts from '@final-hill/decorator-contracts';
 import { MSG_NOT_IMPLEMENTED, MSG_STRING_EXPECTED } from '../Messages';
-import {Alt, Cat, Char, Empty, Nil, Star, OneOf, Opt, Range, Plus, Seq, Token, Any, Not} from './';
+import {Alt, Cat, Char, Empty, Nil, Star, Range, Token, Any, Not} from './';
 
 const contracts = new Contracts(true),
      {demands, invariant, override} = contracts,
@@ -156,34 +156,10 @@ export default class Parser {
     isStar(): this is Star { return false; }
 
     /**
-     * Determine if the current expression is an instance of OneOf
-     * @returns {boolean} - The result
-     */
-    isOneOf(): this is OneOf { return false; }
-
-    /**
-     * Determine if the current expression is an instance of Opt
-     * @returns {boolean} - The result
-     */
-    isOpt(): this is Opt { return false; }
-
-    /**
-     * Determine if the current expression is an instance of Plus
-     * @returns {boolean} - The result
-     */
-    isPlus(): this is Plus { return false; }
-
-    /**
      * Determine if the current expression is an instance of Range
      * @returns {boolean} - The result
      */
     isRange(): this is Range { return false; }
-
-    /**
-     * Determine if the current expression is an instance of Seq
-     * @returns {boolean} - The result
-     */
-    isSeq(): this is Seq { return false; }
 
     /**
      * Determine if the current expression is an instance of Token
@@ -232,24 +208,26 @@ export default class Parser {
 
     /**
      * L1 | L2 | ... | Ln
-     * @returns {OneOf} -
+     * @param {(Parser | string)[]} parsers -
+     * @returns {Parser} -
      */
-    oneOf(...parsers: (Parser | string)[]): OneOf {
-        return new OneOf(...parsers.map(p =>
+    oneOf(...parsers: (Parser | string)[]): Parser {
+        return parsers.map(p =>
             p instanceof Parser ? p :
             p.length == 0 ? this.empty() :
             p.length == 1 ? this.char(p) :
             this.token(p)
-        ));
+        ).reduce((sum,next) => sum.or(next));
     }
 
     /**
      * The Opt parser.
      * P?
-     * @returns {Opt} -
+     * Equivalent to P | ε
+     * @returns {Alt} -
      */
-    opt(): Parser {
-        return new Opt(this);
+    opt(): Alt {
+        return this.or(this.empty());
     }
 
     /**
@@ -258,20 +236,25 @@ export default class Parser {
      *
      * @see Alt
      * @param {Parser} parser -
-     * @returns {Alt} Alt
+     * @returns {Alt} -
      */
-    or(parser: Parser): Alt {
-        // TODO: accept string
-        return new Alt(this,parser);
+    or(parser: Parser | string): Alt {
+        const q = parser instanceof Parser ? parser :
+                  parser.length == 0 ? this.empty() :
+                  parser.length == 1 ? this.char(parser) :
+                  this.token(parser);
+
+        return new Alt(this,q);
     }
 
     /**
-     * The Plus parser
+     * The Plus parser. Matches the current pattern one or more times
      * P+
-     * @returns {Plus} -
+     * Equivalent to P◦P*
+     * @returns {Cat} -
      */
-    plus(): Parser {
-        return new Plus(this);
+    plus(): Cat {
+        return this.then(this.star());
     }
 
     /**
@@ -292,12 +275,12 @@ export default class Parser {
      * @returns {Parser} -
      */
     seq(...parsers: (Parser | string)[]): Parser {
-        return new Seq(...parsers.map(lang =>
-            lang instanceof Parser ? lang :
-            lang.length == 0 ? this.empty() :
-            lang.length == 1 ? this.char(lang) :
-            this.token(lang)
-        ));
+        return parsers.map(p =>
+            p instanceof Parser ? p :
+            p.length == 0 ? this.empty() :
+            p.length == 1 ? this.char(p) :
+            this.token(p)
+        ).reduce((sum,next) => sum.then(next));
     }
 
     /**
@@ -324,9 +307,16 @@ export default class Parser {
      *
      * @see Cat
      * @param {Parser} parser -
-     * @returns {Cat} Cat
+     * @returns {Cat} -
      */
-    then(parser: Parser): Cat { return new Cat(this, parser); }
+    then(parser: Parser | string): Cat {
+        const q = parser instanceof Parser ? parser :
+            parser.length == 0 ? this.empty() :
+            parser.length == 1 ? this.char(parser) :
+            this.token(parser);
+
+        return new Cat(this, q);
+    }
 
     /**
      * "Foo"

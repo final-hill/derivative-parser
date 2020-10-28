@@ -32,7 +32,7 @@ export default class Token extends Parser {
         const transform = this.value.length == 1 ? this.char(this.value) :
             this.char(this.value[0]).then(this.token(this.value.substring(1)));
 
-        return transform.deriv(c).simplify();
+        return transform.deriv(c);
     }
 
     @override
