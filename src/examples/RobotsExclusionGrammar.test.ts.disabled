@@ -1,0 +1,6 @@
+test('RobotsExclusionGrammar', () => {
+    /**
+        * @see https://tools.ietf.org/html/draft-rep-wg-topic-00
+        * /
+    class RobotsExclusionGrammar extends Grammar {}
+});
