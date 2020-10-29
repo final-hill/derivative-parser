@@ -6,8 +6,7 @@
  */
 
 import Contracts from '@final-hill/decorator-contracts';
-import { MSG_NOT_IMPLEMENTED, MSG_STRING_EXPECTED } from '../Messages';
-import {Alt, Cat, Char, Empty, Nil, Star, Range, Token, Any, Not} from './';
+import {Alt, Cat, Char, Empty, Nil, Star, Range, Token, Any, Not, Rep} from './';
 
 const contracts = new Contracts(true),
      {demands, invariant, override} = contracts,
@@ -150,9 +149,11 @@ export default class Parser {
     isNot(): this is Not { return false; }
 
     /**
-     * Determine if the current expression is an instance of Star
+     * Determines if the current expression is an instance of the Rep parser
      * @returns {boolean} - The result
      */
+    isRep(): this is Rep { return false; }
+
     isStar(): this is Star { return false; }
 
     /**
