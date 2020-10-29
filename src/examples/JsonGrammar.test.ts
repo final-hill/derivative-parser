@@ -71,14 +71,14 @@ describe('JsonGrammar', () => {
          * @returns {Parser} -
          */
         ws(): Parser {
-            return this.oneOf(' ', '\t', '\r', '\n').star();
+            return this.alt(' ', '\t', '\r', '\n').star();
         }
         /**
          * value = 'false' | 'null' | 'true' | object | array | number | string
          * @returns {Parser} -
          */
         value(): Parser {
-            return this.oneOf('false', 'true', 'null', this.object(), this.array(), this.number(), this.string());
+            return this.alt('false', 'true', 'null', this.object(), this.array(), this.number(), this.string());
         }
         /**
          * object = begin-object [ member *( value-separator member ) ] end-object
@@ -124,7 +124,7 @@ describe('JsonGrammar', () => {
          * @returns {Parser} -
          */
         exp(): Parser {
-            return this.oneOf('e','E').then(this.oneOf('-','+').opt()).then(this.digit().plus());
+            return this.alt('e','E').then(this.alt('-','+').opt()).then(this.digit().plus());
         }
         /**
          * digit = 0-9
@@ -161,7 +161,7 @@ describe('JsonGrammar', () => {
          * @returns {Parser} -
          */
         chars(): Parser {
-            return this.unescaped().or(this.char('\\').then(this.oneOf('"','\\','/','b','f','n','r','t',this.char('u').then(this.hexdig().rep(4)))));
+            return this.unescaped().or(this.char('\\').then(this.alt('"','\\','/','b','f','n','r','t',this.char('u').then(this.hexdig().rep(4)))));
         }
         /**
          * unescaped = ' ' - '!'  | '#' - '[' | ']'- '~'
@@ -170,14 +170,14 @@ describe('JsonGrammar', () => {
          * @returns {Parser} -
          */
         unescaped(): Parser {
-            return this.oneOf(this.range(' ','!'),this.range('#','['),this.range(']','~'));
+            return this.alt(this.range(' ','!'),this.range('#','['),this.range(']','~'));
         }
         /**
          * hexdig = 0-9 | A-F | a-f
          * @returns {Parser} -
          */
         hexdig(): Parser {
-            return this.oneOf(this.range('0','9'),this.range('A','F'),this.range('a','f'));
+            return this.alt(this.range('0','9'),this.range('A','F'),this.range('a','f'));
         }
     }
 

@@ -6,11 +6,11 @@
  */
 
 import Contracts from '@final-hill/decorator-contracts';
+import { MSG_NOT_IMPLEMENTED } from '../Messages';
 import {Alt, Cat, Char, Empty, Nil, Star, Range, Token, Any, Not, Rep} from './';
 
 const contracts = new Contracts(true),
-     {demands, invariant, override} = contracts,
-     assert: Contracts['assert'] = contracts.assert;
+     {demands, invariant, override} = contracts;
 
 @invariant
 export default class Parser {
@@ -34,6 +34,20 @@ export default class Parser {
     deriv(c: string): Parser { return this.nil(); }
 
     /**
+     * Determines if the provided text matches the current expression
+     *
+     * @param {string} text - The text to test
+     * @returns {boolean} - The result of the test
+     * @throws - If text is not a string
+     */
+    @demands(text => typeof text == 'string')
+    matches(text: string): boolean {
+        return text.length == 0 ?
+            this.containsEmpty() :
+            this.deriv(text[0]).matches(text.substr(1));
+    }
+
+    /**
      * Returns a string representation of the expression
      *
      * @returns {string} - The string representation
@@ -42,16 +56,19 @@ export default class Parser {
     toString(): string { return '∅'; }
 
     /**
-     * The union of two parsers
-     * P1 ∪ P2
-     * P1 | P2
+     * Returns a new parser which is the combination of multiple parsers
+     * P1 | P2 | ... | Pn
      *
-     * @param {Parser} left -
-     * @param {Parser } right -
-     * @returns {Alt} -
+     * @param {(Parser | string)[]} parsers -
+     * @returns {Parser} -
      */
-    alt(left: Parser, right: Parser): Alt {
-        return new Alt(left, right);
+    alt(...parsers: (Parser | string)[]): Parser {
+        return parsers.map(p =>
+            p instanceof Parser ? p :
+            p.length == 0 ? this.empty() :
+            p.length == 1 ? this.char(p) :
+            this.token(p)
+        ).reduce((sum,next) => sum.or(next));
     }
 
     /**
@@ -100,50 +117,49 @@ export default class Parser {
     equals(other: Parser): boolean { return other === this; }
 
     /**
-     * Determine if the current expression is an instance of Alt
+     * Determine if the current expression is an instance of the Alt parser
      * @returns {boolean} - The result
      */
     isAlt(): this is Alt { return false; }
 
     /**
-     * Determine if the current expressions is an instance of Any
+     * Determine if the current expressions is an instance of the Any parser
      * @returns {boolean} - The result
      */
     isAny(): this is Any { return false; }
 
     /**
      * Determine if the current expression is an instance of Char | Empty | Nil
-     *
      * @returns {boolean} - The result of the test
      */
     isAtomic(): boolean { return false; }
 
     /**
-     * Determine if the current expression is an instance of Cat
+     * Determine if the current expression is an instance of the Cat parser
      * @returns {boolean} - The result
      */
     isCat(): this is Cat { return false; }
 
     /**
-     * Determine if the current expression is an instance of Char
+     * Determine if the current expression is an instance of the Char parser
      * @returns {boolean} - The result
      */
     isChar(): this is Char { return false; }
 
     /**
-     * Determine if the current expression is an instance of Empty
+     * Determine if the current expression is an instance of the Empty parser
      * @returns {boolean} - The result
      */
     isEmpty(): this is Empty { return false; }
 
     /**
-     * Determine if the current expression is an instance of Nil
+     * Determine if the current expression is an instance of the Nil parser
      * @returns {boolean} - The result
      */
-    isNil(): this is Nil { return false;}
+    isNil(): this is Nil { return false; }
 
     /**
-     * Determines if the current expression is an instance of Not
+     * Determines if the current expression is an instance of the Not parser
      * @returns {boolean} - The result
      */
     isNot(): this is Not { return false; }
@@ -154,34 +170,23 @@ export default class Parser {
      */
     isRep(): this is Rep { return false; }
 
+    /**
+     * Determine if the current expression is an instance of the Star parser
+     * @returns {boolean} - The result
+     */
     isStar(): this is Star { return false; }
 
     /**
-     * Determine if the current expression is an instance of Range
+     * Determine if the current expression is an instance of the Range parser
      * @returns {boolean} - The result
      */
     isRange(): this is Range { return false; }
 
     /**
-     * Determine if the current expression is an instance of Token
+     * Determine if the current expression is an instance of the Token parser
      * @returns {boolean} - The result
      */
     isToken(): this is Token { return false; }
-
-    /**
-     * Determines if the provided text matches the current expression
-     *
-     * @param {string} text - The text to test
-     * @returns {boolean} - The result of the test
-     * @throws - If text is not a string
-     */
-    matches(text: string): boolean {
-        assert(typeof text == 'string', MSG_STRING_EXPECTED);
-
-        return text.length == 0 ?
-            this.containsEmpty() :
-            this.deriv(text[0]).matches(text.substr(1));
-    }
 
     /**
      * Represents the Nil Parser. Parses a language with no members.
@@ -206,20 +211,6 @@ export default class Parser {
      * @returns {Not} -
      */
     not(): Not { return new Not(this); }
-
-    /**
-     * L1 | L2 | ... | Ln
-     * @param {(Parser | string)[]} parsers -
-     * @returns {Parser} -
-     */
-    oneOf(...parsers: (Parser | string)[]): Parser {
-        return parsers.map(p =>
-            p instanceof Parser ? p :
-            p.length == 0 ? this.empty() :
-            p.length == 1 ? this.char(p) :
-            this.token(p)
-        ).reduce((sum,next) => sum.or(next));
-    }
 
     /**
      * The Opt parser.
@@ -271,6 +262,16 @@ export default class Parser {
     }
 
     /**
+     *
+     * @param {number} [n] - The number of repetitions
+     * @throws {AssertionError} - Throws if n < 0 or n is not an integer
+     * @returns {Parser} -
+     */
+    rep(n: number): Parser {
+        return new Rep(this,n);
+    }
+
+    /**
      * P1,P2,...,Pn
      * @param {(Parser | string)[]} parsers -
      * @returns {Parser} -
@@ -310,15 +311,19 @@ export default class Parser {
      * @param {Parser} parser -
      * @returns {Cat} -
      */
-    then(parser: Parser | string): Cat {
-        const q = parser instanceof Parser ? parser :
-            parser.length == 0 ? this.empty() :
-            parser.length == 1 ? this.char(parser) :
-            this.token(parser);
+    then(...parsers: (Parser | string)[]): Cat {
+        if(parsers.length == 0) {
+            return new Cat(this, this.nil());
+        } else {
+            const q = parsers.map(p =>
+                p instanceof Parser ? p :
+                p.length == 0 ? this.empty() :
+                p.length == 1 ? this.char(p) :
+                this.token(p));
 
-        return new Cat(this, q);
+            return new Cat(this, q.reduce((sum,next) => new Cat(sum, next)));
+        }
     }
-
     /**
      * "Foo"
      * @param {string} value - The string representing the token
