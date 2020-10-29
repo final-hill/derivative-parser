@@ -33,10 +33,8 @@ export default class Range extends Parser {
     @override
     deriv(c: string): Parser {
         const d = this.from == this.to ? this.char(this.from) :
-            this.char(this.from).or(
-                this.range(String.fromCharCode(this.from.charCodeAt(0) + 1),
-                this.to)
-            );
+                  this.from <= c && c <= this.to ? this.char(c) :
+                  this.nil();
 
         return d.deriv(c);
     }
