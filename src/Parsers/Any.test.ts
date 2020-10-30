@@ -9,10 +9,20 @@ import {Parser} from './';
 
 describe('Any', () => {
     const p = new Parser();
+
+    test('Any.height', () => {
+        expect(p.any().height).toBe(0);
+    });
+
     test('Any.deriv(c)', () => {
         expect(p.any().deriv('a')).toEqual(p.empty());
         expect(p.any().deriv('c')).toEqual(p.empty());
         expect(p.any().deriv(' ')).toEqual(p.empty());
+    });
+
+    test('Any.equals', () => {
+        expect(p.any().equals(p.any())).toBe(true);
+        expect(p.any().equals(p.char('a'))).toBe(false);
     });
 
     test('Any.matches(c)', () => {

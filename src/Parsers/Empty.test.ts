@@ -14,6 +14,16 @@ describe('Empty', () => {
         expect(p.empty().deriv('a')).toEqual(p.nil());
     });
 
+    test('Empty.equals', () => {
+        expect(p.empty().equals(p.empty())).toBe(true);
+        expect(p.empty().equals(p.nil())).toBe(false);
+    });
+
+    test('Empty.isEmpty', () => {
+        expect(p.empty().isEmpty()).toBe(true);
+        expect(p.empty().isAlt()).toBe(false);
+    });
+
     test('Empty.matches(c)', () => {
         expect(p.empty().matches('')).toBe(true);
         expect(p.empty().matches('a')).toBe(false);

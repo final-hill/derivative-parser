@@ -23,6 +23,10 @@ describe('Not', () => {
         );
     });
 
+    test('Not.height', () => {
+        expect(p.char('a').not().height).toBe(1);
+    });
+
     test('Not.equals()', () => {
         const notA = p.char('a').not(),
               notA2 = p.char('a').not(),
@@ -39,6 +43,10 @@ describe('Not', () => {
 
         expect(lang.matches('a')).toBe(false);
         expect(lang.matches('b')).toBe(true);
+    });
+
+    test('Not.simplify', () => {
+        expect(p.char('a').not().not().simplify()).toEqual(p.char('a'));
     });
 
     test('Not.toString()', () => {

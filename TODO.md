@@ -1,9 +1,5 @@
 # TODO
 
-rep(n)    L{n}
-
-Rename Plus to Many?
-
 simplify()
     M ∪ L → L ∪ M
     (L ∪ M) ∪ N → L ∪ (M ∪ N)
@@ -18,7 +14,8 @@ simplify()
     ∅* → Ɛ
     Ɛ* → Ɛ
     L+ → LL* → L*L
-    L** → L*
+
+replace simplify() with smart constructors on parser
 
 array access faster than charCodeAt
 <https://mrale.ph/blog/2018/02/03/maybe-you-dont-need-rust-to-speed-up-your-js.html>
