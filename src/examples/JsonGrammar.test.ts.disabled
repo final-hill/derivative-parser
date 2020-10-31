@@ -185,8 +185,6 @@ describe('JsonGrammar', () => {
         const jsonGrammar = new JsonGrammar();
 
         expect(jsonGrammar).toBeDefined();
-        // TODO
-        /*
         expect(jsonGrammar.matches('')).toBe(false);
         expect(jsonGrammar.matches('false')).toBe(true);
         expect(jsonGrammar.matches('f')).toBe(false);
@@ -250,6 +248,5 @@ describe('JsonGrammar', () => {
                "Country":   "US"
             }
           ]`)).toBe(false);
-          */
     });
 });
