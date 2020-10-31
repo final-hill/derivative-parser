@@ -10,7 +10,10 @@ import { MSG_NOT_IMPLEMENTED } from '../Messages';
 import {Alt, Cat, Char, Empty, Nil, Star, Range, Token, Any, Not, Rep} from './';
 
 const contracts = new Contracts(true),
-     {demands, invariant, override} = contracts;
+     {demands, invariant, override} = contracts,
+     ANY = new Any(),
+     EMPTY = new Empty(),
+     NIL = new Nil();
 
 @invariant
 export default class Parser {
@@ -79,8 +82,7 @@ export default class Parser {
      * @returns {Any} Any
      */
     any(): Any {
-        // TODO: not using a constant here due to the lack of an equality definition
-        return new Any();
+        return ANY;
     }
 
     /**
@@ -106,7 +108,7 @@ export default class Parser {
      * ε = {""}
      * @returns {Empty} Empty
      */
-    empty(): Empty { return new Empty(); }
+    empty(): Empty { return EMPTY; }
 
     /**
      * Determines if the current RegularLanguage is structurally equal the provided one
@@ -193,7 +195,7 @@ export default class Parser {
      * ∅ = {}
      * @returns {Nil} -
      */
-    nil(): Nil { return new Nil(); }
+    nil(): Nil { return NIL; }
 
     /**
      * Returns Nil or Empty depending on whether Empty
