@@ -64,12 +64,12 @@ export default class Alt extends Parser {
         let left = this.left.simplify(),
             right = this.right.simplify();
 
-        if(left.height > right.height) {
-            [left, right] = [right, left];
-        }
-
         if(left.isAlt()) {
             [left,right] = [left.left, new Alt(left.right, right)];
+        }
+
+        if(left.height > right.height) {
+            [left, right] = [right, left];
         }
 
         if(left.equals(right)) {

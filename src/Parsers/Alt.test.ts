@@ -43,11 +43,17 @@ describe('Alt', () => {
         expect(p1.matches('c')).toBe(false);
     });
 
+    test('Alt.nilOrEmpty', () => {
+        expect(p.alt('a','b').nilOrEmpty()).toEqual(p.nil().or(p.nil()));
+        expect(p.alt(p.nil(),p.empty()).nilOrEmpty()).toEqual(p.nil().or(p.empty()));
+    });
+
     test('Alt.simplify', () => {
         expect(p.alt('a','a').simplify()).toEqual(p.char('a'));
         expect(p.alt(p.nil(),'a').simplify()).toEqual(p.char('a'));
         expect(p.alt('a',p.nil()).simplify()).toEqual(p.char('a'));
         expect(p.alt(p.alt('a','b'),'c').simplify()).toEqual(p.alt('a',p.alt('b','c')));
+        expect(p.alt(p.seq('a','b'),'c').simplify()).toEqual(p.alt('c',p.seq('a','b')));
     });
 
     test('Alt.toString()', () => {

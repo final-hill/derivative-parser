@@ -272,7 +272,7 @@ export default class Parser {
     }
 
     /**
-     * P1,P2,...,Pn
+     * P1◦P2◦...◦Pn
      * @param {(Parser | string)[]} parsers -
      * @returns {Parser} -
      */
@@ -305,7 +305,7 @@ export default class Parser {
 
     /**
      * Represents the concatenation of two parsers
-     * L1 ◦ L2
+     * L1◦L2
      *
      * @see Cat
      * @param {Parser} parser -
