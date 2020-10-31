@@ -6,14 +6,12 @@
  */
 
 import Contracts from '@final-hill/decorator-contracts';
+import {memo} from '@final-hill/class-tools';
 import { MSG_NOT_IMPLEMENTED } from '../Messages';
 import {Alt, Cat, Char, Empty, Nil, Star, Range, Token, Any, Not, Rep} from './';
 
 const contracts = new Contracts(true),
-     {demands, invariant, override} = contracts,
-     ANY = new Any(),
-     EMPTY = new Empty(),
-     NIL = new Nil();
+     {demands, invariant, override} = contracts;
 
 @invariant
 export default class Parser {
@@ -22,6 +20,18 @@ export default class Parser {
      * @see this.simplify()
      */
     get height(): number { return 0; }
+
+    /**
+     * The parser for a single character. A wildcard.
+     * '.'
+     *
+     * @see Any
+     * @returns {Any} Any
+     */
+    @memo
+    any(): Any {
+        return new Any();
+    }
 
     /**
      * Computes the derivative of a regular language with respect to a character c.
@@ -37,6 +47,14 @@ export default class Parser {
     deriv(c: string): Parser { return this.nil(); }
 
     /**
+     * Represents the Empty parser which parses the empty string
+     * ε = {""}
+     * @returns {Empty} Empty
+     */
+    @memo
+    empty(): Empty { return new Empty(); }
+
+    /**
      * Determines if the provided text matches the current expression
      *
      * @param {string} text - The text to test
@@ -49,6 +67,14 @@ export default class Parser {
             this.containsEmpty() :
             this.deriv(text[0]).matches(text.substr(1));
     }
+
+    /**
+     * Represents the Nil Parser. Parses a language with no members.
+     * ∅ = {}
+     * @returns {Nil} -
+     */
+    @memo
+    nil(): Nil { return new Nil(); }
 
     /**
      * Represents the union of two parsers
@@ -93,17 +119,6 @@ export default class Parser {
     }
 
     /**
-     * The parser for a single character. A wildcard.
-     * '.'
-     *
-     * @see Any
-     * @returns {Any} Any
-     */
-    any(): Any {
-        return ANY;
-    }
-
-    /**
      * Represents the parser of a single character
      * c = {...,'a','b',...}
      *
@@ -120,13 +135,6 @@ export default class Parser {
      * @returns {boolean} - The result of the test
      */
     containsEmpty(): boolean { return false; }
-
-    /**
-     * Represents the Empty parser which parses the empty string
-     * ε = {""}
-     * @returns {Empty} Empty
-     */
-    empty(): Empty { return EMPTY; }
 
     /**
      * Determines if the current RegularLanguage is structurally equal the provided one
@@ -207,13 +215,6 @@ export default class Parser {
      * @returns {boolean} - The result
      */
     isToken(): this is Token { return false; }
-
-    /**
-     * Represents the Nil Parser. Parses a language with no members.
-     * ∅ = {}
-     * @returns {Nil} -
-     */
-    nil(): Nil { return NIL; }
 
     /**
      * Returns Nil or Empty depending on whether Empty
