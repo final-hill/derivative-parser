@@ -51,6 +51,24 @@ export default class Parser {
     }
 
     /**
+     * Represents the union of two parsers
+     * P1 ∪ P2
+     *
+     * @see Alt
+     * @param {Parser} parser -
+     * @returns {Alt} -
+     */
+    @demands(p => typeof p == 'string' || p instanceof Parser)
+    or(parser: Parser | string): Alt {
+        const q = parser instanceof Parser ? parser :
+                  parser.length == 0 ? this.empty() :
+                  parser.length == 1 ? this.char(parser) :
+                  this.token(parser);
+
+        return new Alt(this,q);
+    }
+
+    /**
      * Returns a string representation of the expression
      *
      * @returns {string} - The string representation
@@ -222,23 +240,6 @@ export default class Parser {
      */
     opt(): Alt {
         return this.or(this.empty());
-    }
-
-    /**
-     * Represents the union of two parsers
-     * P1 ∪ P2
-     *
-     * @see Alt
-     * @param {Parser} parser -
-     * @returns {Alt} -
-     */
-    or(parser: Parser | string): Alt {
-        const q = parser instanceof Parser ? parser :
-                  parser.length == 0 ? this.empty() :
-                  parser.length == 1 ? this.char(parser) :
-                  this.token(parser);
-
-        return new Alt(this,q);
     }
 
     /**
