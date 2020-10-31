@@ -30,7 +30,7 @@ class Any extends Parser {
 
     @override
     equals(other: Parser): boolean {
-        return other === this; // TODO: can this be improved?
+        return other.isAny();
     }
 
     @override
