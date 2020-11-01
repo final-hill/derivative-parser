@@ -9,8 +9,9 @@ import {Parser} from "./";
 
 describe('Cat', () => {
     const p = new Parser();
+
     test('Cat.deriv(c)', () => {
-        const p1 = p.char('a').or(p.empty()),
+        const p1 = p.cat('a', p.empty()),
               p2 = p.char('b');
         expect(
             p1.then(p2).deriv('a')
@@ -22,13 +23,34 @@ describe('Cat', () => {
         );
     });
 
+    test('Cat.equals', () => {
+        expect(p.cat('a','b').equals(p.cat('a','b'))).toBe(true);
+        expect(p.cat('a','b').equals(p.cat('b','a'))).toBe(false);
+    });
+
+    test('Cat.height', () => {
+        expect(p.cat('a','b').height).toBe(1);
+        expect(p.cat('a',p.cat('b','c')).height).toBe(2);
+    });
+
+    test('Cat.isCat', () => {
+        expect(p.cat('a','b').isCat()).toBe(true);
+    });
+
     test('Cat.matches(c)', () => {
-        const p1 = p.char('a').then(p.char('b'));
+        const p1 = p.cat('a','b');
         expect(p1.matches('')).toBe(false);
         expect(p1.matches('a')).toBe(false);
         expect(p1.matches('b')).toBe(false);
         expect(p1.matches('ab')).toBe(true);
         expect(p1.matches('ba')).toBe(false);
+    });
+
+    test('Cat.simplify', () => {
+        expect(p.cat(p.empty(),'a').simplify()).toEqual(p.char('a'));
+        expect(p.cat('b',p.empty()).simplify()).toEqual(p.char('b'));
+        expect(p.cat(p.nil(),'a').simplify()).toEqual(p.nil());
+        expect(p.cat('b',p.nil()).simplify()).toEqual(p.nil());
     });
 
     test('Cat.toString()', () => {
