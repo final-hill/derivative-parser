@@ -27,6 +27,10 @@ describe('Range', () => {
         expect(digit.matches('x')).toBe(false);
     });
 
+    test('Range.nilOrEmpty', () => {
+        expect(digit.nilOrEmpty()).toEqual(p.nil());
+    });
+
     test('Range.toString()', () => {
         expect(digit.toString()).toBe('[1-9]');
     });

@@ -28,9 +28,6 @@ export default class Range extends Parser {
     }
 
     @override
-    get height(): number { return 0; }
-
-    @override
     deriv(c: string): Parser {
         const d = this.from == this.to ? this.char(this.from) :
                   this.from <= c && c <= this.to ? this.char(c) :

@@ -287,8 +287,7 @@ export default class Parser {
      * @returns {Parser} -
      */
     range(from: string, to: string): Parser {
-        return from === to ? this.char(from) :
-            from < to ? new Range(from, to) :
+        return from < to ? new Range(from, to) :
             new Range(to, from);
     }
 
