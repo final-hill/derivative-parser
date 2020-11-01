@@ -36,9 +36,6 @@ export default class Star extends Parser {
     }
 
     @override
-    isAtomic(): boolean { return false; }
-
-    @override
     isStar(): this is Star { return true; }
 
     /**
@@ -53,14 +50,13 @@ export default class Star extends Parser {
     // Ɛ* → Ɛ
     @override
     simplify(): Parser {
-        const p = this.parser.simplify();
-
-        if (p.isStar()) { return p.parser.star(); }
+        const p = this.parser;
+        if (p.isStar()) { return p; }
         if (p.isNil()) { return this.empty(); }
         // FIXME: cast required due to TypeScript 3.4.5 inference bug?
         if ((p as Parser).isEmpty()) { return this.empty(); }
 
-        return p;
+        return this;
     }
 
     @override
