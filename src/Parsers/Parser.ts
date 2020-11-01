@@ -119,6 +119,19 @@ export default class Parser {
     }
 
     /**
+     * Creates the concatenation of two parsers
+     * P1◦P2
+     *
+     * @see Cat
+     * @param {Parser} first -
+     * @param {Parser} second -
+     * @returns {Cat} - The concatenation of both parsers
+     */
+    cat(first: Parser, second: Parser): Parser {
+        return new Cat(first, second);
+    }
+
+    /**
      * Represents the parser of a single character
      * c = {...,'a','b',...}
      *
@@ -308,11 +321,12 @@ export default class Parser {
     star(): Star { return new Star(this); }
 
     /**
-     * Represents the concatenation of two parsers
-     * L1◦L2
+     * Returns the concatenation of the current parser with
+     * one or more additional parsers
+     * P1◦P2◦...◦Pn
      *
      * @see Cat
-     * @param {Parser} parser -
+     * @param {Parser} ...parsers -
      * @returns {Cat} -
      */
     then(...parsers: (Parser | string)[]): Cat {
