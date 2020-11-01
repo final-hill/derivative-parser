@@ -7,7 +7,6 @@
 
 import Contracts from '@final-hill/decorator-contracts';
 import {memo} from '@final-hill/class-tools';
-import { MSG_NOT_IMPLEMENTED } from '../Messages';
 import {Alt, Cat, Char, Empty, Nil, Star, Range, Token, Any, Not, Rep} from './';
 
 const contracts = new Contracts(true),
@@ -31,6 +30,32 @@ export default class Parser {
     @memo
     any(): Any {
         return new Any();
+    }
+
+    /**
+     * Creates the concatenation of two parsers
+     * P1◦P2
+     *
+     * @see Cat
+     * @param {Parser} first -
+     * @param {Parser} second -
+     * @returns {Cat} - The concatenation of both parsers
+     */
+    @demands((first, second) =>
+        (first instanceof Parser || typeof first == 'string') &&
+        (second instanceof Parser || typeof second == 'string')
+    )
+    cat(first: Parser | string, second: Parser | string): Parser {
+        const p1 = typeof first == 'string' ?
+                    (first.length == 0 ? this.empty() :
+                     first.length == 1 ? this.char(first) :
+                     this.token(first)) : first,
+              p2 = typeof second == 'string' ?
+                    (second.length == 0 ? this.empty() :
+                     second.length == 1 ? this.char(second) :
+                     this.token(second)) : second;
+
+        return new Cat(p1, p2);
     }
 
     /**
@@ -116,19 +141,6 @@ export default class Parser {
             p.length == 1 ? this.char(p) :
             this.token(p)
         ).reduce((sum,next) => sum.or(next));
-    }
-
-    /**
-     * Creates the concatenation of two parsers
-     * P1◦P2
-     *
-     * @see Cat
-     * @param {Parser} first -
-     * @param {Parser} second -
-     * @returns {Cat} - The concatenation of both parsers
-     */
-    cat(first: Parser, second: Parser): Parser {
-        return new Cat(first, second);
     }
 
     /**
@@ -235,8 +247,10 @@ export default class Parser {
      *
      * δ(L) = ∅ if ε notIn L
      * δ(L) = ε if ε in L
+     *
+     * @returns {Parser} -
      */
-    nilOrEmpty(): Parser { throw new TypeError(MSG_NOT_IMPLEMENTED); }
+    nilOrEmpty(): Parser { return this.nil(); }
 
     /**
      * The complement parser.
