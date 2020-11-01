@@ -10,6 +10,11 @@ import {Parser} from "./";
 describe('Not', () => {
     const p = new Parser();
 
+    test('Not.containsEmpty', () => {
+        expect(p.empty().not().containsEmpty()).toBe(false);
+        expect(p.nil().not().containsEmpty()).toBe(true);
+    });
+
     test('Not.deriv(c)', () => {
         expect(
             p.char('a').not().deriv('a').toString()
@@ -43,6 +48,11 @@ describe('Not', () => {
 
         expect(lang.matches('a')).toBe(false);
         expect(lang.matches('b')).toBe(true);
+    });
+
+    test('Not.nilOrEmpty', () => {
+        expect(p.nil().not().nilOrEmpty()).toEqual(p.empty());
+        expect(p.empty().not().nilOrEmpty()).toEqual(p.nil());
     });
 
     test('Not.simplify', () => {
