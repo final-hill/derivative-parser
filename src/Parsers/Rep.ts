@@ -37,10 +37,13 @@ class Rep extends Parser {
     }
 
     // Dc(P{0}) = ε
+    // Dc(P{1}) = Dc(P)
     // Dc(P{n}) = Dc(P)◦P{n-1}
     @override
     deriv(c: string): Parser {
-        return this.n == 0 ? this.empty() : this.parser.deriv(c).then(this.parser.rep(this.n-1));
+        return this.n == 0 ? this.empty() :
+               this.n == 1 ? this.parser.deriv(c) :
+               this.parser.deriv(c).then(this.parser.rep(this.n-1));
     }
 
     @override
