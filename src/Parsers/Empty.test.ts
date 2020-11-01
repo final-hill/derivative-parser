@@ -19,6 +19,10 @@ describe('Empty', () => {
         expect(p.empty().equals(p.nil())).toBe(false);
     });
 
+    test('Empty.height', () => {
+        expect(p.empty().height).toBe(0);
+    });
+
     test('Empty.isEmpty', () => {
         expect(p.empty().isEmpty()).toBe(true);
         expect(p.empty().isAlt()).toBe(false);
