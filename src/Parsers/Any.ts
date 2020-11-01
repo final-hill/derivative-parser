@@ -39,13 +39,6 @@ class Any extends Parser {
     @override
     isAtomic(): boolean { return true; }
 
-    /**
-     * δ(.) = ∅
-     * @override
-     */
-    @override
-    nilOrEmpty(): Parser { return this.nil(); }
-
     @override
     toString(): string { return '.'; }
 }

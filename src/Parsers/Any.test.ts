@@ -25,6 +25,14 @@ describe('Any', () => {
         expect(p.any().equals(p.char('a'))).toBe(false);
     });
 
+    test('Any.isAny', () => {
+        expect(p.any().isAny()).toBe(true);
+    });
+
+    test('Any.isAtomic', () => {
+        expect(p.any().isAtomic()).toBe(true);
+    });
+
     test('Any.matches(c)', () => {
         expect(p.any().matches('a')).toBe(true);
         expect(p.any().matches('c')).toBe(true);
