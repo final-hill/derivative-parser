@@ -33,32 +33,6 @@ export default class Parser {
     }
 
     /**
-     * Creates the concatenation of two parsers
-     * P1◦P2
-     *
-     * @see Cat
-     * @param {Parser} first -
-     * @param {Parser} second -
-     * @returns {Cat} - The concatenation of both parsers
-     */
-    @demands((first, second) =>
-        (first instanceof Parser || typeof first == 'string') &&
-        (second instanceof Parser || typeof second == 'string')
-    )
-    cat(first: Parser | string, second: Parser | string): Parser {
-        const p1 = typeof first == 'string' ?
-                    (first.length == 0 ? this.empty() :
-                     first.length == 1 ? this.char(first) :
-                     this.token(first)) : first,
-              p2 = typeof second == 'string' ?
-                    (second.length == 0 ? this.empty() :
-                     second.length == 1 ? this.char(second) :
-                     this.token(second)) : second;
-
-        return new Cat(p1, p2);
-    }
-
-    /**
      * Computes the derivative of a regular language with respect to a character c.
      * The derivative is a new language where all strings that start with the character
      * are retained. The prefix character is then removed.
@@ -135,12 +109,30 @@ export default class Parser {
      * @returns {Parser} -
      */
     alt(...parsers: (Parser | string)[]): Parser {
-        return parsers.map(p =>
+        return parsers.length == 0 ? this.empty() :
+        parsers.map(p =>
             p instanceof Parser ? p :
             p.length == 0 ? this.empty() :
             p.length == 1 ? this.char(p) :
             this.token(p)
-        ).reduce((sum,next) => sum.or(next));
+        ).reduce((sum,next) => new Alt(sum, next));
+    }
+
+    /**
+     * The concatenation of multiple parsers
+     * P1◦P2◦...◦Pn
+     * @param {(Parser | string)[]} parsers - The parsers to concatenate
+     * @see Cat
+     * @returns {Parser} - The concatenation of the provided parsers
+     */
+    cat(...parsers: (Parser | string)[]): Parser {
+        return parsers.length == 0 ? this.empty() :
+        parsers.map(p =>
+            p instanceof Parser ? p :
+            p.length == 0 ? this.empty() :
+            p.length == 1 ? this.char(p) :
+            this.token(p)
+        ).reduce((sum,next) => new Cat(sum,next));
     }
 
     /**
@@ -162,12 +154,13 @@ export default class Parser {
     containsEmpty(): boolean { return false; }
 
     /**
-     * Determines if the current RegularLanguage is structurally equal the provided one
+     * Determines if the current Parser is equal the provided one
      *
-     * @param {Parser} other  - The Language to compare with
+     * @param {Parser} other  - The parser to compare with
      * @returns {boolean} - The result of the test
      */
-    equals(other: Parser): boolean { return other === this; }
+    equals(other: Parser): boolean {
+        return other instanceof Parser && other.toString() === '∅' && !other.isNil(); }
 
     /**
      * Determine if the current expression is an instance of the Alt parser
@@ -302,20 +295,6 @@ export default class Parser {
     }
 
     /**
-     * P1◦P2◦...◦Pn
-     * @param {(Parser | string)[]} parsers -
-     * @returns {Parser} -
-     */
-    seq(...parsers: (Parser | string)[]): Parser {
-        return parsers.map(p =>
-            p instanceof Parser ? p :
-            p.length == 0 ? this.empty() :
-            p.length == 1 ? this.char(p) :
-            this.token(p)
-        ).reduce((sum,next) => sum.then(next));
-    }
-
-    /**
      * Converts the current Parser to simplest form possible
      * Where 'simplify' is defined as minimizing the height of the expression tree.
      * Additionally, this method will refactor the expression so that other
@@ -355,6 +334,7 @@ export default class Parser {
             return new Cat(this, q.reduce((sum,next) => new Cat(sum, next)));
         }
     }
+
     /**
      * "Foo"
      * @param {string} value - The string representing the token
