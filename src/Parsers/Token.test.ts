@@ -25,7 +25,7 @@ describe('Token', () => {
 
     test('Token.deriv(c)', () => {
         expect(p.token('foo').deriv('x')).toEqual(p.cat(p.nil(),p.token('oo')));
-        expect(p.token('foo').deriv('f')).toEqual(p.cat(p.empty(),p.token('oo')));
+        expect(p.token('foo').deriv('f')).toEqual(p.cat('',p.token('oo')));
     });
 
     test('Token.matches(c)', () => {

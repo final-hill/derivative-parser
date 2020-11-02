@@ -45,7 +45,7 @@ describe('Alt', () => {
 
     test('Alt.nilOrEmpty', () => {
         expect(p.alt('a','b').nilOrEmpty()).toEqual(p.nil().or(p.nil()));
-        expect(p.alt(p.nil(),p.empty()).nilOrEmpty()).toEqual(p.nil().or(p.empty()));
+        expect(p.alt(p.nil(),'').nilOrEmpty()).toEqual(p.nil().or(''));
     });
 
     test('Alt.simplify', () => {
@@ -53,18 +53,18 @@ describe('Alt', () => {
         expect(p.alt(p.nil(),'a').simplify()).toEqual(p.char('a'));
         expect(p.alt('a',p.nil()).simplify()).toEqual(p.char('a'));
         expect(p.alt(p.alt('a','b'),'c').simplify()).toEqual(p.alt('a',p.alt('b','c')));
-        expect(p.alt(p.seq('a','b'),'c').simplify()).toEqual(p.alt('c',p.seq('a','b')));
+        expect(p.alt(p.cat('a','b'),'c').simplify()).toEqual(p.alt('c',p.cat('a','b')));
     });
 
     test('Alt.toString()', () => {
         expect(
-            p.alt(p.empty(),p.nil()).toString()
+            p.alt('',p.nil()).toString()
         ).toBe('ε|∅');
         expect(
-            p.alt(p.empty(),p.alt(p.nil(),p.empty())).toString()
+            p.alt('',p.alt(p.nil(),'')).toString()
         ).toBe('ε|(∅|ε)');
         expect(
-            p.alt(p.alt(p.nil(),p.empty()),p.empty()).toString()
+            p.alt(p.nil(),'','').toString()
         ).toBe('(∅|ε)|ε');
     });
 });

@@ -11,7 +11,7 @@ describe('Cat', () => {
     const p = new Parser();
 
     test('Cat.deriv(c)', () => {
-        const p1 = p.cat('a', p.empty()),
+        const p1 = p.cat('a', ''),
               p2 = p.char('b');
         expect(
             p1.then(p2).deriv('a')
@@ -47,21 +47,21 @@ describe('Cat', () => {
     });
 
     test('Cat.simplify', () => {
-        expect(p.cat(p.empty(),'a').simplify()).toEqual(p.char('a'));
-        expect(p.cat('b',p.empty()).simplify()).toEqual(p.char('b'));
+        expect(p.cat('','a').simplify()).toEqual(p.char('a'));
+        expect(p.cat('b','').simplify()).toEqual(p.char('b'));
         expect(p.cat(p.nil(),'a').simplify()).toEqual(p.nil());
         expect(p.cat('b',p.nil()).simplify()).toEqual(p.nil());
     });
 
     test('Cat.toString()', () => {
         expect(
-            p.empty().then(p.nil()).toString()
+            p.cat('',p.nil()).toString()
         ).toBe('ε∅');
         expect(
-            p.empty().then(p.nil().then(p.empty())).toString()
+            p.cat('',p.nil().then('')).toString()
         ).toBe('ε(∅ε)');
         expect(
-            p.nil().then(p.empty()).then(p.empty()).toString()
+            p.cat(p.nil(),'','').toString()
         ).toBe('(∅ε)ε');
     });
 });
