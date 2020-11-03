@@ -1,6 +1,69 @@
-test('CsvGrammar', () => {
+/*!
+ * @license
+ * Copyright (C) 2020 Michael L Haufe
+ * SPDX-License-Identifier: AGPL-3.0-only
+ * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
+ */
+
+import Grammar from "../Grammar";
+import { Parser } from "../Parsers";
+
+describe('CsvGrammar', () => {
     /**
-        * @see https://tools.ietf.org/html/rfc4180
-        * /
-    class CsvGrammar extends Grammar {}
+     * @see https://tools.ietf.org/html/rfc4180
+     */
+    class CsvGrammar extends Grammar {
+        file(): Parser {
+            return this.cat(
+                this.header().then(this.crlf()).opt(),
+                this.record(),
+                this.crlf().then(this.record()).star(),
+                this.crlf().opt()
+            );
+        }
+        header(): Parser {
+            return this.name().then(this.comma().then(this.name()).star());
+        }
+        record(): Parser {
+            return this.field().then(this.comma().then(this.field()).star());
+        }
+        name(): Parser {
+            return this.field();
+        }
+        field(): Parser {
+            return this.escaped().or(this.nonEscaped());
+        }
+        escaped(): Parser {
+            return this.cat(
+                this.dquote(),
+                this.alt(this.textData(), this.comma(), this.cr(), this.lf(), this.dquote().rep(2)).star(),
+                this.dquote()
+            );
+        }
+        nonEscaped(): Parser {
+            return this.textData().star();
+        }
+        dquote(): Parser {
+            return this.char('\x22');
+        }
+        comma(): Parser {
+            return this.char(',');
+        }
+        cr(): Parser {
+            return this.char('\r');
+        }
+        lf(): Parser {
+            return this.char('\n');
+        }
+        crlf(): Parser {
+            return this.cat(this.cr(), this.lf());
+        }
+        textData(): Parser {
+            return this.alt(
+                this.range('\x20','\x21'),
+                this.range('\x23','\x2B'),
+                this.range('\x2D','\x7E')
+            );
+        }
+    }
 });
