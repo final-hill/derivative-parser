@@ -16,6 +16,11 @@
           "disableOptimisticBPs": true,
           "windows": {
             "program": "${workspaceFolder}/node_modules/jest/bin/jest",
+            "sourceMapPathOverrides": {
+                "webpack:///./~/*": "${workspaceRoot}/node_modules/*",
+                "webpack:///./*": "${workspaceRoot}/*",
+                "webpack:///*": "*"
+            }
           }
         },
         {
