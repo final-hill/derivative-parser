@@ -5,15 +5,14 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import Contracts from "@final-hill/decorator-contracts";
-import {Parser} from "./Parsers/";
+import {Parser} from './Parsers';
 
-const {override} = new Contracts(true);
+const p = new Parser();
 
 /**
  * The Grammar class represents
  */
-class Grammar extends Parser {
+class Grammar {
     /**
      * Determines if the provided text can be recognized by the grammar
      *
@@ -22,19 +21,12 @@ class Grammar extends Parser {
      * @returns {boolean} - The result of the test
      * @throws - If text is not a string
      */
-    @override
     matches(text: string): boolean {
         const ruleNames = Object.getOwnPropertyNames(Object.getPrototypeOf(this))
                         .filter(name => name != 'constructor' && typeof (this as any)[name] == 'function'),
-            entryPoint = ruleNames.length == 0 ? this.nil() : (this as any)[ruleNames[0]].apply(this);
+            entryPoint: Parser = ruleNames.length == 0 ? p.nil() : (this as any)[ruleNames[0]].apply(this);
 
         return entryPoint.matches(text);
-    }
-
-    @override
-    toString(): string {
-        // TODO
-        return super.toString();
     }
 }
 
