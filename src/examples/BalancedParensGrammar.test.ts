@@ -9,9 +9,10 @@ import { Parser } from "../Parsers";
 import Grammar from "../Grammar";
 
 describe('BalancedParensGrammar', () => {
+    const p = new Parser();
     class BalancedParensGrammar extends Grammar {
         S(): Parser {
-            return this.cat(this.S(),'(',this.S(),')').or('');
+            return p.cat(this.S(),'(',this.S(),')').or('');
         }
     }
 
@@ -20,10 +21,13 @@ describe('BalancedParensGrammar', () => {
     test('balanced', () => {
         expect(b.matches('')).toBe(true);
         expect(b.matches('()')).toBe(true);
+        expect(b.matches('(())')).toBe(true);
+        expect(b.matches('()()()')).toBe(true);
     });
-/*
-    test('unbalanced', () => {
 
+    test('unbalanced', () => {
+        expect(b.matches('(')).toBe(false);
+        expect(b.matches(')')).toBe(false);
+        expect(b.matches('(((()))')).toBe(false);
     });
-*/
 });
