@@ -4,6 +4,10 @@
 
 TypeScript implementation of a Derivative Parser.
 
+## FAQ
+
+- TODO: How laziness is avoided via Proxies
+
 ## Additional Reading
 
 * [A non-blocking lexing toolkit for Scala in less than 800 lines of code, from regex derivatives](http://matt.might.net/articles/nonblocking-lexing-toolkit-based-on-regex-derivatives/)

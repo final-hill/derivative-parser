@@ -160,7 +160,8 @@ export default class Parser {
      * @returns {boolean} - The result of the test
      */
     equals(other: Parser): boolean {
-        return other instanceof Parser && other.toString() === '∅' && !other.isNil(); }
+        return other instanceof Parser && other.toString() === '∅' && !other.isNil();
+    }
 
     /**
      * Determine if the current expression is an instance of the Alt parser
