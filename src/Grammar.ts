@@ -5,8 +5,7 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import {Parser} from './Parsers';
-import ThunkParser from './Parsers/ThunkParser';
+import {Parser, Thunk} from './Parsers';
 
 const p = new Parser();
 
@@ -25,7 +24,7 @@ class Grammar {
                propertyKey !== 'toString' &&
                propertyKey !== 'matches'
             ) {
-                return (...args: any[]) => new ThunkParser(receiver,value,args);
+                return (...args: any[]) => new Thunk(receiver,value,args);
             } else {
                 return value;
             }

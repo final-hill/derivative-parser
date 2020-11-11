@@ -5,13 +5,13 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import { Alt, Any, Cat, Char, Empty, Nil, Not, Parser, Range, Rep, Star, Token } from "./";
+import { Alt, Any, Cat, Char, Empty, Nil, Not, Parser, Range, Rep, Star, Token } from ".";
 import Contracts from '@final-hill/decorator-contracts';
 
 const contracts = new Contracts(true),
     {override} = contracts;
 
-class ThunkParser extends Parser {
+class Thunk extends Parser {
     protected _target: Record<PropertyKey, unknown>;
     protected _fn: (...args: any[]) => Parser;
     protected _args: any;
@@ -99,4 +99,4 @@ class ThunkParser extends Parser {
     toString(): string { return this.parser.toString(); }
 }
 
-export default ThunkParser;
+export default Thunk;

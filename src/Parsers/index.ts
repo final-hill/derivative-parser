@@ -17,5 +17,6 @@ import Range from './Range';
 import Rep from './Rep';
 import Star from './Star';
 import Token from './Token';
+import Thunk from './Thunk';
 
-export {Alt, Any, Cat, Char, Empty, Nil, Not, Parser, Range, Rep, Star, Token};
+export {Alt, Any, Cat, Char, Empty, Nil, Not, Parser, Range, Rep, Star, Thunk, Token};
