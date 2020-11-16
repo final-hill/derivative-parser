@@ -9,12 +9,13 @@ import Grammar from "../Grammar";
 import { Parser } from "../Parsers";
 
 describe('CsvGrammar', () => {
+    const p = new Parser();
     /**
      * @see https://tools.ietf.org/html/rfc4180
      */
     class CsvGrammar extends Grammar {
         file(): Parser {
-            return this.cat(
+            return p.cat(
                 this.header().then(this.crlf()).opt(),
                 this.record(),
                 this.crlf().then(this.record()).star(),
@@ -34,9 +35,9 @@ describe('CsvGrammar', () => {
             return this.escaped().or(this.nonEscaped());
         }
         escaped(): Parser {
-            return this.cat(
+            return p.cat(
                 this.dquote(),
-                this.alt(this.textData(), this.comma(), this.cr(), this.lf(), this.dquote().rep(2)).star(),
+                p.alt(this.textData(), this.comma(), this.cr(), this.lf(), this.dquote().rep(2)).star(),
                 this.dquote()
             );
         }
@@ -44,26 +45,30 @@ describe('CsvGrammar', () => {
             return this.textData().star();
         }
         dquote(): Parser {
-            return this.char('\x22');
+            return p.char('\x22');
         }
         comma(): Parser {
-            return this.char(',');
+            return p.char(',');
         }
         cr(): Parser {
-            return this.char('\r');
+            return p.char('\r');
         }
         lf(): Parser {
-            return this.char('\n');
+            return p.char('\n');
         }
         crlf(): Parser {
-            return this.cat(this.cr(), this.lf());
+            return p.cat(this.cr(), this.lf());
         }
         textData(): Parser {
-            return this.alt(
-                this.range('\x20','\x21'),
-                this.range('\x23','\x2B'),
-                this.range('\x2D','\x7E')
+            return p.alt(
+                p.range('\x20','\x21'),
+                p.range('\x23','\x2B'),
+                p.range('\x2D','\x7E')
             );
         }
     }
+
+    test('The Basics', () => {
+        expect(new CsvGrammar()).toBeDefined();
+    });
 });
