@@ -58,7 +58,7 @@
     "dist"
   ],
   "dependencies": {
-    "@final-hill/class-tools": "^1.2.2",
+    "@final-hill/class-tools": "^1.2.3",
     "@final-hill/decorator-contracts": "^0.18.1"
   }
 }

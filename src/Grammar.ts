@@ -5,7 +5,7 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import {Parser} from './Parsers';
+import {Parser, Thunk} from './Parsers';
 
 const p = new Parser();
 
@@ -13,6 +13,28 @@ const p = new Parser();
  * The Grammar class represents
  */
 class Grammar {
+    protected _handler: ProxyHandler<Record<PropertyKey, unknown>> = {
+        // TODO: Change request to TypeScript repo to
+        // align Proxy.get and Reflect.get documentation
+        get(target, propertyKey, receiver) {
+            const value = Reflect.get(target, propertyKey, receiver);
+            // TODO: require naming convention to prevent conflict
+            // with non-parser methods?
+            if(typeof value == 'function' &&
+               propertyKey !== 'toString' &&
+               propertyKey !== 'matches'
+            ) {
+                return (...args: any[]) => new Thunk(receiver,value,args);
+            } else {
+                return value;
+            }
+        }
+    };
+
+    constructor() {
+        return new Proxy(this, this._handler as any);
+    }
+
     /**
      * Determines if the provided text can be recognized by the grammar
      *
