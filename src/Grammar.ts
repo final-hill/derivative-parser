@@ -16,8 +16,6 @@ const contracts = new Contracts(true),
  */
 class Grammar extends Parser {
     protected _handler: ProxyHandler<Record<PropertyKey, unknown>> = {
-        // TODO: Change request to TypeScript repo to
-        // align Proxy.get and Reflect.get documentation
         get(target, propertyKey, receiver) {
             const value = Reflect.get(target, propertyKey, receiver);
             // TODO: require naming convention to prevent conflict
