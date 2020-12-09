@@ -11,7 +11,7 @@ import Contracts from '@final-hill/decorator-contracts';
 const contracts = new Contracts(true),
     {override} = contracts;
 
-class Thunk extends Parser {
+class ForwardingParser extends Parser {
     protected _target: Record<PropertyKey, unknown>;
     protected _fn: (...args: any[]) => Parser;
     protected _args: any;
@@ -99,4 +99,4 @@ class Thunk extends Parser {
     toString(): string { return this.parser.toString(); }
 }
 
-export default Thunk;
+export default ForwardingParser;
