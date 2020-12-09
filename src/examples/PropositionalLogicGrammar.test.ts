@@ -9,26 +9,25 @@ import { Parser } from "../Parsers";
 import Grammar from "../Grammar";
 
 describe('PropositionalLogicGrammar', () => {
-    const p = new Parser();
     class PropositionalLogicGrammar extends Grammar {
         Sentence(): Parser {
-            return p.alt(
+            return this.alt(
                 this.Atomic(),
                 this.Complex()
             );
         }
         Atomic(): Parser {
-            return p.range('P','Z');
+            return this.range('P','Z');
         }
         Complex(): Parser {
-            return p.alt(
-                p.cat('(',this.Sentence(),')'),
-                p.cat(this.Sentence(),this.Connective(),this.Sentence()),
-                p.cat('~',this.Sentence())
+            return this.alt(
+                this.cat('(',this.Sentence(),')'),
+                this.cat(this.Sentence(),this.Connective(),this.Sentence()),
+                this.cat('~',this.Sentence())
             );
         }
         Connective(): Parser {
-            return p.alt(
+            return this.alt(
                 '∧', '∨', '→', '⟺'
             );
         }

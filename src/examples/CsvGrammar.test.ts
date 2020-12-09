@@ -9,13 +9,12 @@ import Grammar from "../Grammar";
 import { Parser } from "../Parsers";
 
 describe('CsvGrammar', () => {
-    const p = new Parser();
     /**
      * @see https://tools.ietf.org/html/rfc4180
      */
     class CsvGrammar extends Grammar {
         file(): Parser {
-            return p.cat(
+            return this.cat(
                 this.header().then(this.crlf()).opt(),
                 this.record(),
                 this.crlf().then(this.record()).star(),
@@ -35,9 +34,9 @@ describe('CsvGrammar', () => {
             return this.escaped().or(this.nonEscaped());
         }
         escaped(): Parser {
-            return p.cat(
+            return this.cat(
                 this.dquote(),
-                p.alt(this.textData(), this.comma(), this.cr(), this.lf(), this.dquote().rep(2)).star(),
+                this.alt(this.textData(), this.comma(), this.cr(), this.lf(), this.dquote().rep(2)).star(),
                 this.dquote()
             );
         }
@@ -45,25 +44,25 @@ describe('CsvGrammar', () => {
             return this.textData().star();
         }
         dquote(): Parser {
-            return p.char('\x22');
+            return this.char('\x22');
         }
         comma(): Parser {
-            return p.char(',');
+            return this.char(',');
         }
         cr(): Parser {
-            return p.char('\r');
+            return this.char('\r');
         }
         lf(): Parser {
-            return p.char('\n');
+            return this.char('\n');
         }
         crlf(): Parser {
-            return p.cat(this.cr(), this.lf());
+            return this.cat(this.cr(), this.lf());
         }
         textData(): Parser {
-            return p.alt(
-                p.range('\x20','\x21'),
-                p.range('\x23','\x2B'),
-                p.range('\x2D','\x7E')
+            return this.alt(
+                this.range('\x20','\x21'),
+                this.range('\x23','\x2B'),
+                this.range('\x2D','\x7E')
             );
         }
     }

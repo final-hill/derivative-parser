@@ -9,10 +9,9 @@ import { Parser } from "../Parsers";
 import Grammar from "../Grammar";
 
 describe('BalancedParensGrammar', () => {
-    const p = new Parser();
     class BalancedParensGrammar extends Grammar {
         S(): Parser {
-            return p.cat(this.S(),'(',this.S(),')').or('');
+            return this.cat(this.S(),'(',this.S(),')').or('');
         }
     }
 

@@ -10,8 +10,6 @@ import { Parser } from '../Parsers';
 
 describe('UriGrammar', () => {
     test('UriGrammar', () => {
-        const p = new Parser();
-
         /**
          * @see https://tools.ietf.org/html/rfc3986#appendix-A
          */
@@ -21,21 +19,21 @@ describe('UriGrammar', () => {
              * @returns {Parser} -
              */
             URI(): Parser {
-                return this.scheme().then(':',this.hier_part(),p.char('?').then(this.query().opt()),p.char('#').then(this.fragment()).opt());
+                return this.scheme().then(':',this.hier_part(),this.char('?').then(this.query().opt()),this.char('#').then(this.fragment()).opt());
             }
             /**
              * hier-part = "//" authority path-abempty | path-absolute | path-rootless | path-empty
              * @returns {Parser} -
              */
             hier_part(): Parser {
-                return p.alt(
-                    p.token('//').then(this.authority(),this.path_abempty()),
+                return this.alt(
+                    this.token('//').then(this.authority(),this.path_abempty()),
                     this.path_absolute(),
                     this.path_rootless(),
                     this.path_empty()
                 );
             }
-            ALPHA(){ return p.range('a','z').or(p.range('A','Z')); }
+            ALPHA(){ return this.range('a','z').or(this.range('A','Z')); }
             /**
              * URI-reference = URI | relative-ref
              * @returns {Parser} -
@@ -48,22 +46,22 @@ describe('UriGrammar', () => {
              * @returns {Parser} -
              */
             absolute_URI(): Parser {
-                return this.scheme().then(':',this.hier_part(),p.char('?').then(this.query()).opt());
+                return this.scheme().then(':',this.hier_part(),this.char('?').then(this.query()).opt());
             }
             /**
              * relative-ref  = relative-part [ "?" query ] [ "#" fragment ]
              * @returns {Parser} -
              */
             relative_ref(): Parser {
-                return this.relative_part().then(p.char('?').then(this.query()).opt(),p.char('#').then(this.fragment()).opt());
+                return this.relative_part().then(this.char('?').then(this.query()).opt(),this.char('#').then(this.fragment()).opt());
             }
             /**
              * relative-part = "//" authority path-abempty | path-absolute | path-noscheme | path-empty
              * @returns {Parser} -
              */
             relative_part(): Parser {
-                return p.alt(
-                    p.token('//').then(this.authority(), this.path_abempty()),
+                return this.alt(
+                    this.token('//').then(this.authority(), this.path_abempty()),
                     this.path_absolute(),
                     this.path_noscheme(),
                     this.path_empty()
@@ -75,21 +73,21 @@ describe('UriGrammar', () => {
              * @returns {Parser} -
              */
             scheme(): Parser {
-                return this.ALPHA().then(p.alt(this.ALPHA(),this.DIGIT(),'+','-','.').star());
+                return this.ALPHA().then(this.alt(this.ALPHA(),this.DIGIT(),'+','-','.').star());
             }
             /**
              * authority = [ userinfo "@" ] host [ ":" port ]
              * @returns {Parser} -
              */
             authority(): Parser {
-                return this.userinfo().then('@').opt().then(this.host()).then(p.char(':').then(this.port()).opt());
+                return this.userinfo().then('@').opt().then(this.host()).then(this.char(':').then(this.port()).opt());
             }
             /**
              * userinfo = *( unreserved | pct-encoded | sub-delims | ":" )
              * @returns {Parser} -
              */
             userinfo(): Parser {
-                return p.alt(this.unreserved(),this.pct_encoded(),this.sub_delims(),':').star();
+                return this.alt(this.unreserved(),this.pct_encoded(),this.sub_delims(),':').star();
             }
             /**
              * host = IP-literal | IPv4address | reg-name
@@ -110,14 +108,14 @@ describe('UriGrammar', () => {
              * @returns {Parser} -
              */
             IP_literal(): Parser {
-                return p.alt('[', this.IPv6address().or(this.IPvFuture()) ,']');
+                return this.alt('[', this.IPv6address().or(this.IPvFuture()) ,']');
             }
             /**
              * IPvFuture = "v" 1*HEXDIG "." 1*( unreserved | sub-delims | ":" )
              * @returns {Parser} -
              */
             IPvFuture(): Parser {
-                return p.cat('v', this.HEXDIG().plus(), '.', p.alt(this.unreserved(), this.sub_delims(), ':').plus());
+                return this.cat('v', this.HEXDIG().plus(), '.', this.alt(this.unreserved(), this.sub_delims(), ':').plus());
             }
             /**
              * IPv6address =                            6( h16 ":" ) ls32
@@ -132,7 +130,7 @@ describe('UriGrammar', () => {
              * @returns {Parser} -
              */
             IPv6address(): Parser {
-                return p.alt(
+                return this.alt(
                     // TODO
                 );
             }
@@ -148,8 +146,8 @@ describe('UriGrammar', () => {
              * @returns {Parser} -
              */
             ls32(): Parser {
-                return p.alt(
-                    p.cat(this.h16(),':',this.h16()),
+                return this.alt(
+                    this.cat(this.h16(),':',this.h16()),
                     this.IPv4address()
                 );
             }
@@ -158,7 +156,7 @@ describe('UriGrammar', () => {
              * @returns {Parser} -
              */
             IPv4address(): Parser {
-                return this.dec_octet().then(p.char('.').then(this.dec_octet()).rep(3));
+                return this.dec_octet().then(this.char('.').then(this.dec_octet()).rep(3));
             }
             /**
              * dec-octet = DIGIT                 ; 0-9
@@ -169,12 +167,12 @@ describe('UriGrammar', () => {
              * @returns {Parser} -
              */
             dec_octet(): Parser {
-                return p.alt(
+                return this.alt(
                     this.DIGIT(), // 0-9
-                    p.range('1','9').then(this.DIGIT()),   // 10-99
-                    p.char('1').then(this.DIGIT().rep(2)), // 100-199
-                    p.char('2').then(p.range('0','4'),this.DIGIT()), // 200-249
-                    p.token('25').then(p.range('0','5')) // 250-255
+                    this.range('1','9').then(this.DIGIT()),   // 10-99
+                    this.char('1').then(this.DIGIT().rep(2)), // 100-199
+                    this.char('2').then(this.range('0','4'),this.DIGIT()), // 200-249
+                    this.token('25').then(this.range('0','5')) // 250-255
                 );
             }
             /**
@@ -182,21 +180,21 @@ describe('UriGrammar', () => {
              * @returns {Parser} -
              */
             DIGIT(): Parser {
-                return p.range('0','9');
+                return this.range('0','9');
             }
             /**
              * HEXDIG = 0-9 | A-F | a-f
              * @returns {Parser} -
              */
             HEXDIG(): Parser {
-                return p.alt(p.range('0','9'),p.range('A','F'),p.range('a','f'));
+                return this.alt(this.range('0','9'),this.range('A','F'),this.range('a','f'));
             }
             /**
              * reg-name = *( unreserved | pct-encoded | sub-delims )
              * @returns {Parser} -
              */
             reg_name(): Parser {
-                return p.alt(this.unreserved(), this.pct_encoded(), this.sub_delims()).star();
+                return this.alt(this.unreserved(), this.pct_encoded(), this.sub_delims()).star();
             }
             /**
              * path = path-abempty    ; begins with "/" or is empty
@@ -207,7 +205,7 @@ describe('UriGrammar', () => {
              * @returns {Parser} -
              */
             path(): Parser {
-                return p.alt(
+                return this.alt(
                     this.path_abempty(),
                     this.path_absolute(),
                     this.path_noscheme(),
@@ -220,28 +218,28 @@ describe('UriGrammar', () => {
              * @returns {Parser} -
              */
             path_abempty(): Parser {
-                return p.char('/').then(this.segment()).star();
+                return this.char('/').then(this.segment()).star();
             }
             /**
              * path-absolute = "/" [ segment-nz *( "/" segment ) ]
              * @returns {Parser} -
              */
             path_absolute(): Parser {
-                return p.char('/').then(this.segment_nz().then(p.char('/').then(this.segment().star())).opt());
+                return this.char('/').then(this.segment_nz().then(this.char('/').then(this.segment().star())).opt());
             }
             /**
              * path-noscheme = segment-nz-nc *( "/" segment )
              * @returns {Parser} -
              */
             path_noscheme(): Parser {
-                return this.segment_nz_nc().then(p.char('/').then(this.segment()).star());
+                return this.segment_nz_nc().then(this.char('/').then(this.segment()).star());
             }
             /**
              * path-rootless = segment-nz *( "/" segment )
              * @returns {Parser} -
              */
             path_rootless(): Parser {
-                return this.segment_nz().then(p.char('/').then(this.segment()).star());
+                return this.segment_nz().then(this.char('/').then(this.segment()).star());
             }
             /**
              * path-empty = 0<pchar>
@@ -269,42 +267,42 @@ describe('UriGrammar', () => {
              * @returns {Parser} -
              */
             segment_nz_nc(): Parser {
-                return p.alt(this.unreserved(), this.pct_encoded(), this.sub_delims(), '@').plus();
+                return this.alt(this.unreserved(), this.pct_encoded(), this.sub_delims(), '@').plus();
             }
             /**
              * pchar = unreserved | pct-encoded | sub-delims | ":" | "@"
              * @returns {Parser} -
              */
             pchar(): Parser {
-                return p.alt(this.unreserved(), this.pct_encoded(), this.sub_delims(), ':', '@');
+                return this.alt(this.unreserved(), this.pct_encoded(), this.sub_delims(), ':', '@');
             }
             /**
              * query = *( pchar | "/" | "?" )
              * @returns {Parser} -
              */
             query(): Parser {
-                return p.alt(this.pchar(), '/', '?').star();
+                return this.alt(this.pchar(), '/', '?').star();
             }
             /**
              * fragment = *( pchar | "/" | "?" )
              * @returns {Parser} -
              */
             fragment(): Parser {
-                return p.alt(this.pchar(), '/', '?').star();
+                return this.alt(this.pchar(), '/', '?').star();
             }
             /**
              * pct-encoded = "%" HEXDIG HEXDIG
              * @returns {Parser} -
              */
             pct_encoded(): Parser {
-                return p.cat('%', this.HEXDIG(), this.HEXDIG());
+                return this.cat('%', this.HEXDIG(), this.HEXDIG());
             }
             /**
              * unreserved = ALPHA | DIGIT | "-" | "." | "_" | "~"
              * @returns {Parser} -
              */
             unreserved(): Parser {
-                return p.alt(this.ALPHA(),this.DIGIT(), '-', '.', '_', '~');
+                return this.alt(this.ALPHA(),this.DIGIT(), '-', '.', '_', '~');
             }
             /**
              * reserved = gen-delims | sub-delims
@@ -318,7 +316,7 @@ describe('UriGrammar', () => {
              * @returns {Parser} -
              */
             gen_delims(): Parser {
-                return p.alt(":", "/", "?", "#", "[", "]", "@");
+                return this.alt(":", "/", "?", "#", "[", "]", "@");
             }
             /**
              * sub-delims    = "!" / "$" / "&" / "'" / "(" / ")"
@@ -334,11 +332,11 @@ describe('UriGrammar', () => {
         expect(uriGrammar).toBeDefined();
 
         /*
-        expect(uriGrammar.matches('ftp://ftp.is.co.za/rfc/rfc1808.txt')).toBe(true);
+        expect(uriGrammar.matches('ftp://ftthis.is.co.za/rfc/rfc1808.txt')).toBe(true);
         expect(uriGrammar.matches('http://www.ietf.org/rfc/rfc2396.txt')).toBe(true);
         expect(uriGrammar.matches('ldap://[2001:db8::7]/c=GB?objectClass?one')).toBe(true);
         expect(uriGrammar.matches('mailto:John.Doe@example.com')).toBe(true);
-        expect(uriGrammar.matches('news:comp.infosystems.www.servers.unix')).toBe(true);
+        expect(uriGrammar.matches('news:comthis.infosystems.www.servers.unix')).toBe(true);
         expect(uriGrammar.matches('tel:+1-816-555-1212')).toBe(true);
         expect(uriGrammar.matches('telnet://192.0.2.16:80/')).toBe(true);
         expect(uriGrammar.matches('urn:oasis:names:specification:docbook:dtd:xml:4.1.2')).toBe(true);
