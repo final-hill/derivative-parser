@@ -68,7 +68,7 @@ export default class Cat extends Parser {
 
         return fst.isEmpty() ? snd :
                snd.isEmpty() ? fst :
-               // TODO: TypeScript inference bug
+               // TODO: TypeScript inference bug <https://github.com/microsoft/TypeScript/issues/36887>
                (fst as Parser).isNil() ? fst :
                (snd as Parser).isNil() ? snd :
                this;
