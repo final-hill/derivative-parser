@@ -5,12 +5,8 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import Contracts from '@final-hill/decorator-contracts';
+import {assert, override} from '@final-hill/decorator-contracts';
 import { Parser } from "./";
-
-const contracts = new Contracts(true),
-     {override} = contracts,
-     assert: Contracts['assert'] = contracts.assert;
 
 /**
  * The Repetition parser.

@@ -59,6 +59,6 @@
   ],
   "dependencies": {
     "@final-hill/class-tools": "^1.2.3",
-    "@final-hill/decorator-contracts": "^0.18.1"
+    "@final-hill/decorator-contracts": "^0.20.0"
   }
 }

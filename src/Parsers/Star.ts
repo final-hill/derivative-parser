@@ -6,10 +6,7 @@
  */
 
 import {Parser} from './';
-import Contracts from '@final-hill/decorator-contracts';
-
-const contracts = new Contracts(true),
-    {override} = contracts;
+import {override} from '@final-hill/decorator-contracts';
 
 /**
  * Represents the Kleene star of the given language

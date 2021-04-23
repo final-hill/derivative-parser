@@ -6,10 +6,7 @@
  */
 
 import { Alt, Any, Cat, Char, Empty, Nil, Not, Parser, Range, Rep, Star, Token } from ".";
-import Contracts from '@final-hill/decorator-contracts';
-
-const contracts = new Contracts(true),
-    {override} = contracts;
+import {override} from '@final-hill/decorator-contracts';
 
 class Thunk extends Parser {
     protected _target: Record<PropertyKey, unknown>;

@@ -6,10 +6,7 @@
  */
 
 import {Parser, Thunk} from './Parsers';
-import Contracts from '@final-hill/decorator-contracts';
-
-const contracts = new Contracts(true),
-    {override} = contracts;
+import {override} from '@final-hill/decorator-contracts';
 
 /**
  * The Grammar class represents

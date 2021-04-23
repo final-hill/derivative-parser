@@ -6,12 +6,8 @@
  */
 
 import {Parser} from './';
-import Contracts from '@final-hill/decorator-contracts';
+import {assert, override} from '@final-hill/decorator-contracts';
 import {MSG_CHAR_EXPECTED} from '../Messages';
-
-const contracts = new Contracts(true),
-    {override} = contracts,
-    assert: Contracts['assert'] = contracts.assert;
 
 /**
  * Represents the parser of a single character
