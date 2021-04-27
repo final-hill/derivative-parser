@@ -1,6 +1,6 @@
 /*!
  * @license
- * Copyright (C) 2020 Michael L Haufe
+ * Copyright (C) 2021 Final Hill LLC
  * SPDX-License-Identifier: AGPL-3.0-only
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
@@ -245,7 +245,7 @@ describe('UriGrammar', () => {
              * path-empty = 0<pchar>
              */
             path_empty(): Parser {
-                throw new Error("Not Implemented");
+                throw new Error('Not Implemented');
                 // TODO
             }
             /**
@@ -316,14 +316,14 @@ describe('UriGrammar', () => {
              * @returns {Parser} -
              */
             gen_delims(): Parser {
-                return this.alt(":", "/", "?", "#", "[", "]", "@");
+                return this.alt(':', '/', '?', '#', '[', ']', '@');
             }
             /**
              * sub-delims    = "!" / "$" / "&" / "'" / "(" / ")"
              * / "*" / "+" / "," / ";" / "="
              */
             sub_delims(): Parser {
-                throw new Error("Not Implemented");
+                throw new Error('Not Implemented');
             }
         }
 

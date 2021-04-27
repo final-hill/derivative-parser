@@ -1,6 +1,6 @@
 /*!
  * @license
- * Copyright (C) 2020 Michael L Haufe
+ * Copyright (C) 2021 Final Hill LLC
  * SPDX-License-Identifier: AGPL-3.0-only
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
@@ -12,7 +12,7 @@ import {override} from '@final-hill/decorator-contracts';
  * The Grammar class represents
  */
 class Grammar extends Parser {
-    protected _handler: ProxyHandler<Record<PropertyKey, unknown>> = {
+    protected handler: ProxyHandler<Record<PropertyKey, unknown>> = {
         get(target, propertyKey, receiver) {
             const value = Reflect.get(target, propertyKey, receiver);
             // TODO: require naming convention to prevent conflict
@@ -31,7 +31,7 @@ class Grammar extends Parser {
     constructor() {
         super();
 
-        return new Proxy(this, this._handler as any);
+        return new Proxy(this, this.handler as any);
     }
 
     /**

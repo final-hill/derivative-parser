@@ -4,6 +4,7 @@
     },
     "typescript.tsdk": "node_modules\\typescript\\lib",
     "cSpell.ignorePaths": [
+        ".eslintrc.json",
         "node_modules",
         "package.json"
     ],

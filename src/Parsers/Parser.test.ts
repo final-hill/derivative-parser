@@ -1,11 +1,11 @@
 /*!
  * @license
- * Copyright (C) 2020 Michael L Haufe
+ * Copyright (C) 2021 Final Hill LLC
  * SPDX-License-Identifier: AGPL-3.0-only
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import {Parser} from "./";
+import {Parser} from './';
 
 describe('Parser', () => {
     const p = new Parser();
@@ -65,7 +65,7 @@ describe('Parser', () => {
         expect(p.empty().isEmpty()).toBe(true);
         expect(p.nil().isNil()).toBe(true);
         expect(p.not().isNot()).toBe(true);
-        expect(p.opt().toString()).toEqual(`(∅)|ε`);
+        expect(p.opt().toString()).toEqual('(∅)|ε');
         expect(p.or(p.char('a')).isAlt()).toBe(true);
         expect(p.or('a').isAlt()).toBe(true);
         expect(p.or('').isAlt()).toBe(true);

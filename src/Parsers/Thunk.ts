@@ -1,18 +1,18 @@
 /*!
  * @license
- * Copyright (C) 2020 Michael L Haufe
+ * Copyright (C) 2021 Final Hill LLC
  * SPDX-License-Identifier: AGPL-3.0-only
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import { Alt, Any, Cat, Char, Empty, Nil, Not, Parser, Range, Rep, Star, Token } from ".";
+import { Alt, Any, Cat, Char, Empty, Nil, Not, Parser, Range, Rep, Star, Token } from '.';
 import {override} from '@final-hill/decorator-contracts';
 
 class Thunk extends Parser {
-    protected _target: Record<PropertyKey, unknown>;
-    protected _fn: (...args: any[]) => Parser;
-    protected _args: any;
-    protected _parser: Parser | undefined;
+    protected target: Record<PropertyKey, unknown>;
+    protected fn: (...args: any[]) => Parser;
+    protected args: any;
+    protected innerParser: Parser | undefined;
 
     constructor(
         target: Record<PropertyKey, unknown>,
@@ -20,16 +20,16 @@ class Thunk extends Parser {
         ...args: any[]
     ){
         super();
-        this._target = target;
-        this._fn = fn;
-        this._args = args;
+        this.target = target;
+        this.fn = fn;
+        this.args = args;
     }
 
     get parser(): Parser {
-        if(this._parser != undefined) {
-            return this._parser;
+        if(this.innerParser != undefined) {
+            return this.innerParser;
         } else {
-            return (this._parser = this._fn.apply(this._target,this._args));
+            return (this.innerParser = this.fn.apply(this.target,this.args));
         }
     }
 
