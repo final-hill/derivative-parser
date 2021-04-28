@@ -1,16 +1,12 @@
 /*!
  * @license
- * Copyright (C) 2020 Michael L Haufe
+ * Copyright (C) 2021 Final Hill LLC
  * SPDX-License-Identifier: AGPL-3.0-only
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import Contracts from '@final-hill/decorator-contracts';
-import { Parser } from "./";
-
-const contracts = new Contracts(true),
-     {override} = contracts,
-     assert: Contracts['assert'] = contracts.assert;
+import {assert, override} from '@final-hill/decorator-contracts';
+import { Parser } from './';
 
 /**
  * The Repetition parser.

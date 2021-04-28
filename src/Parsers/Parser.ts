@@ -1,18 +1,27 @@
 /*!
  * @license
- * Copyright (C) 2020 Michael L Haufe
+ * Copyright (C) 2021 Final Hill LLC
  * SPDX-License-Identifier: AGPL-3.0-only
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import Contracts from '@final-hill/decorator-contracts';
+import {Contract, Contracted, override} from '@final-hill/decorator-contracts';
 import {memo} from '@final-hill/class-tools';
 import {Alt, Cat, Char, Empty, Nil, Star, Range, Token, Any, Not, Rep} from './';
 
-const contracts = new Contracts(true),
-     {demands, invariant, override} = contracts;
+const parserContract = new Contract<Parser>({
+    deriv: {
+        demands(_self, c){ return typeof c == 'string' && c.length == 1; }
+    },
+    matches: {
+        demands(_self, text) { return typeof text == 'string'; }
+    },
+    or: {
+        demands(_self,p) { return typeof p == 'string' || p instanceof Parser; }
+    }
+});
 
-@invariant
+@Contracted(parserContract)
 export default class Parser {
     /**
      * The height of the expression tree. This is used for simplification.
@@ -33,39 +42,12 @@ export default class Parser {
     }
 
     /**
-     * Computes the derivative of a regular language with respect to a character c.
-     * The derivative is a new language where all strings that start with the character
-     * are retained. The prefix character is then removed.
-     *
-     * @param {string} c - A character
-     * @throws Throw an error if the provided string is not length == 1
-     * @returns {Parser} -
-     */
-    @demands((c: string) => typeof c == 'string' && c.length == 1)
-    // @ts-ignore: unused variable
-    deriv(c: string): Parser { return this.nil(); }
-
-    /**
      * Represents the Empty parser which parses the empty string
      * ε = {""}
      * @returns {Empty} Empty
      */
     @memo
     empty(): Empty { return new Empty(); }
-
-    /**
-     * Determines if the provided text matches the current expression
-     *
-     * @param {string} text - The text to test
-     * @returns {boolean} - The result of the test
-     * @throws - If text is not a string
-     */
-    @demands(text => typeof text == 'string')
-    matches(text: string): boolean {
-        return text.length == 0 ?
-            this.containsEmpty() :
-            this.deriv(text[0]).matches(text.substr(1));
-    }
 
     /**
      * Represents the Nil Parser. Parses a language with no members.
@@ -76,6 +58,39 @@ export default class Parser {
     nil(): Nil { return new Nil(); }
 
     /**
+     * Returns a string representation of the expression
+     *
+     * @returns {string} - The string representation
+     */
+    @override
+    toString(): string { return '∅'; }
+
+    /**
+     * Computes the derivative of a regular language with respect to a character c.
+     * The derivative is a new language where all strings that start with the character
+     * are retained. The prefix character is then removed.
+     *
+     * @param {string} c - A character
+     * @throws Throw an error if the provided string is not length == 1
+     * @returns {Parser} -
+     */
+    // @ts-ignore: unused variable
+    deriv(c: string): Parser { return this.nil(); }
+
+    /**
+     * Determines if the provided text matches the current expression
+     *
+     * @param {string} text - The text to test
+     * @returns {boolean} - The result of the test
+     * @throws - If text is not a string
+     */
+    matches(text: string): boolean {
+        return text.length == 0 ?
+            this.containsEmpty() :
+            this.deriv(text[0]).matches(text.substr(1));
+    }
+
+    /**
      * Represents the union of two parsers
      * P1 ∪ P2
      *
@@ -83,7 +98,6 @@ export default class Parser {
      * @param {Parser} parser -
      * @returns {Alt} -
      */
-    @demands(p => typeof p == 'string' || p instanceof Parser)
     or(parser: Parser | string): Alt {
         const q = parser instanceof Parser ? parser :
                   parser.length == 0 ? this.empty() :
@@ -92,14 +106,6 @@ export default class Parser {
 
         return new Alt(this,q);
     }
-
-    /**
-     * Returns a string representation of the expression
-     *
-     * @returns {string} - The string representation
-     */
-    @override
-    toString(): string { return '∅'; }
 
     /**
      * Returns a new parser which is the combination of multiple parsers

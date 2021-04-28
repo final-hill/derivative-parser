@@ -1,6 +1,6 @@
 /*!
  * @license
- * Copyright (C) 2020 Michael L Haufe
+ * Copyright (C) 2021 Final Hill LLC
  * SPDX-License-Identifier: AGPL-3.0-only
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
@@ -48,7 +48,7 @@ describe('Rep', () => {
     });
 
     test('Rep.toString()', () => {
-        expect(c.rep(2).toString()).toBe(`'a'{2}`);
-        expect(c.rep(0).toString()).toBe(`'a'{0}`);
+        expect(c.rep(2).toString()).toBe('\'a\'{2}');
+        expect(c.rep(0).toString()).toBe('\'a\'{0}');
     });
 });
