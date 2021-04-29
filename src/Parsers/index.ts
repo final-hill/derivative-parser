@@ -17,6 +17,6 @@ import Range from './Range';
 import Rep from './Rep';
 import Star from './Star';
 import Token from './Token';
-import Thunk from './Thunk';
+import ForwardingParser from './ForwardingParser';
 
-export {Alt, Any, Cat, Char, Empty, Nil, Not, Parser, Range, Rep, Star, Thunk, Token};
+export {Alt, Any, Cat, Char, Empty, ForwardingParser, Nil, Not, Parser, Range, Rep, Star, Token};

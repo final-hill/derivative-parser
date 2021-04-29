@@ -5,7 +5,7 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import {Parser, Thunk} from './Parsers';
+import {Parser, ForwardingParser} from './Parsers';
 import {override} from '@final-hill/decorator-contracts';
 
 /**
@@ -21,7 +21,7 @@ class Grammar extends Parser {
                propertyKey !== 'toString' &&
                propertyKey !== 'matches'
             ) {
-                return (...args: any[]) => new Thunk(receiver,value,args);
+                return (...args: any[]) => new ForwardingParser(receiver,value,args);
             } else {
                 return value;
             }

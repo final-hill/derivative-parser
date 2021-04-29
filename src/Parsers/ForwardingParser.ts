@@ -8,7 +8,7 @@
 import { Alt, Any, Cat, Char, Empty, Nil, Not, Parser, Range, Rep, Star, Token } from '.';
 import {override} from '@final-hill/decorator-contracts';
 
-class Thunk extends Parser {
+class ForwardingParser extends Parser {
     protected target: Record<PropertyKey, unknown>;
     protected fn: (...args: any[]) => Parser;
     protected args: any;
@@ -96,4 +96,4 @@ class Thunk extends Parser {
     toString(): string { return this.parser.toString(); }
 }
 
-export default Thunk;
+export default ForwardingParser;
