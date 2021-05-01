@@ -5,45 +5,39 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import {Parser} from './';
+import {IParser, Parser} from './';
 import {override} from '@final-hill/decorator-contracts';
 
 /**
+ * @inheritdoc
  * Represents the Empty parser which matches the empty string
  * ε = {""}
  */
-export default class Empty extends Parser {
-    @override
-    get height(): number { return 0; }
-
-    @override
-    containsEmpty(): boolean { return true; }
-
-    // Dc(ε) = ∅
-    @override
-    // @ts-ignore: unused variable
-    deriv(c: string): Parser {
-        return this.nil();
-    }
-
-    @override
-    equals(other: Parser): boolean {
-        return other.isEmpty();
-    }
-
-    @override
-    isAtomic(): boolean { return true; }
-
-    @override
-    isEmpty(): this is Empty { return true; }
-
+interface IEmpty extends IParser {
     /**
+     * @inheritdoc
+     * Dc(ε) = ∅
+     */
+    deriv(c: string): IParser;
+    /**
+     * @inheritdoc
      * δ(ε) = ε
      * @override
      */
-    @override
-    nilOrEmpty(): Empty { return this; }
-
-    @override
-    toString(): string { return 'ε'; }
+    nilOrEmpty(): IEmpty;
 }
+
+class Empty extends Parser implements IEmpty {
+    @override get height(): number { return 0; }
+    @override containsEmpty(): boolean { return true; }
+    // @ts-ignore: unused variable
+    @override deriv(c: string): IParser { return this.nil(); }
+    @override equals(other: IParser): boolean { return other.isEmpty(); }
+    @override isAtomic(): boolean { return true; }
+    @override isEmpty(): this is IEmpty { return true; }
+    @override nilOrEmpty(): IEmpty { return this; }
+    @override toString(): string { return 'ε'; }
+}
+
+export default Empty;
+export {IEmpty};

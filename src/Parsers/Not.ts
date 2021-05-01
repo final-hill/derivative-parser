@@ -5,59 +5,56 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import {Parser} from './';
+import {IParser, Parser} from './';
 import {override} from '@final-hill/decorator-contracts';
 
 /**
  * The complement parser.
  * Matches anything that is not the provided parser
  */
+interface INot extends IParser {
+    readonly parser: IParser;
+    /**
+     * @inheritdoc
+     * Dc(¬P) = ¬Dc(P)
+     */
+    deriv(c: string): IParser;
+    /**
+     * @inheritdoc
+     * δ(¬P) = ε if δ(P) = ∅
+     * δ(¬P) = ∅ if δ(P) = ε
+     */
+    nilOrEmpty(): IParser;
+    /**
+     * @inheritdoc
+     * ¬¬P → P
+     */
+    simplify(): IParser;
+}
+
 class Not extends Parser {
-    constructor(
-        readonly parser: Parser
-    ) { super(); }
-
-    @override
-    get height(): number { return 1 + this.parser.height; }
-
-    @override
-    containsEmpty(): boolean { return !this.parser.containsEmpty(); }
-
-    // Dc(¬P) = ¬Dc(P)
-    @override
-    deriv(c: string): Parser {
-        return this.parser.deriv(c).not();
-    }
-
-    @override
-    equals(other: Parser): boolean {
+    constructor(readonly parser: IParser) { super(); }
+    @override get height(): number { return 1 + this.parser.height; }
+    @override containsEmpty(): boolean { return !this.parser.containsEmpty(); }
+    @override deriv(c: string): IParser { return this.parser.deriv(c).not(); }
+    @override equals(other: IParser): boolean {
         return other.isNot() && this.parser.equals(other.parser);
     }
-
-    @override
-    isNot(): boolean { return true; }
-
-    // δ(¬P) = ε if δ(P) = ∅
-    // δ(¬P) = ∅ if δ(P) = ε
-    @override
-    nilOrEmpty(): Parser {
+    @override isNot(): boolean { return true; }
+    @override nilOrEmpty(): IParser {
         const nilOrEmpty = this.parser.nilOrEmpty();
 
         return nilOrEmpty.isNil() ? this.empty() : this.nil();
     }
-
-    // ¬¬P → P
-    @override
-    simplify(): Parser {
+    @override simplify(): IParser {
         const lang = this.parser.simplify();
 
         return lang.isNot() ? lang.parser : lang.not();
     }
-
-    @override
-    toString(): string {
+    @override toString(): string {
         return `¬${this.parser.isAtomic() ? this.parser.toString() : `(${this.parser})`}`;
     }
 }
 
 export default Not;
+export {INot};

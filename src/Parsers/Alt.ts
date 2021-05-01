@@ -6,58 +6,57 @@
  */
 
 import {override} from '@final-hill/decorator-contracts';
-import {Parser} from './';
+import {Parser, IParser} from './';
 
 /**
+ * @inheritdoc
  * Represents the union of two parsers
  * P1 ∪ P2
  */
-export default class Alt extends Parser {
-    constructor(
-        readonly left: Parser,
-        readonly right: Parser
-    ) { super(); }
+interface IAlt extends IParser {
+    readonly left: IParser;
+    readonly right: IParser;
+    /**
+     * @inheritdoc
+     * δ(L1 | L2) = δ(L1) | δ(L2)
+     */
+    containsEmpty(): boolean;
+    /**
+     * @inheritdoc
+     * Dc(L1 ∪ L2) = Dc(L1) ∪ Dc(L2)
+     */
+    deriv(c: string): IParser;
+    /**
+     * @inheritdoc
+     * L ∪ L → L
+     * M ∪ L → L ∪ M
+     * ∅ ∪ L → L
+     * L ∪ ∅ → L
+     * (L ∪ M) ∪ N → L ∪ (M ∪ N)
+     */
+    simplify(): IParser;
+}
 
-    @override
-    get height(): number {
+class Alt extends Parser implements IAlt {
+    constructor(readonly left: IParser, readonly right: IParser) { super(); }
+
+    @override get height(): number {
         return 1 + Math.max(this.left.height, this.right.height);
     }
-
-    /**
-     * δ(L1 | L2) = δ(L1) | δ(L2)
-     * @override
-     */
-    @override
-    containsEmpty(): boolean {
+    @override containsEmpty(): boolean {
         return this.left.containsEmpty() || this.right.containsEmpty();
     }
-
-    // Dc(L1 ∪ L2) = Dc(L1) ∪ Dc(L2)
-    @override
-    deriv(c: string): Parser {
+    @override deriv(c: string): IParser {
         return this.left.deriv(c).or(this.right.deriv(c));
     }
-
-    @override
-    equals(other: Parser): boolean {
+    @override equals(other: IParser): boolean {
         return other.isAlt() && this.left.equals(other.left) && this.right.equals(other.right);
     }
-
-    @override
-    isAlt(): this is Alt { return true; }
-
-    @override
-    nilOrEmpty(): Parser {
+    @override isAlt(): this is IAlt { return true; }
+    @override nilOrEmpty(): IParser {
         return this.left.nilOrEmpty().or(this.right.nilOrEmpty());
     }
-
-    // L ∪ L → L
-    // M ∪ L → L ∪ M
-    // ∅ ∪ L → L
-    // L ∪ ∅ → L
-    // (L ∪ M) ∪ N → L ∪ (M ∪ N)
-    @override
-    simplify(): Parser {
+    @override simplify(): IParser {
         let left = this.left.simplify(),
             right = this.right.simplify();
 
@@ -79,12 +78,13 @@ export default class Alt extends Parser {
 
         return new Alt(left, right);
     }
-
-    @override
-    toString(): string {
+    @override toString(): string {
         const leftString = this.left.isAtomic() ? `${this.left}` : `(${this.left})`,
               rightString = this.right.isAtomic() ? `${this.right}` : `(${this.right})`;
 
         return `${leftString}|${rightString}`;
     }
 }
+
+export default Alt;
+export {IAlt};

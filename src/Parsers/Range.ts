@@ -6,22 +6,29 @@
  */
 
 import {Parser} from './';
-import {assert, override} from '@final-hill/decorator-contracts';
-import { MSG_CHAR_EXPECTED } from '../Messages';
+import {invariant, override, Contract, Contracted} from '@final-hill/decorator-contracts';
+import { IParser } from './Parser';
 
 /**
+ * @inheritdoc
  * [a-b]
  */
-export default class Range extends Parser {
-    constructor(
-        readonly from: string,
-        readonly to: string
-    ) {
-        super();
-        assert(typeof from == 'string' && from.length == 1, MSG_CHAR_EXPECTED);
-        assert(typeof to == 'string' && to.length == 1, MSG_CHAR_EXPECTED);
-        assert(from <= to, 'Assertion failed: Range.from <= Range.to');
+interface IRange extends IParser {
+    readonly from: string;
+    readonly to: string;
+}
+
+const rangeContract = new Contract<IRange> ({
+    [invariant](self){
+        return self.from <= self.to &&
+               self.from.length == 1 &&
+               self.to.length == 1;
     }
+});
+
+@Contracted(rangeContract)
+class Range extends Parser implements IRange {
+    constructor(readonly from: string, readonly to: string) { super(); }
 
     @override
     deriv(c: string): Parser {
@@ -32,12 +39,10 @@ export default class Range extends Parser {
         return d.deriv(c);
     }
 
-    @override
-    isRange(): this is Range { return true; }
-
-    @override
-    nilOrEmpty(): Parser { return this.nil(); }
-
-    @override
-    toString(): string { return `[${this.from}-${this.to}]`; }
+    @override isRange(): this is Range { return true; }
+    @override nilOrEmpty(): Parser { return this.nil(); }
+    @override toString(): string { return `[${this.from}-${this.to}]`; }
 }
+
+export default Range;
+export {IRange};

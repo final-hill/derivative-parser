@@ -5,7 +5,7 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import { MSG_CHAR_EXPECTED } from '../Messages';
+import { AssertionError } from '@final-hill/decorator-contracts';
 import {Parser} from './';
 
 describe('Char', () => {
@@ -13,7 +13,7 @@ describe('Char', () => {
 
     test('Char.toString()', () => {
         expect(p.char('a').toString()).toBe('\'a\'');
-        expect(() => p.char('abc')).toThrow(MSG_CHAR_EXPECTED);
+        expect(() => p.char('abc')).toThrow(AssertionError);
     });
 
     test('Char.deriv(c)', () => {

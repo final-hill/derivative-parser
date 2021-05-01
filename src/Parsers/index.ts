@@ -5,18 +5,21 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import Parser from './Parser';
-import Alt from './Alt';
-import Any from './Any';
-import Cat from './Cat';
-import Char from './Char';
-import Empty from './Empty';
-import Nil from './Nil';
-import Not from './Not';
-import Range from './Range';
-import Rep from './Rep';
-import Star from './Star';
-import Token from './Token';
-import ForwardingParser from './ForwardingParser';
+import Parser, {IParser} from './Parser';
+import Alt, {IAlt} from './Alt';
+import Any, {IAny} from './Any';
+import Cat, {ICat} from './Cat';
+import Char, {IChar} from './Char';
+import Empty, {IEmpty} from './Empty';
+import Nil, {INil} from './Nil';
+import Not, {INot} from './Not';
+import Range, {IRange} from './Range';
+import Rep, {IRep} from './Rep';
+import Star, {IStar} from './Star';
+import Token, {IToken} from './Token';
+import ForwardingParser, {IForwardingParser} from './ForwardingParser';
 
-export {Alt, Any, Cat, Char, Empty, ForwardingParser, Nil, Not, Parser, Range, Rep, Star, Token};
+export {Alt, IAlt, Any, IAny, Cat, ICat, Char, IChar,
+    Empty, IEmpty, ForwardingParser, IForwardingParser,
+    Nil, INil, Not, INot, Parser, IParser, Range, IRange,
+    Rep, IRep, Star, IStar, Token, IToken};

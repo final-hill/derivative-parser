@@ -5,59 +5,58 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import {Parser} from './';
+import {IParser, Parser} from './';
 import {override} from '@final-hill/decorator-contracts';
 
 /**
  * Represents the Kleene star of the given language
  * L*
  */
-export default class Star extends Parser {
-    constructor(readonly parser: Parser) { super(); }
+interface IStar extends IParser {
+    readonly parser: IParser;
+    /**
+     * @inheritdoc
+     * Dc(L*) = Dc(L) ◦ L*
+     */
+    deriv(c: string): IParser;
+    /**
+     * @inheritdoc
+     * δ(L*) = ε
+     */
+    nilOrEmpty(): IParser;
+    /**
+     * @inheritdoc
+     * Ɛ* → Ɛ
+     * ∅* → Ɛ
+     * L** → L*
+     */
+    simplify(): IParser;
+}
 
-    @override
-    get height(): number { return 1 + this.parser.height; }
+class Star extends Parser implements IStar {
+    constructor(readonly parser: IParser) { super(); }
 
-    @override
-    containsEmpty(): boolean { return true; }
-
-    // Dc(L*) = Dc(L) ◦ L*
-    @override
-    deriv(c: string): Parser {
-        return this.parser.deriv(c).then(this);
-    }
-
-    @override
-    equals(other: Parser): boolean {
+    @override get height(): number { return 1 + this.parser.height; }
+    @override containsEmpty(): boolean { return true; }
+    @override deriv(c: string): IParser { return this.parser.deriv(c).then(this); }
+    @override equals(other: IParser): boolean {
         return other.isStar() && this.parser.equals(other.parser);
     }
-
-    @override
-    isStar(): this is Star { return true; }
-
-    /**
-     * δ(L*) = ε
-     * @override
-     */
-    @override
-    nilOrEmpty(): Parser { return this.empty(); }
-
-    // L** → L*
-    // ∅* → Ɛ
-    // Ɛ* → Ɛ
-    @override
-    simplify(): Parser {
+    @override isStar(): this is Star { return true; }
+    @override nilOrEmpty(): IParser { return this.empty(); }
+    @override simplify(): IParser {
         const p = this.parser;
         if (p.isStar()) { return p; }
         if (p.isNil()) { return this.empty(); }
         // FIXME: cast required due to TypeScript 3.4.5 inference bug?
-        if ((p as Parser).isEmpty()) { return this.empty(); }
+        if ((p as IParser).isEmpty()) { return this.empty(); }
 
         return this;
     }
-
-    @override
-    toString(): string {
+    @override toString(): string {
         return this.parser.isAtomic() ? `${this.parser}*` : `(${this.parser})*`;
     }
 }
+
+export default Star;
+export {IStar};

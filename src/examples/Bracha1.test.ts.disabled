@@ -1,0 +1,62 @@
+/*!
+ * @license
+ * Copyright (C) 2021 Final Hill LLC
+ * SPDX-License-Identifier: AGPL-3.0-only
+ * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
+ */
+
+import { Parser } from '../Parsers';
+import { Grammar } from '..';
+
+// From: http://bracha.org/executableGrammars.pdf
+describe('', () => {
+    interface ExecGrammarSemantics<T> {
+        digit(): T;
+        letter(): T;
+        id(): T;
+        identifier(): T;
+        hat(): T;
+        expression(): T;
+        returnStatement(): T;
+    }
+
+    class ExecGrammar extends Grammar implements ExecGrammarSemantics<Parser> {
+        tokenFor(p: Parser){
+            // TODO: skip leading whitespace (and comments?)
+            // also attaches line/col/index info
+             return p;
+            }
+        digit(){ return this.range('0','9'); }
+        letter(){ return this.range('a','z').or(this.range('A','Z')); }
+        id(){ return this.letter().then(this.letter().or(this.digit())).star(); }
+        identifier(){ return this.tokenFor(this.id()); }
+        hat() { return this.tokenFor(this.char('^')); }
+        expression() { return this.identifier(); }
+        returnStatement() { return this.hat().then(this.expression()); }
+    }
+
+    // Introduces recursion
+    interface ExecGrammar2Semantics<T> extends ExecGrammarSemantics<T> {
+        statement(): T;
+        ifStatement(): T;
+    }
+
+    class ExecGrammar2 extends ExecGrammar implements ExecGrammar2Semantics<Parser> {
+        ifKeyword(){ return this.tokenFor(this.token('if')); }
+        thenKeyword(){ return this.tokenFor(this.token('then')); }
+        elseKeyword(){ return this.tokenFor(this.token('else')); }
+        ifStatement(): Parser {
+            return this.cat(
+                this.ifStatement(),
+                this.expression(),
+                this.thenKeyword(),
+                this.expression(),
+                this.elseKeyword(),
+                this.statement()
+            );
+        }
+        statement(): Parser {
+            return this.ifStatement().or(this.returnStatement());
+        }
+    }
+});
