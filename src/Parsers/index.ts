@@ -5,7 +5,9 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import Parser, {IParser} from './Parser';
+import Parser, {IParser, containsEmpty, deriv, equals, height, isAlt, isAny,
+    isAtomic, isCat, isChar, isEmpty, isNil, isNot, isRep, isStar,
+    isRange, isToken, matches, nilOrEmpty, simplify, toString} from './Parser';
 import Alt, {IAlt} from './Alt';
 import Any, {IAny} from './Any';
 import Cat, {ICat} from './Cat';
@@ -22,4 +24,8 @@ import ForwardingParser, {IForwardingParser} from './ForwardingParser';
 export {Alt, IAlt, Any, IAny, Cat, ICat, Char, IChar,
     Empty, IEmpty, ForwardingParser, IForwardingParser,
     Nil, INil, Not, INot, Parser, IParser, Range, IRange,
-    Rep, IRep, Star, IStar, Token, IToken};
+    Rep, IRep, Star, IStar, Token, IToken,
+    containsEmpty, deriv, equals, height, isAlt, isAny,
+    isAtomic, isCat, isChar, isEmpty, isNil, isNot, isRep, isStar,
+    isRange, isToken, matches, nilOrEmpty, simplify, toString
+};

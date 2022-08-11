@@ -5,18 +5,39 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import {Contract, Contracted, override} from '@final-hill/decorator-contracts';
+import {Contract, Contracted} from '@final-hill/decorator-contracts';
 import {memo} from '@final-hill/class-tools';
 import {IAlt, Alt, IAny, Any, ICat, Cat, IChar, Char,
-    IEmpty, Empty, INil, Nil, IStar, Star,  IRange, Range,
+    IEmpty, Empty, INil, Nil, IStar, Star, IRange, Range,
     IToken, Token, INot, Not, IRep, Rep} from './';
+
+const containsEmpty = Symbol('containsEmpty'),
+    deriv = Symbol('deriv'),
+    equals = Symbol('equals'),
+    height = Symbol('height'),
+    isAlt = Symbol('isAlt'),
+    isAny = Symbol('isAny'),
+    isAtomic = Symbol('isAtomic'),
+    isCat = Symbol('isCat'),
+    isChar = Symbol('isChar'),
+    isEmpty = Symbol('isEmpty'),
+    isNil = Symbol('isNil'),
+    isNot = Symbol('isNot'),
+    isRep = Symbol('isRep'),
+    isStar = Symbol('isStar'),
+    isRange = Symbol('isRange'),
+    isToken = Symbol('isToken'),
+    matches = Symbol('matches'),
+    nilOrEmpty = Symbol('nilOrEmpty'),
+    simplify = Symbol('simplify'),
+    toString = Symbol('toString');
 
 interface IParser {
     /**
      * The height of the expression tree. This is used for simplification.
      * @see this.simplify()
      */
-    readonly height: number;
+    readonly [height]: number;
 
     /**
      * The parser for a single character. A wildcard.
@@ -42,14 +63,6 @@ interface IParser {
     nil(): INil;
 
     /**
-     * Returns a string representation of the expression
-     *
-     * @override
-     * @returns {string} The string representation
-     */
-    toString(): string;
-
-    /**
      * Computes the derivative of a regular language with respect to a character c.
      * The derivative is a new language where all strings that start with the character
      * are retained. The prefix character is then removed.
@@ -58,7 +71,7 @@ interface IParser {
      * @throws Throw an error if the provided string is not length == 1
      * @returns {IParser} The derivative of the parser
      */
-    deriv(c: string): IParser;
+    [deriv](c: string): IParser;
 
     /**
      * Determines if the provided text matches the current expression
@@ -67,7 +80,7 @@ interface IParser {
      * @returns {boolean} The result of the test
      * @throws If text is not a string
      */
-    matches(text: string): boolean;
+    [matches](text: string): boolean;
 
     /**
      * Represents the union of two parsers
@@ -113,7 +126,7 @@ interface IParser {
      *
      * @returns {boolean} The result of the test
      */
-    containsEmpty(): boolean;
+    [containsEmpty](): boolean;
 
     /**
      * Determines if the current Parser is equal the provided one
@@ -121,79 +134,79 @@ interface IParser {
      * @param {IParser} other The parser to compare with
      * @returns {boolean} The result of the test
      */
-    equals(other: IParser): boolean;
+    [equals](other: IParser): boolean;
 
     /**
      * Determine if the current expression is an instance of the Alt parser
      * @returns {boolean} The result
      */
-    isAlt(): this is IAlt;
+    [isAlt](): this is IAlt;
 
     /**
      * Determine if the current expressions is an instance of the Any parser
      * @returns {boolean} The result
      */
-    isAny(): this is IAny;
+    [isAny](): this is IAny;
 
     /**
      * Determine if the current expression is an instance of Char | Empty | Nil
      * @returns {boolean} The result of the test
      */
-    isAtomic(): boolean;
+    [isAtomic](): boolean;
 
     /**
      * Determine if the current expression is an instance of the Cat parser
      * @returns {boolean} The result
      */
-    isCat(): this is ICat;
+    [isCat](): this is ICat;
 
     /**
      * Determine if the current expression is an instance of the Char parser
      * @returns {boolean} The result
      */
-    isChar(): this is IChar;
+    [isChar](): this is IChar;
 
     /**
      * Determine if the current expression is an instance of the Empty parser
      * @returns {boolean} The result
      */
-    isEmpty(): this is IEmpty;
+    [isEmpty](): this is IEmpty;
 
     /**
      * Determine if the current expression is an instance of the Nil parser
      * @returns {boolean} The result
      */
-    isNil(): this is INil;
+    [isNil](): this is INil;
 
     /**
      * Determines if the current expression is an instance of the Not parser
      * @returns {boolean} The result
      */
-    isNot(): this is INot;
+    [isNot](): this is INot;
 
     /**
      * Determines if the current expression is an instance of the Rep parser
      * @returns {boolean} The result
      */
-    isRep(): this is IRep;
+    [isRep](): this is IRep;
 
     /**
      * Determine if the current expression is an instance of the Star parser
      * @returns {boolean} The result
      */
-    isStar(): this is IStar;
+    [isStar](): this is IStar;
 
     /**
      * Determine if the current expression is an instance of the Range parser
      * @returns {boolean} The result
      */
-    isRange(): this is IRange;
+    [isRange](): this is IRange;
 
     /**
      * Determine if the current expression is an instance of the Token parser
      * @returns {boolean} The result
      */
-    isToken(): this is IToken;
+    [isToken](): this is IToken;
 
     /**
      * Returns Nil or Empty depending on whether Empty
@@ -204,7 +217,7 @@ interface IParser {
      *
      * @returns {IParser} The Nil or Empty parser
      */
-    nilOrEmpty(): IParser;
+    [nilOrEmpty](): IParser;
 
     /**
      * The complement parser.
@@ -255,7 +268,7 @@ interface IParser {
      *
      * @returns {IParser} The simplified parser
      */
-    simplify(): IParser;
+    [simplify](): IParser;
 
     /**
      * Represents the Kleene star of the current parser
@@ -282,27 +295,33 @@ interface IParser {
      * @returns {IParser} The Token parser
      */
     token(value: string): IParser;
+
+    /**
+     * Returns a string representation of the expression
+     *
+     * @returns {string} The string representation
+     */
+    [toString](): string;
 }
 
 const parserContract = new Contract<IParser>({
-    deriv: {
+    [deriv]: {
         demands(_, c){ return c.length == 1; }
     }
 });
 
 @Contracted(parserContract)
 class Parser implements IParser {
-    get height(): number { return 0; }
+    get [height](): number { return 0; }
     @memo any(): IAny { return new Any(); }
     @memo empty(): IEmpty { return new Empty(); }
     @memo nil(): INil { return new Nil(); }
-    @override toString(): string { return '∅'; }
     // @ts-ignore: unused variable
-    deriv(c: string): IParser { return this.nil(); }
-    matches(text: string): boolean {
+    [deriv](c: string): IParser { return this.nil(); }
+    [matches](text: string): boolean {
         return text.length == 0 ?
-            this.containsEmpty() :
-            this.deriv(text[0]).matches(text.substr(1));
+            this[containsEmpty]() :
+            this[deriv](text[0])[matches](text.substr(1));
     }
     or(parser: IParser | string): IAlt {
         const q = parser instanceof Parser ? parser :
@@ -330,31 +349,33 @@ class Parser implements IParser {
             this.token(p as string)
         ).reduce((sum,next) => new Cat(sum,next));
     }
-    char(value: string): IChar { return new Char(value); }
-    containsEmpty(): boolean { return false; }
-    // TODO: switch to abstract?
-    equals(other: IParser): boolean {
-        return other.toString() === '∅' && !other.isNil();
+    char(value: string): IChar {
+        return new Char(value);
     }
-    isAlt(): this is IAlt { return false; }
-    isAny(): this is IAny { return false; }
-    isAtomic(): boolean { return false; }
-    isCat(): this is ICat { return false; }
-    isChar(): this is IChar { return false; }
-    isEmpty(): this is IEmpty { return false; }
-    isNil(): this is INil { return false; }
-    isNot(): this is INot { return false; }
-    isRep(): this is IRep { return false; }
-    isStar(): this is IStar { return false; }
-    isRange(): this is IRange { return false; }
-    isToken(): this is IToken { return false; }
-    nilOrEmpty(): INil | IEmpty { return this.nil(); }
+    [containsEmpty](): boolean { return false; }
+    // TODO: switch to abstract?
+    [equals](other: IParser): boolean {
+        return other.toString() === '∅' && !other[isNil]();
+    }
+    [isAlt](): this is IAlt { return false; }
+    [isAny](): this is IAny { return false; }
+    [isAtomic](): boolean { return false; }
+    [isCat](): this is ICat { return false; }
+    [isChar](): this is IChar { return false; }
+    [isEmpty](): this is IEmpty { return false; }
+    [isNil](): this is INil { return false; }
+    [isNot](): this is INot { return false; }
+    [isRep](): this is IRep { return false; }
+    [isStar](): this is IStar { return false; }
+    [isRange](): this is IRange { return false; }
+    [isToken](): this is IToken { return false; }
+    [nilOrEmpty](): INil | IEmpty { return this.nil(); }
     not(): INot { return new Not(this); }
     opt(): IAlt { return this.or(this.empty()); }
     plus(): ICat { return this.then(this.star()); }
     range(from: string, to: string): IRange { return new Range(from, to); }
     rep(n: number): IRep { return new Rep(this,n); }
-    simplify(): IParser { return this; }
+    [simplify](): IParser { return this; }
     star(): IStar { return new Star(this); }
     then(...parsers: (IParser | string)[]): ICat {
         if(parsers.length == 0) {
@@ -371,7 +392,10 @@ class Parser implements IParser {
         }
     }
     token(value: string): IParser { return new Token(value); }
+    [toString](): string { return '∅'; }
 }
 
-export {IParser};
+export {IParser, containsEmpty, deriv, equals, height, isAlt, isAny,
+    isAtomic, isCat, isChar, isEmpty, isNil, isNot, isRep, isStar,
+    isRange, isToken, matches, nilOrEmpty, parserContract, simplify, toString};
 export default Parser;

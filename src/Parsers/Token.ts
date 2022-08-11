@@ -5,8 +5,9 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import {Parser, IParser} from './';
-import { Contract, Contracted, invariant, override} from '@final-hill/decorator-contracts';
+import {Parser, IParser, height, containsEmpty, deriv, toString, nilOrEmpty, isToken} from './';
+import { Contract, Contracted, extend, invariant, override} from '@final-hill/decorator-contracts';
+import { parserContract } from './Parser';
 
 /**
  * @inheritdoc
@@ -17,6 +18,7 @@ interface IToken extends IParser {
 }
 
 const tokenContract = new Contract<IToken>({
+    [extend]: parserContract,
     [invariant](self) {
         return self.value.length > 0;
     }
@@ -25,17 +27,17 @@ const tokenContract = new Contract<IToken>({
 @Contracted(tokenContract)
 class Token extends Parser implements IToken {
     constructor(readonly value: string) { super(); }
-    @override get height(): number { return 0; }
-    @override containsEmpty(): boolean { return false; }
-    @override deriv(c: string): IParser {
-        const d = this.value.length == 1 ? this.char(this.value).deriv(c) :
-            this.char(this.value[0]).deriv(c).then(this.token(this.value.substring(1)));
+    @override get [height](): number { return 0; }
+    @override [containsEmpty](): boolean { return false; }
+    @override [deriv](c: string): IParser {
+        const d = this.value.length == 1 ? this.char(this.value)[deriv](c) :
+            this.char(this.value[0])[deriv](c).then(this.token(this.value.substring(1)));
 
         return d;
     }
-    @override isToken(): this is IToken { return true; }
-    @override nilOrEmpty(): IParser { return this.nil(); }
-    @override toString(): string { return JSON.stringify(this.value); }
+    @override [isToken](): this is IToken { return true; }
+    @override [nilOrEmpty](): IParser { return this.nil(); }
+    @override [toString](): string { return JSON.stringify(this.value); }
 }
 
 export default Token;

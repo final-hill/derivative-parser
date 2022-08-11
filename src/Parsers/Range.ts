@@ -5,9 +5,9 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import {Parser} from './';
-import {invariant, override, Contract, Contracted} from '@final-hill/decorator-contracts';
-import { IParser } from './Parser';
+import {deriv, isRange, nilOrEmpty, Parser, toString} from './';
+import {invariant, override, Contract, Contracted, extend} from '@final-hill/decorator-contracts';
+import { IParser, parserContract } from './Parser';
 
 /**
  * @inheritdoc
@@ -19,6 +19,7 @@ interface IRange extends IParser {
 }
 
 const rangeContract = new Contract<IRange> ({
+    [extend]: parserContract,
     [invariant](self){
         return self.from <= self.to &&
                self.from.length == 1 &&
@@ -28,20 +29,28 @@ const rangeContract = new Contract<IRange> ({
 
 @Contracted(rangeContract)
 class Range extends Parser implements IRange {
-    constructor(readonly from: string, readonly to: string) { super(); }
+    #from: string;
+    #to: string;
+    constructor(from: string, to: string) {
+        super();
+        this.#from = from;
+        this.#to = to;
+    }
+    get from(): string { return this.#from; }
+    get to(): string { return this.#to; }
 
     @override
-    deriv(c: string): Parser {
+    [deriv](c: string): Parser {
         const d = this.from == this.to ? this.char(this.from) :
                   this.from <= c && c <= this.to ? this.char(c) :
                   this.nil();
 
-        return d.deriv(c);
+        return d[deriv](c);
     }
 
-    @override isRange(): this is Range { return true; }
-    @override nilOrEmpty(): Parser { return this.nil(); }
-    @override toString(): string { return `[${this.from}-${this.to}]`; }
+    @override [isRange](): this is Range { return true; }
+    @override [nilOrEmpty](): Parser { return this.nil(); }
+    @override [toString](): string { return `[${this.from}-${this.to}]`; }
 }
 
 export default Range;
