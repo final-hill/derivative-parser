@@ -1,11 +1,11 @@
 /*!
  * @license
- * Copyright (C) 2021 Final Hill LLC
+ * Copyright (C) 2022 Final Hill LLC
  * SPDX-License-Identifier: AGPL-3.0-only
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import {deriv, equals, height, isRep, matches, nilOrEmpty, Parser, toString} from './';
+import { deriv, equals, height, isRep, matches, nilOrEmpty, Parser, toString } from './';
 
 describe('Rep', () => {
     const p = new Parser(),
@@ -18,7 +18,7 @@ describe('Rep', () => {
 
     test('rep[equals]', () => {
         const q = c.rep(2),
-              r = c.rep(3);
+            r = c.rep(3);
         expect(q[equals](q)).toBe(true);
         expect(q[equals](c.rep(2))).toBe(true);
         expect(q[equals](r)).toBe(false);
@@ -26,7 +26,7 @@ describe('Rep', () => {
 
     test('Rep[height]', () => {
         expect(c.rep(2)[height]).toBe(1);
-        expect(p.alt('a','b').rep(5)[height]).toBe(2);
+        expect(p.alt('a', 'b').rep(5)[height]).toBe(2);
     });
 
     test('Rep[isRep]', () => {

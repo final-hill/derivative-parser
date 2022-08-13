@@ -1,31 +1,25 @@
 /*!
  * @license
- * Copyright (C) 2021 Final Hill LLC
+ * Copyright (C) 2022 Final Hill LLC
  * SPDX-License-Identifier: AGPL-3.0-only
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import Parser, {IParser, containsEmpty, deriv, equals, height, isAlt, isAny,
-    isAtomic, isCat, isChar, isEmpty, isNil, isNot, isRep, isStar,
-    isRange, isToken, matches, nilOrEmpty, simplify, toString} from './Parser';
-import Alt, {IAlt} from './Alt';
-import Any, {IAny} from './Any';
-import Cat, {ICat} from './Cat';
-import Char, {IChar} from './Char';
-import Empty, {IEmpty} from './Empty';
-import Nil, {INil} from './Nil';
-import Not, {INot} from './Not';
-import Range, {IRange} from './Range';
-import Rep, {IRep} from './Rep';
-import Star, {IStar} from './Star';
-import Token, {IToken} from './Token';
-import ForwardingParser, {IForwardingParser} from './ForwardingParser';
-
-export {Alt, IAlt, Any, IAny, Cat, ICat, Char, IChar,
-    Empty, IEmpty, ForwardingParser, IForwardingParser,
-    Nil, INil, Not, INot, Parser, IParser, Range, IRange,
-    Rep, IRep, Star, IStar, Token, IToken,
-    containsEmpty, deriv, equals, height, isAlt, isAny,
+export {
+    Parser, containsEmpty, deriv, equals, height, isAlt, isAny,
     isAtomic, isCat, isChar, isEmpty, isNil, isNot, isRep, isStar,
     isRange, isToken, matches, nilOrEmpty, simplify, toString
-};
+} from './Parser';
+
+export { Alt } from './Alt';
+export { Any } from './Any';
+export { Cat } from './Cat';
+export { Char } from './Char';
+export { Empty } from './Empty';
+export { Nil } from './Nil';
+export { Not } from './Not';
+export { Range } from './Range';
+export { Rep } from './Rep';
+export { Star } from './Star';
+export { Token } from './Token';
+export { ForwardingParser } from './ForwardingParser';

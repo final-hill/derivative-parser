@@ -1,11 +1,14 @@
 /*!
  * @license
- * Copyright (C) 2021 Final Hill LLC
+ * Copyright (C) 2022 Final Hill LLC
  * SPDX-License-Identifier: AGPL-3.0-only
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import { containsEmpty, deriv, height, isCat, isToken, matches, nilOrEmpty, Parser, toString } from './';
+import {
+    containsEmpty, deriv, height, isCat, isToken, matches, nilOrEmpty, Parser,
+    toString
+} from './';
 
 describe('Token', () => {
     const p = new Parser();
@@ -24,8 +27,8 @@ describe('Token', () => {
     });
 
     test('Token[deriv](c)', () => {
-        expect(p.token('foo')[deriv]('x')).toEqual(p.cat(p.nil(),p.token('oo')));
-        expect(p.token('foo')[deriv]('f')).toEqual(p.cat('',p.token('oo')));
+        expect(p.token('foo')[deriv]('x')).toEqual(p.cat(p.nil(), p.token('oo')));
+        expect(p.token('foo')[deriv]('f')).toEqual(p.cat('', p.token('oo')));
     });
 
     test('Token[matches](c)', () => {

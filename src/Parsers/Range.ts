@@ -1,34 +1,29 @@
 /*!
  * @license
- * Copyright (C) 2021 Final Hill LLC
+ * Copyright (C) 2022 Final Hill LLC
  * SPDX-License-Identifier: AGPL-3.0-only
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import {deriv, isRange, nilOrEmpty, Parser, toString} from './';
-import {invariant, override, Contract, Contracted, extend} from '@final-hill/decorator-contracts';
-import { IParser, parserContract } from './Parser';
+import { deriv, isRange, nilOrEmpty, Parser, toString } from './';
+import { invariant, override, Contract, Contracted, extend } from '@final-hill/decorator-contracts';
+import { parserContract } from './Parser';
+
+const rangeContract = new Contract<Range>({
+    [extend]: parserContract,
+    [invariant](self) {
+        return self.from <= self.to &&
+            self.from.length == 1 &&
+            self.to.length == 1;
+    }
+});
 
 /**
  * @inheritdoc
  * [a-b]
  */
-interface IRange extends IParser {
-    readonly from: string;
-    readonly to: string;
-}
-
-const rangeContract = new Contract<IRange> ({
-    [extend]: parserContract,
-    [invariant](self){
-        return self.from <= self.to &&
-               self.from.length == 1 &&
-               self.to.length == 1;
-    }
-});
-
 @Contracted(rangeContract)
-class Range extends Parser implements IRange {
+export default class Range extends Parser {
     #from: string;
     #to: string;
     constructor(from: string, to: string) {
@@ -42,8 +37,8 @@ class Range extends Parser implements IRange {
     @override
     [deriv](c: string): Parser {
         const d = this.from == this.to ? this.char(this.from) :
-                  this.from <= c && c <= this.to ? this.char(c) :
-                  this.nil();
+            this.from <= c && c <= this.to ? this.char(c) :
+                this.nil();
 
         return d[deriv](c);
     }
@@ -53,5 +48,4 @@ class Range extends Parser implements IRange {
     @override [toString](): string { return `[${this.from}-${this.to}]`; }
 }
 
-export default Range;
-export {IRange};
+export { Range };

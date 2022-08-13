@@ -1,11 +1,11 @@
 /*!
  * @license
- * Copyright (C) 2021 Final Hill LLC
+ * Copyright (C) 2022 Final Hill LLC
  * SPDX-License-Identifier: AGPL-3.0-only
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import {deriv, equals, height, isAlt, isEmpty, matches, Parser, toString} from '.';
+import { deriv, equals, height, isAlt, isEmpty, matches, Parser, toString } from '.';
 
 describe('Empty', () => {
     const p = new Parser();

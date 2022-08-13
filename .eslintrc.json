@@ -34,7 +34,9 @@
         ],
         "consistent-return": [
             "error",
-            { "treatUndefinedAsUnspecified": true }
+            {
+                "treatUndefinedAsUnspecified": true
+            }
         ],
         /*
         "@typescript-eslint/naming-convention": ["error",
@@ -247,15 +249,18 @@
         "require-yield": [
             "error"
         ],
-        "require-jsdoc": ["error", {
-            "require": {
-                "FunctionDeclaration": true,
-                "MethodDefinition": false,
-                "ClassDeclaration": false,
-                "ArrowFunctionExpression": false,
-                "FunctionExpression": false
+        "require-jsdoc": [
+            "error",
+            {
+                "require": {
+                    "FunctionDeclaration": true,
+                    "MethodDefinition": false,
+                    "ClassDeclaration": false,
+                    "ArrowFunctionExpression": false,
+                    "FunctionExpression": false
+                }
             }
-        }],
+        ],
         "use-isnan": [
             "error"
         ],
@@ -342,20 +347,33 @@
             "never"
         ],
         "yoda": "off",
-        "valid-jsdoc": ["error", {
-            "requireReturn": false
-        }],
-        "header/header": [2, "block", [
-            "!",
-            " * @license",
-            " * Copyright (C) 2021 Final Hill LLC",
-            " * SPDX-License-Identifier: AGPL-3.0-only",
-            " * @see <https://spdx.org/licenses/AGPL-3.0-only.html>",
-            " "
-        ]]
+        "valid-jsdoc": [
+            "error",
+            {
+                "requireReturn": false
+            }
+        ],
+        "header/header": [
+            2,
+            "block",
+            [
+                "!",
+                " * @license",
+                " * Copyright (C) 2022 Final Hill LLC",
+                " * SPDX-License-Identifier: AGPL-3.0-only",
+                " * @see <https://spdx.org/licenses/AGPL-3.0-only.html>",
+                " "
+            ]
+        ]
     },
     "settings": {
-        "import/parsers": { "@typescript-eslint/parser": [".ts"] },
-        "import/resolver": { "eslint-import-resolver-typescript": true }
+        "import/parsers": {
+            "@typescript-eslint/parser": [
+                ".ts"
+            ]
+        },
+        "import/resolver": {
+            "eslint-import-resolver-typescript": true
+        }
     }
 }

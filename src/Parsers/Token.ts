@@ -1,44 +1,39 @@
 /*!
  * @license
- * Copyright (C) 2021 Final Hill LLC
+ * Copyright (C) 2022 Final Hill LLC
  * SPDX-License-Identifier: AGPL-3.0-only
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import {Parser, IParser, height, containsEmpty, deriv, toString, nilOrEmpty, isToken} from './';
-import { Contract, Contracted, extend, invariant, override} from '@final-hill/decorator-contracts';
+import { Parser, height, containsEmpty, deriv, toString, nilOrEmpty, isToken } from './';
+import { Contract, Contracted, extend, invariant, override } from '@final-hill/decorator-contracts';
 import { parserContract } from './Parser';
 
-/**
- * @inheritdoc
- * "Foo"
- */
-interface IToken extends IParser {
-    readonly value: string;
-}
-
-const tokenContract = new Contract<IToken>({
+const tokenContract = new Contract<Token>({
     [extend]: parserContract,
     [invariant](self) {
         return self.value.length > 0;
     }
 });
 
+/**
+ * @inheritdoc
+ * "Foo"
+ */
 @Contracted(tokenContract)
-class Token extends Parser implements IToken {
+export default class Token extends Parser {
     constructor(readonly value: string) { super(); }
     @override get [height](): number { return 0; }
     @override [containsEmpty](): boolean { return false; }
-    @override [deriv](c: string): IParser {
+    @override [deriv](c: string): Parser {
         const d = this.value.length == 1 ? this.char(this.value)[deriv](c) :
             this.char(this.value[0])[deriv](c).then(this.token(this.value.substring(1)));
 
         return d;
     }
-    @override [isToken](): this is IToken { return true; }
-    @override [nilOrEmpty](): IParser { return this.nil(); }
+    @override [isToken](): this is Token { return true; }
+    @override [nilOrEmpty](): Parser { return this.nil(); }
     @override [toString](): string { return JSON.stringify(this.value); }
 }
 
-export default Token;
-export {IToken};
+export { Token };

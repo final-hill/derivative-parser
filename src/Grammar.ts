@@ -1,27 +1,27 @@
 /*!
  * @license
- * Copyright (C) 2021 Final Hill LLC
+ * Copyright (C) 2022 Final Hill LLC
  * SPDX-License-Identifier: AGPL-3.0-only
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import {Parser, ForwardingParser, matches} from './Parsers';
-import {override} from '@final-hill/decorator-contracts';
+import { Parser, ForwardingParser, matches } from './Parsers';
+import { override } from '@final-hill/decorator-contracts';
 
 /**
  * The Grammar class represents
  */
-class Grammar extends Parser {
+export default class Grammar extends Parser {
     protected handler: ProxyHandler<Record<PropertyKey, unknown>> = {
         get(target, propertyKey, receiver) {
             const value = Reflect.get(target, propertyKey, receiver);
             // TODO: require naming convention to prevent conflict
             // with non-parser methods?
-            if(typeof value == 'function' &&
-               propertyKey !== 'toString' &&
-               propertyKey !== 'matches'
+            if (typeof value == 'function' &&
+                propertyKey !== 'toString' &&
+                propertyKey !== 'matches'
             ) {
-                return (...args: any[]) => new ForwardingParser(receiver,value,args);
+                return (...args: any[]) => new ForwardingParser(receiver, value, args);
             } else {
                 return value;
             }
@@ -51,4 +51,4 @@ class Grammar extends Parser {
     }
 }
 
-export default Grammar;
+export { Grammar };

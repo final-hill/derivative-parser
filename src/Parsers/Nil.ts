@@ -1,41 +1,37 @@
 /*!
  * @license
- * Copyright (C) 2021 Final Hill LLC
+ * Copyright (C) 2022 Final Hill LLC
  * SPDX-License-Identifier: AGPL-3.0-only
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import {deriv, equals, height, IParser, isAtomic, isNil, nilOrEmpty, Parser, toString} from './';
-import {override} from '@final-hill/decorator-contracts';
+import { deriv, equals, height, isAtomic, isNil, nilOrEmpty, Parser, toString } from './';
+import { override } from '@final-hill/decorator-contracts';
 
 /**
  * @inheritdoc
  * The Nil Parser ∅. Matches nothing.
  * ∅ = {}
  */
-interface INil extends IParser {
+export default class Nil extends Parser {
+    @override get [height](): number { return 0; }
     /**
+     * @override
      * @inheritdoc
      * Dc(∅) = ∅
      */
-    [deriv](c: string): IParser;
+    // @ts-ignore: Unused variable
+    @override [deriv](c: string): Parser { return this; }
+    @override [equals](other: Parser): boolean { return other[isNil](); }
+    @override [isAtomic](): boolean { return true; }
+    @override [isNil](): this is Nil { return true; }
     /**
+     * @override
      * @inheritdoc
      * δ(∅) = ∅
      */
-    [nilOrEmpty](): INil;
-}
-
-class Nil extends Parser implements INil {
-    @override get [height](): number { return 0; }
-    // @ts-ignore: Unused variable
-    @override [deriv](c: string): IParser { return this; }
-    @override [equals](other: IParser): boolean { return other[isNil](); }
-    @override [isAtomic](): boolean { return true; }
-    @override [isNil](): this is INil { return true; }
-    @override [nilOrEmpty](): INil { return this; }
+    @override [nilOrEmpty](): Nil { return this; }
     @override [toString](): string { return '∅'; }
 }
 
-export default Nil;
-export {INil};
+export { Nil };

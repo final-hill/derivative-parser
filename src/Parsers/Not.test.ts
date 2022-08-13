@@ -1,11 +1,11 @@
 /*!
  * @license
- * Copyright (C) 2021 Final Hill LLC
+ * Copyright (C) 2022 Final Hill LLC
  * SPDX-License-Identifier: AGPL-3.0-only
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import {containsEmpty, deriv, equals, height, matches, nilOrEmpty, Parser, simplify, toString} from './';
+import { containsEmpty, deriv, equals, height, matches, nilOrEmpty, Parser, simplify, toString } from './';
 
 describe('Not', () => {
     const p = new Parser();
@@ -34,8 +34,8 @@ describe('Not', () => {
 
     test('Not[equals]()', () => {
         const notA = p.char('a').not(),
-              notA2 = p.char('a').not(),
-              notB = p.char('b').not();
+            notA2 = p.char('a').not(),
+            notB = p.char('b').not();
 
         expect(notA[equals](notA)).toEqual(true);
         expect(notA[equals](notA2)).toEqual(true);
