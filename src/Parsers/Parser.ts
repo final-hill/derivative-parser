@@ -84,7 +84,7 @@ export default class Parser {
     [matches](text: string): boolean {
         return text.length == 0 ?
             this[containsEmpty]() :
-            this[deriv](text[0])[matches](text.substr(1));
+            this[deriv](text[0])[matches](text.substring(1));
     }
     /**
      * Represents the union of two parsers
@@ -160,7 +160,7 @@ export default class Parser {
      */
     // TODO: switch to abstract?
     [equals](other: Parser): boolean {
-        return other.toString() === '∅' && !other[isNil]();
+        return other[toString]() === '∅' && !other[isNil]();
     }
     /**
      * Determine if the current expression is an instance of an Alt parser

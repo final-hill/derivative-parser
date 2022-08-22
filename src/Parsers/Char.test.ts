@@ -6,10 +6,18 @@
  */
 
 import { AssertionError } from '@final-hill/decorator-contracts';
-import { deriv, matches, Parser, toString } from './';
+import { Char, deriv, height, matches, Parser, toString, value } from './';
 
 describe('Char', () => {
     const p = new Parser();
+
+    test('Construct Char', () => {
+        const c = p.char('a');
+
+        expect(c).toBeInstanceOf(Char);
+        expect(c[value]).toBe('a');
+        expect(c[height]).toBe(0);
+    });
 
     test('Char[toString]()', () => {
         expect(p.char('a')[toString]()).toBe('\'a\'');

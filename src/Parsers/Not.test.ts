@@ -19,7 +19,7 @@ describe('Not', () => {
         expect(
             p.char('a').not()[deriv]('a')[toString]()
         ).toEqual(
-            p.empty().not().toString()
+            p.empty().not()[toString]()
         );
         expect(
             p.char('a').not()[deriv]('b')[toString]()

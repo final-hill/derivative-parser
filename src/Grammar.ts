@@ -15,16 +15,10 @@ export default class Grammar extends Parser {
     protected handler: ProxyHandler<Record<PropertyKey, unknown>> = {
         get(target, propertyKey, receiver) {
             const value = Reflect.get(target, propertyKey, receiver);
-            // TODO: require naming convention to prevent conflict
-            // with non-parser methods?
-            if (typeof value == 'function' &&
-                propertyKey !== 'toString' &&
-                propertyKey !== 'matches'
-            ) {
-                return (...args: any[]) => new ForwardingParser(receiver, value, args);
-            } else {
-                return value;
-            }
+
+            return typeof value == 'function' ?
+                (...args: any[]) => new ForwardingParser(receiver, value, args)
+                : value;
         }
     };
 

@@ -6,12 +6,14 @@
  */
 
 import { deriv, equals, height, isAtomic, isChar, nilOrEmpty, Parser, toString } from './';
-import { override, invariant, Contract, Contracted, extend } from '@final-hill/decorator-contracts';
+import { override, Contract, extend, Contracted, invariant } from '@final-hill/decorator-contracts';
 import { parserContract } from './Parser';
+
+export const value = Symbol('value');
 
 const charContract = new Contract<Char>({
     [extend]: parserContract,
-    [invariant](self) { return self.value.length == 1; }
+    [invariant](self: Char) { return self[value].length == 1; }
 });
 
 /**
@@ -24,20 +26,24 @@ const charContract = new Contract<Char>({
 @Contracted(charContract)
 export default class Char extends Parser {
     #value: string;
-    constructor(value: string) { super(); this.#value = value; }
+    constructor(value: string) {
+        super();
+
+        this.#value = value;
+    }
     @override get [height](): number { return 0; }
     /**
-     * The character value of the parser. Has a length of 1
+     * The character value of the parser
      */
-    get value(): string { return this.#value; }
+    get [value](): string { return this.#value; }
     /**
      * @override
      * @inheritdoc
      * Dc(c) = ε
      * Dc(c') = ∅
      */
-    @override [deriv](c: string): Parser { return c === this.value ? this.empty() : this.nil(); }
-    @override [equals](other: Parser): boolean { return other[isChar]() && this.value === (other as Char).value; }
+    @override [deriv](c: string): Parser { return c === this[value] ? this.empty() : this.nil(); }
+    @override [equals](other: Parser): boolean { return other[isChar]() && this[value] === (other as Char)[value]; }
     @override [isAtomic](): boolean { return true; }
     @override [isChar](): this is Char { return true; }
     /**
@@ -46,7 +52,7 @@ export default class Char extends Parser {
      * δ(c) = ∅
      */
     @override [nilOrEmpty](): Parser { return this.nil(); }
-    @override [toString](): string { return `'${this.value}'`; }
+    @override [toString](): string { return `'${this[value]}'`; }
 }
 
 export { Char };

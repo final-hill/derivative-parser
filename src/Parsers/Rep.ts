@@ -23,11 +23,20 @@ const repContract = new Contract<Rep>({
  */
 @Contracted(repContract)
 export default class Rep extends Parser {
-    constructor(
-        readonly parser: Parser,
-        readonly n: number,
-    ) { super(); }
+    #parser: Parser;
+    #n: number;
+
+    constructor(parser: Parser, n: number,) {
+        super();
+        this.#n = n;
+        this.#parser = parser;
+    }
+
     @override get [height](): number { return 1 + this.parser[height]; }
+
+    get parser(): Parser { return this.#parser; }
+    get n(): number { return this.#n; }
+
     @override [containsEmpty](): boolean { return this.n === 0 || this.parser[containsEmpty](); }
     /**
      * @override
@@ -50,7 +59,7 @@ export default class Rep extends Parser {
     @override [nilOrEmpty](): Parser {
         return this.n === 0 ? this.empty() : this.parser[nilOrEmpty]();
     }
-    @override [toString](): string { return `${this.parser}{${this.n}}`; }
+    @override [toString](): string { return `${this.parser[toString]()}{${this.n}}`; }
 }
 
 export { Rep };

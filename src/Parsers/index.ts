@@ -14,7 +14,7 @@ export {
 export { Alt } from './Alt';
 export { Any } from './Any';
 export { Cat } from './Cat';
-export { Char } from './Char';
+export { Char, value } from './Char';
 export { Empty } from './Empty';
 export { Nil } from './Nil';
 export { Not } from './Not';

@@ -71,8 +71,8 @@ export default class Cat extends Parser {
                         this;
     }
     @override [toString](): string {
-        const fst = this.first[isAtomic]() ? `${this.first}` : `(${this.first})`,
-            snd = this.second[isAtomic]() ? `${this.second}` : `(${this.second})`;
+        const fst = this.first[isAtomic]() ? this.first[toString]() : `(${this.first[toString]()})`,
+            snd = this.second[isAtomic]() ? this.second[toString]() : `(${this.second[toString]()})`;
 
         return `${fst}${snd}`;
     }

@@ -76,8 +76,8 @@ export default class Alt extends Parser {
         return new Alt(left, right);
     }
     @override [toString](): string {
-        const leftString = this.left[isAtomic]() ? `${this.left}` : `(${this.left})`,
-            rightString = this.right[isAtomic]() ? `${this.right}` : `(${this.right})`;
+        const leftString = this.left[isAtomic]() ? this.left[toString]() : `(${this.left[toString]()})`,
+            rightString = this.right[isAtomic]() ? this.right[toString]() : `(${this.right[toString]()})`;
 
         return `${leftString}|${rightString}`;
     }

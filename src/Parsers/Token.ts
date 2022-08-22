@@ -22,8 +22,17 @@ const tokenContract = new Contract<Token>({
  */
 @Contracted(tokenContract)
 export default class Token extends Parser {
-    constructor(readonly value: string) { super(); }
+    #value: string;
+
+    constructor(value: string) {
+        super();
+        this.#value = value;
+    }
+
     @override get [height](): number { return 0; }
+
+    get value(): string { return this.#value; }
+
     @override [containsEmpty](): boolean { return false; }
     @override [deriv](c: string): Parser {
         const d = this.value.length == 1 ? this.char(this.value)[deriv](c) :

@@ -17,7 +17,7 @@ describe('Nil', () => {
         expect(p.nil()[matches]('')).toBe(false);
         expect(p.nil()[matches]('a')).toBe(false);
     });
-    test('Nil.toString()', () => {
+    test('Nil[toString]()', () => {
         expect(p.nil()[toString]()).toBe('∅');
     });
 });

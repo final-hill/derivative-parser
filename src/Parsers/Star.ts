@@ -16,9 +16,17 @@ import { override } from '@final-hill/decorator-contracts';
  * L*
  */
 export default class Star extends Parser {
-    constructor(readonly parser: Parser) { super(); }
+    #parser: Parser;
+
+    constructor(parser: Parser) {
+        super();
+        this.#parser = parser;
+    }
 
     @override get [height](): number { return 1 + this.parser[height]; }
+
+    get parser(): Parser { return this.#parser; }
+
     @override [containsEmpty](): boolean { return true; }
     /**
      * @override
@@ -53,7 +61,7 @@ export default class Star extends Parser {
         return this;
     }
     @override [toString](): string {
-        return this.parser[isAtomic]() ? `${this.parser}*` : `(${this.parser})*`;
+        return this.parser[isAtomic]() ? `${this.parser[toString]()}*` : `(${this.parser[toString]()})*`;
     }
 }
 
