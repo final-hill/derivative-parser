@@ -294,9 +294,9 @@ export default class Parser {
      * @returns {Cat} The Cat parser
     */
     then(...parsers: (Parser | string)[]): Cat {
-        if (parsers.length == 0) {
+        if (parsers.length == 0)
             return new Cat(this, this.nil());
-        } else {
+         else {
             const q = parsers.map(p =>
                 p instanceof Parser ? p :
                     (p as string).length == 0 ? this.empty() :

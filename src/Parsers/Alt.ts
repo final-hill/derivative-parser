@@ -57,21 +57,21 @@ export default class Alt extends Parser {
         let left = this.left[simplify](),
             right = this.right[simplify]();
 
-        if (left[isAlt]()) {
+        if (left[isAlt]())
             [left, right] = [(left as Alt).left, new Alt((left as Alt).right, right)];
-        }
 
-        if (left[height] > right[height]) {
+
+        if (left[height] > right[height])
             [left, right] = [right, left];
-        }
 
-        if (left[equals](right)) {
+
+        if (left[equals](right))
             return left;
-        } else if (left[isNil]()) {
+         else if (left[isNil]())
             return right;
-        } else if (right[isNil]()) {
+         else if (right[isNil]())
             return left;
-        }
+
 
         return new Alt(left, right);
     }

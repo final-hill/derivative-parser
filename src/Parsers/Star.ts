@@ -53,10 +53,10 @@ export default class Star extends Parser {
      */
     @override [simplify](): Parser {
         const p = this.parser;
-        if (p[isStar]()) { return p; }
-        if (p[isNil]()) { return this.empty(); }
+        if (p[isStar]())  return p;
+        if (p[isNil]())  return this.empty();
         // FIXME: cast required due to TypeScript 3.4.5 inference bug?
-        if ((p as Parser)[isEmpty]()) { return this.empty(); }
+        if ((p as Parser)[isEmpty]())  return this.empty();
 
         return this;
     }
