@@ -5,7 +5,7 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import { deriv, matches, Parser, toString } from '.';
+import { deriv, matches, Parser, toString } from '../Parsers';
 
 describe('Nil', () => {
     const p = new Parser();
