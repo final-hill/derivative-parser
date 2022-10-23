@@ -5,7 +5,7 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import { containsEmpty, deriv, equals, height, matches, nilOrEmpty, Parser, simplify, toString } from '../Parsers';
+import { containsEmpty, deriv, equals, height, matches, nilOrEmpty, Parser, simplify, toString } from '..';
 
 describe('Not', () => {
     const p = new Parser();
@@ -28,8 +28,8 @@ describe('Not', () => {
         );
     });
 
-    test('Not[height]', () => {
-        expect(p.char('a').not()[height]).toBe(1);
+    test('Not[height]()', () => {
+        expect(p.char('a').not()[height]()).toBe(1);
     });
 
     test('Not[equals]()', () => {

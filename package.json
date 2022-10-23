@@ -73,9 +73,5 @@
     },
     "files": [
         "dist"
-    ],
-    "dependencies": {
-        "@final-hill/class-tools": "^1.2.3",
-        "@final-hill/decorator-contracts": "^0.24.1"
-    }
+    ]
 }

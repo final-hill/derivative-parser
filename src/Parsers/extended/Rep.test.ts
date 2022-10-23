@@ -5,7 +5,7 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import { deriv, equals, height, isRep, matches, nilOrEmpty, Parser, toString } from '../Parsers';
+import { deriv, equals, height, isRep, matches, nilOrEmpty, Parser, toString } from '..';
 
 describe('Rep', () => {
     const p = new Parser(),
@@ -16,7 +16,7 @@ describe('Rep', () => {
         expect(c.rep(0)[deriv]('a')).toEqual(p.nil());
     });
 
-    test('rep[equals]', () => {
+    test('Rep[equals]', () => {
         const q = c.rep(2),
             r = c.rep(3);
         expect(q[equals](q)).toBe(true);
@@ -24,9 +24,9 @@ describe('Rep', () => {
         expect(q[equals](r)).toBe(false);
     });
 
-    test('Rep[height]', () => {
-        expect(c.rep(2)[height]).toBe(1);
-        expect(p.alt('a', 'b').rep(5)[height]).toBe(2);
+    test('Rep[height]()', () => {
+        expect(c.rep(2)[height]()).toBe(1);
+        expect(p.alt('a', 'b').rep(5)[height]()).toBe(2);
     });
 
     test('Rep[isRep]', () => {

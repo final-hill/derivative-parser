@@ -6,26 +6,25 @@
  */
 
 import { Parser, ForwardingParser, matches } from './Parsers';
-import { override } from '@final-hill/decorator-contracts';
+
+const handler: ProxyHandler<any> = {
+    get(target, propertyKey, receiver) {
+        const value = Reflect.get(target, propertyKey, receiver);
+
+        return typeof propertyKey != 'symbol' && propertyKey != 'constructor' && typeof value == 'function' ?
+            (...args: any[]) => new ForwardingParser(receiver, value, args)
+            : value;
+    }
+};
 
 /**
  * The Grammar class represents
  */
 export default class Grammar extends Parser {
-    protected handler: ProxyHandler<Record<PropertyKey, unknown>> = {
-        get(target, propertyKey, receiver) {
-            const value = Reflect.get(target, propertyKey, receiver);
-
-            return typeof value == 'function' ?
-                (...args: any[]) => new ForwardingParser(receiver, value, args)
-                : value;
-        }
-    };
-
     constructor() {
         super();
 
-        return new Proxy(this, this.handler as any);
+        return new Proxy(this, handler);
     }
 
     /**
@@ -36,13 +35,12 @@ export default class Grammar extends Parser {
      * @returns {boolean} - The result of the test
      * @throws - If text is not a string
      */
-    @override
     [matches](text: string): boolean {
-        const ruleNames = Object.getOwnPropertySymbols(Object.getPrototypeOf(this)),
-            entryPoint: Parser = ruleNames.length == 0 ? this.nil() : (this as any)[ruleNames[0]].apply(this);
+        const rules = Object.entries<() => Parser>(Object.getPrototypeOf(this)),
+            entryPoint = rules.length == 0 ? this.nil() : rules[0][1].apply(this);
 
         return entryPoint[matches](text);
     }
 }
 
-export { Grammar };
+export { Grammar, matches };

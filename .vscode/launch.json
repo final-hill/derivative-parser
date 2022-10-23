@@ -34,11 +34,12 @@
             "runtimeExecutable": "npm",
             "console": "integratedTerminal",
             "skipFiles": [
-                "<node_internals>/**"
+                "<node_internals>/**",
+                "**/node_modules/**"
             ],
             "resolveSourceMapLocations": [
-                "${workspaceFolder}/**"
-                //"!**/node_modules/**"
+                "${workspaceFolder}/**",
+                "!**/node_modules/**"
             ],
             "sourceMaps": true
         }

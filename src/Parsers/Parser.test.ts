@@ -9,7 +9,7 @@ import {
     deriv, equals, height, isAlt, isAny, isAtomic, isCat, isChar, isEmpty,
     isNil, isNot, isRange, isRep, isStar, isToken, nilOrEmpty, Parser,
     simplify, toString
-} from '../Parsers';
+} from '.';
 
 describe('Parser', () => {
     const p = new Parser();
@@ -18,8 +18,12 @@ describe('Parser', () => {
         expect(p[deriv]('a')).toEqual(p.nil());
     });
 
-    test('Parser[height]', () => {
-        expect(p[height]).toBe(0);
+    test('Parser[height]()', () => {
+        expect(p[height]()).toBe(0);
+    });
+
+    test('Parser[deriv]', () => {
+        expect(p[deriv]('x')).toBe(p.nil());
     });
 
     test('Parser[equals]', () => {

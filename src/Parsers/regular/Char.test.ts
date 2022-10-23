@@ -5,8 +5,8 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import { AssertionError } from '@final-hill/decorator-contracts';
-import { Char, deriv, height, matches, Parser, toString, value } from '../Parsers';
+import { Char, deriv, height, matches, Parser, toString } from '..';
+import { value } from './Char';
 
 describe('Char', () => {
     const p = new Parser();
@@ -15,15 +15,15 @@ describe('Char', () => {
         const c = p.char('a');
 
         expect(c).toBeInstanceOf(Char);
-        expect(c[value]).toBe('a');
-        expect(c[height]).toBe(0);
+        expect(c[value]()).toBe('a');
+    });
+
+    test('Char[height]()', () => {
+        expect(p.char('a')[height]()).toBe(0);
     });
 
     test('Char[toString]()', () => {
         expect(p.char('a')[toString]()).toBe('\'a\'');
-        expect(() => {
-            p.char('abc');
-        }).toThrow(AssertionError);
     });
 
     test('Char[deriv](c)', () => {

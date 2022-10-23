@@ -8,7 +8,7 @@
 import {
     containsEmpty, deriv, equals, height, isStar, matches, nilOrEmpty, Parser,
     simplify, toString
-} from '../Parsers';
+} from '..';
 
 describe('Star', () => {
     const p = new Parser();
@@ -31,9 +31,9 @@ describe('Star', () => {
         expect(p.char('a').star()[equals](p.char('s'))).toBe(false);
     });
 
-    test('Star[height]', () => {
-        expect(p.char('a').star()[height]).toBe(1);
-        expect(p.alt('a', p.alt('b', 'c')).star()[height]).toBe(3);
+    test('Star[height]()', () => {
+        expect(p.char('a').star()[height]()).toBe(1);
+        expect(p.alt('a', p.alt('b', 'c')).star()[height]()).toBe(3);
     });
 
     test('Star[isStar]', () => {

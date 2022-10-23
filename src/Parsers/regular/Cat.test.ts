@@ -5,7 +5,7 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import { deriv, equals, height, isCat, matches, nilOrEmpty, Parser, simplify, toString } from '../Parsers';
+import { deriv, equals, height, isCat, matches, nilOrEmpty, Parser, simplify, toString } from '..';
 
 describe('Cat', () => {
     const p = new Parser();
@@ -28,9 +28,9 @@ describe('Cat', () => {
         expect(p.cat('a', 'b')[equals](p.cat('b', 'a'))).toBe(false);
     });
 
-    test('Cat[height]', () => {
-        expect(p.cat('a', 'b')[height]).toBe(1);
-        expect(p.cat('a', p.cat('b', 'c'))[height]).toBe(2);
+    test('Cat[height]()', () => {
+        expect(p.cat('a', 'b')[height]()).toBe(1);
+        expect(p.cat('a', p.cat('b', 'c'))[height]()).toBe(2);
     });
 
     test('Cat[isCat]', () => {

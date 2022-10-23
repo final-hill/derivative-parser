@@ -5,10 +5,14 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import { deriv, matches, Parser, toString } from '../Parsers';
+import { deriv, height, matches, Parser, toString } from '..';
 
 describe('Nil', () => {
     const p = new Parser();
+
+    test('Nil[height]()', () => {
+        expect(p.nil()[height]()).toBe(0);
+    });
 
     test('Nil.deriv(c)', () => {
         expect(p.nil()[deriv]('a')).toEqual(p.nil());

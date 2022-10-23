@@ -5,11 +5,9 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import { Contract, Contracted } from '@final-hill/decorator-contracts';
-import { memo } from '@final-hill/class-tools';
-import { Alt, Any, Cat, Char, Empty, Nil, Star, Range, Token, Not, Rep } from './';
+import { Alt, Any, ANY, Cat, Char, Empty, EMPTY, Nil, NIL, Star, Range, Token, Not, Rep } from './';
 
-const containsEmpty = Symbol('containsEmpty'),
+export const containsEmpty = Symbol('containsEmpty'),
     deriv = Symbol('deriv'),
     equals = Symbol('equals'),
     height = Symbol('height'),
@@ -28,21 +26,16 @@ const containsEmpty = Symbol('containsEmpty'),
     matches = Symbol('matches'),
     nilOrEmpty = Symbol('nilOrEmpty'),
     simplify = Symbol('simplify'),
-    toString = Symbol('toString'),
+    toString = Symbol('toString');
 
-    parserContract = new Contract<Parser>({
-        [deriv]: {
-            demands(_, c) { return c.length == 1; }
-        }
-    });
-
-@Contracted(parserContract)
-export default class Parser {
+export class Parser {
     /**
      * The height of the expression tree. This is used for simplification.
      * @see this.simplify()
+     * @returns {number} The height
      */
-    get [height](): number { return 0; }
+    [height](): number { return 0; }
+
     /**
      * The parser for a single character. A wildcard.
      * '.'
@@ -50,19 +43,22 @@ export default class Parser {
      * @see Any
      * @returns {Any} The Any parser
      */
-    @memo any(): Any { return new Any(); }
+    any(): Any { return ANY; }
+
     /**
      * Represents the Empty parser which parses the empty string
      * ε = {""}
      * @returns {Empty} The Empty parser
      */
-    @memo empty(): Empty { return new Empty(); }
+    empty(): Empty { return EMPTY; }
+
     /**
      * Represents the Nil Parser. Parses a language with no members.
      * ∅ = {}
      * @returns {Nil} The Nil parser
      */
-    @memo nil(): Nil { return new Nil(); }
+    nil(): Nil { return NIL; }
+
     /**
      * Computes the derivative of a regular language with respect to a character c.
      * The derivative is a new language where all strings that start with the character
@@ -73,7 +69,10 @@ export default class Parser {
      * @returns {Parser} The derivative of the parser
      */
     // @ts-ignore: unused variable
-    [deriv](c: string): Parser { return this.nil(); }
+    [deriv](c: AsciiChar): Parser {
+        return this.nil();
+    }
+
     /**
      * Determines if the provided text matches the current expression
      *
@@ -84,8 +83,9 @@ export default class Parser {
     [matches](text: string): boolean {
         return text.length == 0 ?
             this[containsEmpty]() :
-            this[deriv](text[0])[matches](text.substring(1));
+            this[deriv](text[0] as AsciiChar)[matches](text.substring(1));
     }
+
     /**
      * Represents the union of two parsers
      * P1 ∪ P2
@@ -96,12 +96,13 @@ export default class Parser {
      */
     or(parser: Parser | string): Alt {
         const q = parser instanceof Parser ? parser :
-            (parser as string).length == 0 ? this.empty() :
-                (parser as string).length == 1 ? this.char(parser as string) :
-                    this.token(parser as string);
+            parser.length == 0 ? this.empty() :
+                parser.length == 1 ? this.char(parser as AsciiChar) :
+                    this.token(parser);
 
         return new Alt(this, q);
     }
+
     /**
      * Returns a new parser which is the combination of multiple parsers
      * P1 | P2 | ... | Pn
@@ -113,11 +114,12 @@ export default class Parser {
         return parsers.length == 0 ? this.empty() :
             parsers.map(p =>
                 p instanceof Parser ? p :
-                    (p as string).length == 0 ? this.empty() :
-                        (p as string).length == 1 ? this.char(p as string) :
-                            this.token(p as string)
+                    p.length == 0 ? this.empty() :
+                        p.length == 1 ? this.char(p as AsciiChar) :
+                            this.token(p)
             ).reduce((sum, next) => new Alt(sum, next));
     }
+
     /**
      * The concatenation of multiple parsers
      * P1◦P2◦...◦Pn
@@ -129,99 +131,114 @@ export default class Parser {
         return parsers.length == 0 ? this.empty() :
             parsers.map(p =>
                 p instanceof Parser ? p :
-                    (p as string).length == 0 ? this.empty() :
-                        (p as string).length == 1 ? this.char(p as string) :
-                            this.token(p as string)
+                    p.length == 0 ? this.empty() :
+                        p.length == 1 ? this.char(p as AsciiChar) :
+                            this.token(p)
             ).reduce((sum, next) => new Cat(sum, next));
     }
+
     /**
      * Represents the parser of a single character
      * c = {...,'a','b',...}
      *
      * @see Char
-     * @param {string} value - A character
+     * @param {AsciiChar} value - A character
      * @throws Throws an error if the provided string is not length == 1
      * @returns {Char} - The Char Parser
      */
-    char(value: string): Char {
+    char(value: AsciiChar): Char {
         return new Char(value);
     }
+
     /**
      * Determines if the current language contains Empty
      *
      * @returns {boolean} The result of the test
      */
     [containsEmpty](): boolean { return false; }
+
     /**
      * Determines if the current Parser is equal the provided one
      *
      * @param {Parser} other The parser to compare with
      * @returns {boolean} The result of the test
      */
-    // TODO: switch to abstract?
     [equals](other: Parser): boolean {
-        return other[toString]() === '∅' && !other[isNil]();
+        return other === this;
     }
+
     /**
      * Determine if the current expression is an instance of an Alt parser
      * @returns {boolean} The result
      */
     [isAlt](): this is Alt { return false; }
+
     /**
      * Determine if the current expressions is an instance of the Any parser
      * @returns {boolean} The result
      */
     [isAny](): this is Any { return false; }
+
     /**
      * Determine if the current expression is an instance of Char | Empty | Nil
      * @returns {boolean} The result of the test
      */
     [isAtomic](): boolean { return false; }
+
     /**
      * Determine if the current expression is an instance of the Cat parser
      * @returns {boolean} The result
      */
     [isCat](): this is Cat { return false; }
+
     /**
      * Determine if the current expression is an instance of the Char parser
      * @returns {boolean} The result
      */
     [isChar](): this is Char { return false; }
+
     /**
      * Determine if the current expression is an instance of the Empty parser
      * @returns {boolean} The result
      */
     [isEmpty](): this is Empty { return false; }
+
     /**
      * Determine if the current expression is an instance of the Nil parser
      * @returns {boolean} The result
      */
     [isNil](): this is Nil { return false; }
+
     /**
      * Determines if the current expression is an instance of the Not parser
      * @returns {boolean} The result
      */
     [isNot](): this is Not { return false; }
+
     /**
      * Determines if the current expression is an instance of the Rep parser
      * @returns {boolean} The result
      */
     [isRep](): this is Rep { return false; }
+
     /**
      * Determine if the current expression is an instance of the Star parser
      * @returns {boolean} The result
      */
     [isStar](): this is Star { return false; }
+
     /**
      * Determine if the current expression is an instance of the Range parser
      * @returns {boolean} The result
      */
     [isRange](): this is Range { return false; }
+
     /**
      * Determine if the current expression is an instance of the Token parser
      * @returns {boolean} The result
      */
     [isToken](): this is Token { return false; }
+
     /**
      * Returns Nil or Empty depending on whether Empty
      * exists in the current expression.
@@ -232,6 +249,7 @@ export default class Parser {
      * @returns {Parser} The Nil or Empty parser
      */
     [nilOrEmpty](): Nil | Empty { return this.nil(); }
+
     /**
      * The complement parser.
      * Parses anything that is not the current parser
@@ -239,6 +257,7 @@ export default class Parser {
      * @returns {Not} The Not Parser
      */
     not(): Not { return new Not(this); }
+
     /**
      * The Opt parser.
      * P?
@@ -246,6 +265,7 @@ export default class Parser {
      * @returns {Alt} The Alt parser
      */
     opt(): Alt { return this.or(this.empty()); }
+
     /**
      * The Plus parser. Matches the current pattern one or more times
      * P+
@@ -253,21 +273,24 @@ export default class Parser {
      * @returns {Cat} The Cat parser
      */
     plus(): Cat { return this.then(this.star()); }
+
     /**
      * [a-b]
-     * @param {string} from The starting character
-     * @param {string} to The ending character
-     * @throws {AssertionError} Throws if 'from' is not less than or equal to 'to'
+     * @param {AsciiChar} from The starting character
+     * @param {AsciiChar} to The ending character
+     * @throws {Error} Throws if 'from' is not less than or equal to 'to'
      * @returns {Range} The Range parser
      */
-    range(from: string, to: string): Range { return new Range(from, to); }
+    range(from: AsciiChar, to: AsciiChar): Range { return new Range(from, to); }
+
     /**
      *
      * @param {number} [n] The number of repetitions
-     * @throws {AssertionError} Throws if n < 0 or n is not an integer
+     * @throws {Error} Throws if n < 0 or n is not an integer
      * @returns {Rep} The Rep parser
      */
     rep(n: number): Rep { return new Rep(this, n); }
+
     /**
      * Converts the current Parser to simplest form possible
      * Where 'simplify' is defined as minimizing the height of the expression tree.
@@ -277,6 +300,7 @@ export default class Parser {
      * @returns {Parser} The simplified parser
      */
     [simplify](): Parser { return this; }
+
     /**
      * Represents the Kleene star of the current parser
      * P*
@@ -284,6 +308,7 @@ export default class Parser {
      * @returns {Star} The Star Parser
      */
     star(): Star { return new Star(this); }
+
     /**
      * Returns the concatenation of the current parser with
      * one or more additional parsers
@@ -296,23 +321,25 @@ export default class Parser {
     then(...parsers: (Parser | string)[]): Cat {
         if (parsers.length == 0)
             return new Cat(this, this.nil());
-         else {
+        else {
             const q = parsers.map(p =>
                 p instanceof Parser ? p :
-                    (p as string).length == 0 ? this.empty() :
-                        (p as string).length == 1 ? this.char(p as string) :
+                    p.length == 0 ? this.empty() :
+                        p.length == 1 ? this.char(p as AsciiChar) :
                             this.token(p as string)
             );
 
             return new Cat(this, q.reduce((sum, next) => new Cat(sum, next)));
         }
     }
+
     /**
      * "Foo"
      * @param {string} value The string representing the token
      * @returns {Token} The Token parser
      */
     token(value: string): Token { return new Token(value); }
+
     /**
      * Returns a string representation of the expression
      *
@@ -320,9 +347,3 @@ export default class Parser {
      */
     [toString](): string { return '∅'; }
 }
-
-export {
-    Parser, containsEmpty, deriv, equals, height, isAlt, isAny,
-    isAtomic, isCat, isChar, isEmpty, isNil, isNot, isRep, isStar,
-    isRange, isToken, matches, nilOrEmpty, parserContract, simplify, toString
-};

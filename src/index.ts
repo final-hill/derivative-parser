@@ -5,4 +5,4 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-export { Grammar } from './Grammar';
+export { Grammar, matches } from './Grammar';

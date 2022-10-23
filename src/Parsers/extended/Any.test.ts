@@ -5,13 +5,13 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import { deriv, equals, height, isAny, isAtomic, matches, Parser, toString } from '../Parsers';
+import { deriv, equals, height, isAny, isAtomic, matches, Parser, toString } from '..';
 
 describe('Any', () => {
     const p = new Parser();
 
-    test('Any[height]', () => {
-        expect(p.any()[height]).toBe(0);
+    test('Any[height]()', () => {
+        expect(p.any()[height]()).toBe(0);
     });
 
     test('Any[deriv](c)', () => {

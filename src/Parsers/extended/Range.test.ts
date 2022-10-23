@@ -5,7 +5,7 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import { deriv, isRange, matches, nilOrEmpty, Parser, toString } from '../Parsers';
+import { deriv, isRange, matches, nilOrEmpty, Parser, toString } from '..';
 
 describe('Range', () => {
     const p = new Parser(),

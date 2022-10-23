@@ -5,17 +5,17 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import { deriv, equals, height, isAlt, matches, nilOrEmpty, Parser, simplify, toString } from '../Parsers';
+import { deriv, equals, height, isAlt, matches, nilOrEmpty, Parser, simplify, toString } from '..';
 
 describe('Alt', () => {
     const p = new Parser();
 
-    test('Alt[height]', () => {
+    test('Alt[height]()', () => {
         const a = p.alt('a', 'b'),
             b = p.alt('a', p.alt('b', 'c'));
 
-        expect(a[height]).toBe(1);
-        expect(b[height]).toBe(2);
+        expect(a[height]()).toBe(1);
+        expect(b[height]()).toBe(2);
     });
 
     test('Alt[deriv](c)', () => {

@@ -8,7 +8,7 @@
 import {
     containsEmpty, deriv, height, isCat, isToken, matches, nilOrEmpty, Parser,
     toString
-} from '../Parsers';
+} from '..';
 
 describe('Token', () => {
     const p = new Parser();
@@ -17,8 +17,8 @@ describe('Token', () => {
         expect(p.token('foo')[containsEmpty]()).toBe(false);
     });
 
-    test('Token[height]', () => {
-        expect(p.token('foo')[height]).toBe(0);
+    test('Token[height]()', () => {
+        expect(p.token('foo')[height]()).toBe(0);
     });
 
     test('Token[isToken]', () => {
