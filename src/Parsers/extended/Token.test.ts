@@ -6,12 +6,26 @@
  */
 
 import {
-    containsEmpty, deriv, height, isCat, isToken, matches, nilOrEmpty, Parser,
-    toString
+    containsEmpty, deriv, equals, height, isCat, isToken, matches,
+    nilOrEmpty, Parser, toString
 } from '..';
+import { value } from './Token';
 
 describe('Token', () => {
     const p = new Parser();
+
+    test('Token[ctor]', () => {
+        expect(p.token('foo')).toEqual(p.token('foo'));
+    });
+
+    test('Token[equals]', () => {
+        expect(p.token('foo')[equals](p.token('foo'))).toBe(true);
+        expect(p.token('foo')[equals](p.token('bar'))).toBe(false);
+    });
+
+    test('Bad Token[ctor]', () => {
+        expect(() => p.token('')).toThrow();
+    });
 
     test('Token[containsEmpty]', () => {
         expect(p.token('foo')[containsEmpty]()).toBe(false);
@@ -46,5 +60,9 @@ describe('Token', () => {
 
     test('Token[toString]()', () => {
         expect(p.token('foo')[toString]()).toBe('"foo"');
+    });
+
+    test('Token value', () => {
+        expect(p.token('foo')[value]()).toBe('foo');
     });
 });

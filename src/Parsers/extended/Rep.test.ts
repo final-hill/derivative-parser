@@ -11,6 +11,10 @@ describe('Rep', () => {
     const p = new Parser(),
         c = p.char('a');
 
+    test('Bad Rep', () => {
+        expect(() => c.rep(-1)).toThrow();
+    });
+
     test('Rep[deriv](c)', () => {
         expect(c.rep(1)[deriv]('a')).toEqual(p.empty());
         expect(c.rep(0)[deriv]('a')).toEqual(p.nil());

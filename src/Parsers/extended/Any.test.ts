@@ -7,7 +7,7 @@
 
 import { deriv, equals, height, isAny, isAtomic, matches, Parser, toString } from '..';
 
-describe('Any', () => {
+describe('Any tests', () => {
     const p = new Parser();
 
     test('Any[height]()', () => {
