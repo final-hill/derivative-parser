@@ -20,7 +20,7 @@ const handler: ProxyHandler<any> = {
 /**
  * The Grammar class represents
  */
-export default class Grammar extends Parser {
+export default abstract class Grammar extends Parser {
     constructor() {
         super();
 
@@ -28,18 +28,19 @@ export default class Grammar extends Parser {
     }
 
     /**
+     * The starting rule for the grammar.
+     */
+    abstract TOP(): Parser;
+
+    /**
      * Determines if the provided text can be recognized by the grammar
      *
      * @override
      * @param {string} text - The text to test
      * @returns {boolean} - The result of the test
-     * @throws - If text is not a string
      */
     [matches](text: string): boolean {
-        const rules = Object.entries<() => Parser>(Object.getPrototypeOf(this)),
-            entryPoint = rules.length == 0 ? this.nil() : rules[0][1].apply(this);
-
-        return entryPoint[matches](text);
+        return this.TOP()[matches](text);
     }
 }
 
