@@ -16,24 +16,24 @@ export const parser = Symbol('parser');
  * P{n}
  */
 export class Rep extends Parser {
-    #parser: Parser;
-    #n: number;
+    private _parser: Parser;
+    private _n: number;
 
     constructor(parser: Parser, n: number) {
         super();
         if (!Number.isSafeInteger(n) || n < 0)
             throw new Error('Rep must be an integer >= 0');
-        this.#n = n;
-        this.#parser = parser;
+        this._n = n;
+        this._parser = parser;
     }
 
-    [height](): number { return 1 + this.#parser[height](); }
+    [height](): number { return 1 + this._parser[height](); }
 
-    [parser](): Parser { return this.#parser; }
+    [parser](): Parser { return this._parser; }
 
-    [n](): number { return this.#n; }
+    [n](): number { return this._n; }
 
-    [containsEmpty](): boolean { return this.#n === 0 || this.#parser[containsEmpty](); }
+    [containsEmpty](): boolean { return this._n === 0 || this._parser[containsEmpty](); }
 
     /**
      * @override
@@ -43,20 +43,20 @@ export class Rep extends Parser {
      * Dc(P{n}) = Dc(P)◦P{n-1}
      */
     [deriv](c: AsciiChar): Parser {
-        return this.#n == 0 ? this.empty() :
-            this.#n == 1 ? this.#parser[deriv](c) :
-                this.#parser[deriv](c).then(this.#parser.rep(this.#n - 1));
+        return this._n == 0 ? this.empty() :
+            this._n == 1 ? this._parser[deriv](c) :
+                this._parser[deriv](c).then(this._parser.rep(this._n - 1));
     }
 
     [equals](other: Parser): boolean {
         return other[isRep]() &&
-            (other as Rep)[n]() === this.#n &&
-            (other as Rep)[parser]()[equals](this.#parser);
+            (other as Rep)[n]() === this._n &&
+            (other as Rep)[parser]()[equals](this._parser);
     }
 
     [isRep](): this is Rep { return true; }
     [nilOrEmpty](): Parser {
-        return this[n]() === 0 ? this.empty() : this.#parser[nilOrEmpty]();
+        return this[n]() === 0 ? this.empty() : this._parser[nilOrEmpty]();
     }
-    [toString](): string { return `${this.#parser[toString]()}{${this.#n}}`; }
+    [toString](): string { return `${this._parser[toString]()}{${this._n}}`; }
 }

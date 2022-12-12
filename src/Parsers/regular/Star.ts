@@ -17,16 +17,16 @@ export const parser = Symbol('parser');
  * L*
  */
 export class Star extends Parser {
-    #parser;
+    private _parser;
 
     constructor(parser: Parser) {
         super();
-        this.#parser = parser;
+        this._parser = parser;
     }
 
-    [height](): number { return 1 + this.#parser[height](); }
+    [height](): number { return 1 + this._parser[height](); }
 
-    [parser](): Parser { return this.#parser; }
+    [parser](): Parser { return this._parser; }
 
     [containsEmpty](): boolean { return true; }
 
@@ -35,9 +35,9 @@ export class Star extends Parser {
      * @inheritdoc
      * Dc(L*) = Dc(L) ◦ L*
      */
-    [deriv](c: AsciiChar): Parser { return this.#parser[deriv](c).then(this); }
+    [deriv](c: AsciiChar): Parser { return this._parser[deriv](c).then(this); }
     [equals](other: Parser): boolean {
-        return other[isStar]() && this.#parser[equals]((other as Star)[parser]());
+        return other[isStar]() && this._parser[equals]((other as Star)[parser]());
     }
     [isStar](): this is Star { return true; }
 
@@ -56,7 +56,7 @@ export class Star extends Parser {
      * L** → L*
      */
     [simplify](): Parser {
-        const p = this.#parser;
+        const p = this._parser;
         if (p[isStar]()) return p;
         if (p[isNil]()) return this.empty();
         if (p[isEmpty]()) return this.empty();
@@ -65,6 +65,6 @@ export class Star extends Parser {
     }
 
     [toString](): string {
-        return this.#parser[isAtomic]() ? `${this.#parser[toString]()}*` : `(${this.#parser[toString]()})*`;
+        return this._parser[isAtomic]() ? `${this._parser[toString]()}*` : `(${this._parser[toString]()})*`;
     }
 }

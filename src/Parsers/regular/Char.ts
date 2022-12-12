@@ -16,11 +16,11 @@ export const value = Symbol('value');
  * @example new Char('a')
  */
 export class Char extends Parser {
-    #value;
+    private _value;
     constructor(value: AsciiChar) {
         super();
 
-        this.#value = value;
+        this._value = value;
     }
 
     [height](): number { return 0; }
@@ -29,7 +29,7 @@ export class Char extends Parser {
      * The character value of the parser
      * @returns {AsciiChar} The character value
      */
-    [value](): AsciiChar { return this.#value; }
+    [value](): AsciiChar { return this._value; }
 
     /**
      * @override
@@ -37,11 +37,11 @@ export class Char extends Parser {
      * Dc(c) = ε
      * Dc(c') = ∅
      */
-    [deriv](c: AsciiChar): Parser { return c === this.#value ? this.empty() : this.nil(); }
+    [deriv](c: AsciiChar): Parser { return c === this._value ? this.empty() : this.nil(); }
 
     [equals](other: Parser): boolean {
         // TODO: cast needed due to TypeScript inference bug: <https://github.com/microsoft/TypeScript/issues/36887>
-        return other[isChar]() && this.#value === (other as Char)[value]();
+        return other[isChar]() && this._value === (other as Char)[value]();
     }
     [isAtomic](): boolean { return true; }
     [isChar](): this is Char { return true; }
@@ -52,5 +52,5 @@ export class Char extends Parser {
      * δ(c) = ∅
      */
     [nilOrEmpty](): Parser { return this.nil(); }
-    [toString](): string { return `'${this.#value}'`; }
+    [toString](): string { return `'${this._value}'`; }
 }

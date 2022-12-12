@@ -16,20 +16,21 @@ export const right = Symbol('right');
  * P1 ∪ P2
  */
 export class Alt extends Parser {
-    #left; #right;
+    private _left;
+    private _right;
 
     constructor(left: Parser, right: Parser) {
         super();
-        this.#left = left;
-        this.#right = right;
+        this._left = left;
+        this._right = right;
     }
 
-    [left]() { return this.#left; }
+    [left]() { return this._left; }
 
-    [right]() { return this.#right; }
+    [right]() { return this._right; }
 
     [height](): number {
-        return 1 + Math.max(this.#left[height](), this.#right[height]());
+        return 1 + Math.max(this._left[height](), this._right[height]());
     }
 
     /**
@@ -38,7 +39,7 @@ export class Alt extends Parser {
      * δ(L1 | L2) = δ(L1) | δ(L2)
      */
     [containsEmpty](): boolean {
-        return this.#left[containsEmpty]() || this.#right[containsEmpty]();
+        return this._left[containsEmpty]() || this._right[containsEmpty]();
     }
 
     /**
@@ -47,19 +48,19 @@ export class Alt extends Parser {
      * Dc(L1 ∪ L2) = Dc(L1) ∪ Dc(L2)
      */
     [deriv](c: AsciiChar): Parser {
-        return this.#left[deriv](c).or(this.#right[deriv](c));
+        return this._left[deriv](c).or(this._right[deriv](c));
     }
 
     [equals](other: Parser): boolean {
         return other[isAlt]() &&
-            this.#left[equals]((other as Alt)[left]()) &&
-            this.#right[equals]((other as Alt)[right]());
+            this._left[equals]((other as Alt)[left]()) &&
+            this._right[equals]((other as Alt)[right]());
     }
 
     [isAlt](): this is Alt { return true; }
 
     [nilOrEmpty](): Parser {
-        return this.#left[nilOrEmpty]().or(this.#right[nilOrEmpty]());
+        return this._left[nilOrEmpty]().or(this._right[nilOrEmpty]());
     }
 
     /**
@@ -72,8 +73,8 @@ export class Alt extends Parser {
      * (L ∪ M) ∪ N → L ∪ (M ∪ N)
      */
     [simplify](): Parser {
-        let l = this.#left[simplify](),
-            r = this.#right[simplify]();
+        let l = this._left[simplify](),
+            r = this._right[simplify]();
 
         if (l[isAlt]())
             [l, r] = [(l as Alt)[left](), new Alt((l as Alt)[right](), r)];
@@ -93,8 +94,8 @@ export class Alt extends Parser {
     }
 
     [toString](): string {
-        const leftString = this.#left[isAtomic]() ? this.#left[toString]() : `(${this.#left[toString]()})`,
-            rightString = this.#right[isAtomic]() ? this.#right[toString]() : `(${this.#right[toString]()})`;
+        const leftString = this._left[isAtomic]() ? this._left[toString]() : `(${this._left[toString]()})`,
+            rightString = this._right[isAtomic]() ? this._right[toString]() : `(${this._right[toString]()})`;
 
         return `${leftString}|${rightString}`;
     }

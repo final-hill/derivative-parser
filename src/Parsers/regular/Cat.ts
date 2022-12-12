@@ -19,19 +19,20 @@ export const second = Symbol('second');
  * P1 ◦ P2
  */
 export class Cat extends Parser {
-    #first; #second;
+    private _first;
+    private _second;
 
     constructor(first: Parser, second: Parser) {
         super();
-        this.#first = first;
-        this.#second = second;
+        this._first = first;
+        this._second = second;
     }
 
-    [first]() { return this.#first; }
-    [second]() { return this.#second; }
+    [first]() { return this._first; }
+    [second]() { return this._second; }
 
     [height](): number {
-        return 1 + Math.max(this.#first[height](), this.#second[height]());
+        return 1 + Math.max(this._first[height](), this._second[height]());
     }
 
     /**
@@ -40,7 +41,7 @@ export class Cat extends Parser {
      * δ(P1◦P2) = δ(P1)◦δ(P2)
      */
     [containsEmpty](): boolean {
-        return this.#first[containsEmpty]() && this.#second[containsEmpty]();
+        return this._first[containsEmpty]() && this._second[containsEmpty]();
     }
 
     /**
@@ -49,21 +50,21 @@ export class Cat extends Parser {
      * Dc(P1◦P2) = (Dc(P1)◦P2) ∪ (δ(P1)◦Dc(P2))
      */
     [deriv](c: AsciiChar): Parser {
-        const [f, s] = [this.#first, this.#second];
+        const [f, s] = [this._first, this._second];
 
         return f[deriv](c).then(s).or(f[nilOrEmpty]().then(s[deriv](c)));
     }
 
     [equals](other: Parser): boolean {
         return other[isCat]() &&
-            this.#first[equals]((other as Cat)[first]()) &&
-            this.#second[equals]((other as Cat)[second]());
+            this._first[equals]((other as Cat)[first]()) &&
+            this._second[equals]((other as Cat)[second]());
     }
 
     [isCat](): this is Cat { return true; }
 
     [nilOrEmpty](): Nil | Empty {
-        return this.#first[nilOrEmpty]().then(this.#second[nilOrEmpty]());
+        return this._first[nilOrEmpty]().then(this._second[nilOrEmpty]());
     }
 
     /**
@@ -76,8 +77,8 @@ export class Cat extends Parser {
      * Unused: (Q ∪ R)P → QP ∪ RP  (Is this actually simpler? Maybe the other direction?)
      */
     [simplify](): Parser {
-        const fst = this.#first[simplify](),
-            snd = this.#second[simplify]();
+        const fst = this._first[simplify](),
+            snd = this._second[simplify]();
 
         return fst[isEmpty]() ? snd :
             snd[isEmpty]() ? fst :
@@ -87,8 +88,8 @@ export class Cat extends Parser {
     }
 
     [toString](): string {
-        const fst = this.#first[isAtomic]() ? this.#first[toString]() : `(${this.#first[toString]()})`,
-            snd = this.#second[isAtomic]() ? this.#second[toString]() : `(${this.#second[toString]()})`;
+        const fst = this._first[isAtomic]() ? this._first[toString]() : `(${this._first[toString]()})`,
+            snd = this._second[isAtomic]() ? this._second[toString]() : `(${this._second[toString]()})`;
 
         return `${fst}${snd}`;
     }

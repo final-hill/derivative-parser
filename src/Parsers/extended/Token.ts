@@ -14,30 +14,30 @@ export const value = Symbol('value');
  * "Foo"
  */
 export class Token extends Parser {
-    #value: string;
+    private _value: string;
 
     constructor(value: string) {
         super();
         if (value.length == 0)
             throw new Error('A token must be a non-empty string');
-        this.#value = value;
+        this._value = value;
     }
 
     [height](): number { return 0; }
 
-    [value](): string { return this.#value; }
+    [value](): string { return this._value; }
 
     [containsEmpty](): boolean { return false; }
     [deriv](c: AsciiChar): Parser {
-        const d = this.#value.length == 1 ? this.char(this.#value as AsciiChar)[deriv](c) :
-            this.char(this.#value[0] as AsciiChar)[deriv](c).then(this.token(this.#value.substring(1)));
+        const d = this._value.length == 1 ? this.char(this._value as AsciiChar)[deriv](c) :
+            this.char(this._value[0] as AsciiChar)[deriv](c).then(this.token(this._value.substring(1)));
 
         return d;
     }
     [equals](other: Parser): boolean {
-        return other[isToken]() && (other as Token).#value === this.#value;
+        return other[isToken]() && (other as Token)._value === this._value;
     }
     [isToken](): this is Token { return true; }
     [nilOrEmpty](): Parser { return this.nil(); }
-    [toString](): string { return JSON.stringify(this.#value); }
+    [toString](): string { return JSON.stringify(this._value); }
 }

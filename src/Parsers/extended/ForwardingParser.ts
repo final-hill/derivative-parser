@@ -13,10 +13,10 @@ export const parser = Symbol('parser');
  * @inheritdoc
  */
 export class ForwardingParser extends Parser {
-    #args: any;
-    #fn!: (...args: any[]) => Parser;
-    #innerParser?: Parser;
-    #target!: Record<PropertyKey, unknown>;
+    private _args: any;
+    private _fn!: (...args: any[]) => Parser;
+    private _innerParser?: Parser;
+    private _target!: Record<PropertyKey, unknown>;
 
     constructor(
         target: Record<PropertyKey, unknown>,
@@ -24,18 +24,18 @@ export class ForwardingParser extends Parser {
         ...args: any[]
     ) {
         super();
-        this.#args = args;
-        this.#fn = fn;
-        this.#target = target;
+        this._args = args;
+        this._fn = fn;
+        this._target = target;
 
-        // return new Proxy(this, {
-        //     get: (target, propertyKey, receiver) =>
-        //         propertyKey == parser || propertyKey == 'constructor' ? Reflect.get(target, propertyKey, receiver) :
-        //             Reflect.get(this[parser](), propertyKey, this[parser]())
-        // });
+        return new Proxy(this, {
+            get: (target, propertyKey, receiver) =>
+                propertyKey == parser || propertyKey == 'constructor' ? Reflect.get(target, propertyKey, receiver) :
+                    Reflect.get(this[parser](), propertyKey, this[parser]())
+        });
     }
 
     [parser](): Parser {
-        return this.#innerParser ?? (this.#innerParser = this.#fn.apply(this.#target, this.#args));
+        return this._innerParser ?? (this._innerParser = this._fn.apply(this._target, this._args));
     }
 }

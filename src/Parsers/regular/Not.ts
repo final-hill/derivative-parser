@@ -17,27 +17,27 @@ export const parser = Symbol('parser');
  * Matches anything that is not the provided parser
  */
 export class Not extends Parser {
-    #parser;
+    private _parser;
 
     constructor(parser: Parser) {
         super();
-        this.#parser = parser;
+        this._parser = parser;
     }
 
-    [height](): number { return 1 + this.#parser[height](); }
+    [height](): number { return 1 + this._parser[height](); }
 
-    [parser](): Parser { return this.#parser; }
+    [parser](): Parser { return this._parser; }
 
-    [containsEmpty](): boolean { return !this.#parser[containsEmpty](); }
+    [containsEmpty](): boolean { return !this._parser[containsEmpty](); }
 
     /**
      * @override
      * @inheritdoc
      * Dc(¬P) = ¬Dc(P)
      */
-    [deriv](c: AsciiChar): Parser { return this.#parser[deriv](c).not(); }
+    [deriv](c: AsciiChar): Parser { return this._parser[deriv](c).not(); }
     [equals](other: Parser): boolean {
-        return other[isNot]() && this.#parser[equals]((other as Not)[parser]());
+        return other[isNot]() && this._parser[equals]((other as Not)[parser]());
     }
     [isNot](): boolean { return true; }
 
@@ -48,7 +48,7 @@ export class Not extends Parser {
      * δ(¬P) = ∅ if δ(P) = ε
      */
     [nilOrEmpty](): Nil | Empty {
-        const ne = this.#parser[nilOrEmpty]();
+        const ne = this._parser[nilOrEmpty]();
 
         return ne[isNil]() ? this.empty() : this.nil();
     }
@@ -59,11 +59,11 @@ export class Not extends Parser {
      * ¬¬P → P
      */
     [simplify](): Parser {
-        const lang = this.#parser[simplify]();
+        const lang = this._parser[simplify]();
 
         return lang[isNot]() ? (lang as Not)[parser]() : lang.not();
     }
     [toString](): string {
-        return `¬${this.#parser[isAtomic]() ? this.#parser[toString]() : `(${this.#parser[toString]()})`}`;
+        return `¬${this._parser[isAtomic]() ? this._parser[toString]() : `(${this._parser[toString]()})`}`;
     }
 }
