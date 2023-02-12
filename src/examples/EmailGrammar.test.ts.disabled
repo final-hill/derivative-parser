@@ -1,6 +1,0 @@
-test('EmailGrammar', () => {
-    /**
-        * @see https://tools.ietf.org/html/rfc5322#section-3.4
-        * /
-    class EmailGrammar extends Grammar {}
-});

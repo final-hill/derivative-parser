@@ -12,14 +12,5 @@
         "tsconfig.json": "tsconfig.*.json",
         "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml"
     },
-    "typescript.tsdk": "node_modules\\typescript\\lib",
-    "cSpell.ignorePaths": [
-        ".eslintrc.json",
-        "node_modules",
-        "package.json"
-    ],
-    "cSpell.ignoreWords": [
-        "agpl",
-        "spdx"
-    ]
+    "typescript.tsdk": "node_modules\\typescript\\lib"
 }

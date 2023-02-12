@@ -1,47 +1,36 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
-    // See: https://github.com/Microsoft/vscode-recipes/tree/master/debugging-jest-tests
     "configurations": [
         {
-            "name": "Jest All",
-            "type": "pwa-node",
+            "type": "node",
             "request": "launch",
+            "name": "Jest All",
+            "program": "${workspaceRoot}\\node_modules\\jest\\bin\\jest.js",
             "runtimeArgs": [
-                "run-script",
-                "test",
-                "--runInBand"
+                "--experimental-vm-modules"
             ],
-            "runtimeExecutable": "npm",
-            "console": "integratedTerminal",
-            "skipFiles": [
-                "<node_internals>/**"
+            "args": [
+                "-i",
             ],
-            "sourceMaps": true
+            "internalConsoleOptions": "openOnSessionStart"
         },
         {
-            "name": "Jest Current File",
-            "type": "pwa-node",
+            "type": "node",
             "request": "launch",
+            "name": "Jest Current File",
+            "program": "${workspaceRoot}\\node_modules\\jest\\bin\\jest.js",
             "runtimeArgs": [
-                "run-script",
-                "test",
-                "--runInBand",
+                "--experimental-vm-modules"
+            ],
+            "args": [
+                "-i",
                 "${fileBasenameNoExtension}"
             ],
-            "runtimeExecutable": "npm",
-            "console": "integratedTerminal",
+            "internalConsoleOptions": "openOnSessionStart",
             "skipFiles": [
-                "<node_internals>/**",
-                "**/node_modules/**"
-            ],
-            "resolveSourceMapLocations": [
-                "${workspaceFolder}/**",
-                "!**/node_modules/**"
-            ],
-            "sourceMaps": true
+                "${workspaceFolder}/node_modules/**",
+                "<node_internals>/**"
+            ]
         }
     ]
 }
