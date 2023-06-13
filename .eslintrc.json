@@ -1,20 +1,21 @@
 {
     "env": {
         "browser": true,
-        "es6": true,
-        "jest": true,
-        "node": true
+        "es6": true
     },
-    "extends": [],
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended"
+    ],
     "ignorePatterns": [
         "node_modules",
-        "dist",
-        ".cache",
-        "coverage"
+        "dist"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
-        "project": "tsconfig.json",
+        "project": [
+            "./tsconfig.json"
+        ],
         "sourceType": "module"
     },
     "plugins": [
@@ -34,28 +35,103 @@
         ],
         "consistent-return": [
             "error",
-            { "treatUndefinedAsUnspecified": true }
+            {
+                "treatUndefinedAsUnspecified": true
+            }
         ],
-        /*
-        "@typescript-eslint/naming-convention": ["error",
-            { "selector": "default", "format": ["camelCase"] },
-
-            { "selector": "variableLike", "format": ["camelCase"] },
-            { "selector": "accessor", "format": ["camelCase", "UPPER_CASE", "PascalCase"] },
-            { "selector": "variable", "format": ["camelCase", "UPPER_CASE", "PascalCase"] },
-            { "selector": "parameterProperty", "format": ["camelCase", "UPPER_CASE", "PascalCase"] },
-
-            { "selector": "function", "format": ["camelCase", "PascalCase"] },
-            { "selector": "parameter", "format": ["camelCase", "PascalCase"], "leadingUnderscore": "allow" },
-
-            { "selector": "memberLike", "format": ["camelCase"] },
-            { "selector": "memberLike", "modifiers": ["private"], "format": ["camelCase"], "leadingUnderscore": "require"  },
-
-            { "selector": "typeLike", "format": ["PascalCase"] },
-            { "selector": "typeParameter", "format": ["PascalCase"] },
-
-            { "selector": "interface", "format": ["PascalCase"], "custom": { "regex": "^I[A-Z]", "match": false } }
-          ], */
+        "@typescript-eslint/naming-convention": [
+            "error",
+            {
+                "selector": "default",
+                "format": [
+                    "camelCase"
+                ]
+            },
+            {
+                "selector": "variableLike",
+                "format": [
+                    "camelCase"
+                ]
+            },
+            {
+                "selector": "accessor",
+                "format": [
+                    "camelCase",
+                    "UPPER_CASE",
+                    "PascalCase"
+                ]
+            },
+            {
+                "selector": "variable",
+                "format": [
+                    "camelCase",
+                    "UPPER_CASE",
+                    "PascalCase"
+                ]
+            },
+            {
+                "selector": "parameterProperty",
+                "format": [
+                    "camelCase",
+                    "UPPER_CASE",
+                    "PascalCase"
+                ]
+            },
+            {
+                "selector": "function",
+                "format": [
+                    "camelCase",
+                    "PascalCase"
+                ]
+            },
+            {
+                "selector": "parameter",
+                "format": [
+                    "camelCase",
+                    "PascalCase"
+                ],
+                "leadingUnderscore": "allow"
+            },
+            {
+                "selector": "memberLike",
+                "format": [
+                    "camelCase",
+                    "PascalCase"
+                ]
+            },
+            {
+                "selector": "memberLike",
+                "modifiers": [
+                    "private"
+                ],
+                "format": [
+                    "camelCase"
+                ],
+                "leadingUnderscore": "require"
+            },
+            {
+                "selector": "typeLike",
+                "format": [
+                    "PascalCase"
+                ]
+            },
+            {
+                "selector": "typeParameter",
+                "format": [
+                    "PascalCase"
+                ]
+            },
+            {
+                "selector": "interface",
+                "format": [
+                    "PascalCase"
+                ],
+                "custom": {
+                    "regex": "^I[A-Z]",
+                    "match": false
+                }
+            }
+        ],
         "@typescript-eslint/consistent-type-assertions": "error",
         "@typescript-eslint/member-delimiter-style": "error",
         "no-array-constructor": [
@@ -88,179 +164,17 @@
         "no-use-before-define": [
             "off"
         ],
-        "@typescript-eslint/prefer-namespace-keyword": "error",
-        "@typescript-eslint/triple-slash-reference": "error",
-        "@typescript-eslint/type-annotation-spacing": "error",
-        "no-var": [
-            "error"
-        ],
-        "prefer-const": "error",
-        "prefer-rest-params": [
-            "error"
-        ],
-        "prefer-spread": [
-            "error"
-        ],
-        "constructor-super": [
-            "error"
-        ],
-        "for-direction": [
-            "error"
-        ],
-        "getter-return": [
-            "error"
-        ],
-        "no-async-promise-executor": [
-            "error"
-        ],
-        "no-case-declarations": [
-            "error"
-        ],
-        "no-class-assign": [
-            "error"
-        ],
-        "no-compare-neg-zero": [
-            "error"
-        ],
-        "no-cond-assign": "error",
-        "no-const-assign": [
-            "error"
-        ],
-        "no-constant-condition": [
-            "error"
-        ],
-        "no-control-regex": [
-            "error"
-        ],
-        "no-debugger": "error",
-        "no-delete-var": [
-            "error"
-        ],
-        "no-dupe-args": [
-            "error"
-        ],
-        // TypeScript supports signature overloading
-        "no-dupe-class-members": "off",
-        "no-dupe-keys": [
-            "error"
-        ],
-        "no-duplicate-case": [
-            "error"
-        ],
-        "no-empty": [
-            "error"
-        ],
-        "no-empty-character-class": [
-            "error"
-        ],
-        "no-empty-pattern": [
-            "error"
-        ],
-        "no-ex-assign": [
-            "error"
-        ],
-        "no-extra-boolean-cast": [
-            "error"
-        ],
-        "no-extra-semi": [
-            "error"
-        ],
-        "no-fallthrough": [
-            "error"
-        ],
-        "no-func-assign": [
-            "error"
-        ],
-        "no-global-assign": [
-            "error"
-        ],
-        "no-inner-declarations": [
-            "error"
-        ],
-        "no-invalid-regexp": [
-            "error"
-        ],
-        "no-irregular-whitespace": "error",
-        "no-misleading-character-class": [
-            "error"
-        ],
-        "no-mixed-spaces-and-tabs": [
-            "error"
-        ],
-        "no-new-symbol": [
-            "error"
-        ],
-        "no-obj-calls": [
-            "error"
-        ],
-        "no-octal": [
-            "error"
-        ],
-        "no-prototype-builtins": [
-            "error"
-        ],
-        "no-redeclare": [
-            "error"
-        ],
-        "no-regex-spaces": [
-            "error"
-        ],
-        "no-self-assign": [
-            "error"
-        ],
-        "no-shadow-restricted-names": [
-            "error"
-        ],
-        "no-sparse-arrays": [
-            "error"
-        ],
-        "no-this-before-super": [
-            "error"
-        ],
-        "no-undef": [
-            "off"
-        ],
-        "no-unexpected-multiline": [
-            "error"
-        ],
-        "no-unreachable": [
-            "error"
-        ],
-        "no-unsafe-finally": [
-            "error"
-        ],
-        "no-unsafe-negation": [
-            "error"
-        ],
-        "no-unused-labels": [
-            "error"
-        ],
-        "no-useless-catch": [
-            "error"
-        ],
-        "no-useless-escape": [
-            "error"
-        ],
-        "no-with": [
-            "error"
-        ],
-        "require-yield": [
-            "error"
-        ],
-        "require-jsdoc": ["error", {
-            "require": {
-                "FunctionDeclaration": true,
-                "MethodDefinition": false,
-                "ClassDeclaration": false,
-                "ArrowFunctionExpression": false,
-                "FunctionExpression": false
+        "require-jsdoc": [
+            "error",
+            {
+                "require": {
+                    "FunctionDeclaration": true,
+                    "MethodDefinition": false,
+                    "ClassDeclaration": false,
+                    "ArrowFunctionExpression": false,
+                    "FunctionExpression": false
+                }
             }
-        }],
-        "use-isnan": [
-            "error"
-        ],
-        "valid-typeof": [
-            "error"
         ],
         "@typescript-eslint/array-type": "error",
         "@typescript-eslint/consistent-type-definitions": "error",
@@ -270,10 +184,12 @@
                 "accessibility": "no-public"
             }
         ],
-        "@typescript-eslint/member-ordering": "error",
+        // buggy: https://github.com/typescript-eslint/typescript-eslint/issues/2409
+        "@typescript-eslint/member-ordering": "off",
         "@typescript-eslint/no-param-reassign": "off",
         "@typescript-eslint/prefer-for-of": "error",
         "@typescript-eslint/prefer-function-type": "error",
+        "@typescript-eslint/prefer-namespace-keyword": "error",
         "@typescript-eslint/quotes": [
             "error",
             "single"
@@ -282,6 +198,8 @@
             "error",
             "always"
         ],
+        "@typescript-eslint/triple-slash-reference": "error",
+        "@typescript-eslint/type-annotation-spacing": "error",
         "@typescript-eslint/unified-signatures": "error",
         "arrow-body-style": "error",
         "arrow-parens": [
@@ -295,9 +213,28 @@
                 "max": 10
             }
         ],
-        "curly": "error",
+        "curly": [
+            "error",
+            "multi"
+        ],
         "default-case": "error",
-        "eol-last": "off",
+        // No need to suffer such a unix hack.
+        "eol-last": [
+            "error",
+            "never"
+        ],
+        "header/header": [
+            2,
+            "block",
+            [
+                "!",
+                " * @license",
+                " * Copyright (C) 2022 Final Hill LLC",
+                " * SPDX-License-Identifier: AGPL-3.0-only",
+                " * @see <https://spdx.org/licenses/AGPL-3.0-only.html>",
+                " "
+            ]
+        ],
         "linebreak-style": [
             "error",
             "windows"
@@ -335,27 +272,23 @@
             "error",
             "consistent-as-needed"
         ],
-        "radix": "error",
         "space-before-function-paren": "off",
-        "space-in-parens": [
+        "valid-jsdoc": [
             "error",
-            "never"
+            {
+                "requireReturn": false
+            }
         ],
-        "yoda": "off",
-        "valid-jsdoc": ["error", {
-            "requireReturn": false
-        }],
-        "header/header": [2, "block", [
-            "!",
-            " * @license",
-            " * Copyright (C) 2021 Final Hill LLC",
-            " * SPDX-License-Identifier: AGPL-3.0-only",
-            " * @see <https://spdx.org/licenses/AGPL-3.0-only.html>",
-            " "
-        ]]
+        "yoda": "off"
     },
     "settings": {
-        "import/parsers": { "@typescript-eslint/parser": [".ts"] },
-        "import/resolver": { "eslint-import-resolver-typescript": true }
+        "import/parsers": {
+            "@typescript-eslint/parser": [
+                ".ts"
+            ]
+        },
+        "import/resolver": {
+            "eslint-import-resolver-typescript": true
+        }
     }
 }
