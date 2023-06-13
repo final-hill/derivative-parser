@@ -5,7 +5,7 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import {Parser} from './';
+import {deriv, isRange, nilOrEmpty, Parser, toString} from './';
 import {invariant, override, Contract, Contracted} from '@final-hill/decorator-contracts';
 import { IParser } from './Parser';
 
@@ -31,17 +31,17 @@ class Range extends Parser implements IRange {
     constructor(readonly from: string, readonly to: string) { super(); }
 
     @override
-    deriv(c: string): Parser {
+    [deriv](c: string): Parser {
         const d = this.from == this.to ? this.char(this.from) :
                   this.from <= c && c <= this.to ? this.char(c) :
                   this.nil();
 
-        return d.deriv(c);
+        return d[deriv](c);
     }
 
-    @override isRange(): this is Range { return true; }
-    @override nilOrEmpty(): Parser { return this.nil(); }
-    @override toString(): string { return `[${this.from}-${this.to}]`; }
+    @override [isRange](): this is Range { return true; }
+    @override [nilOrEmpty](): Parser { return this.nil(); }
+    @override [toString](): string { return `[${this.from}-${this.to}]`; }
 }
 
 export default Range;

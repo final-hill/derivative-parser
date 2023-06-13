@@ -5,7 +5,7 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import {Parser, ForwardingParser} from './Parsers';
+import {Parser, ForwardingParser, matches} from './Parsers';
 import {override} from '@final-hill/decorator-contracts';
 
 /**
@@ -43,12 +43,11 @@ class Grammar extends Parser {
      * @throws - If text is not a string
      */
     @override
-    matches(text: string): boolean {
-        const ruleNames = Object.getOwnPropertyNames(Object.getPrototypeOf(this))
-                        .filter(name => name != 'constructor' && typeof (this as any)[name] == 'function'),
+    [matches](text: string): boolean {
+        const ruleNames = Object.getOwnPropertySymbols(Object.getPrototypeOf(this)),
             entryPoint: Parser = ruleNames.length == 0 ? this.nil() : (this as any)[ruleNames[0]].apply(this);
 
-        return entryPoint.matches(text);
+        return entryPoint[matches](text);
     }
 }
 

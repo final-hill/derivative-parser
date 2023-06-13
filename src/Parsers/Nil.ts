@@ -5,7 +5,7 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import {IParser, Parser} from './';
+import {deriv, equals, height, IParser, isAtomic, isNil, nilOrEmpty, Parser, toString} from './';
 import {override} from '@final-hill/decorator-contracts';
 
 /**
@@ -18,23 +18,23 @@ interface INil extends IParser {
      * @inheritdoc
      * Dc(∅) = ∅
      */
-    deriv(c: string): Parser;
+    [deriv](c: string): IParser;
     /**
      * @inheritdoc
      * δ(∅) = ∅
      */
-    nilOrEmpty(): INil;
+    [nilOrEmpty](): INil;
 }
 
 class Nil extends Parser implements INil {
-    @override get height(): number { return 0; }
+    @override get [height](): number { return 0; }
     // @ts-ignore: Unused variable
-    @override deriv(c: string): IParser { return this; }
-    @override equals(other: IParser): boolean { return other.isNil(); }
-    @override isAtomic(): boolean { return true; }
-    @override isNil(): this is INil { return true; }
-    @override nilOrEmpty(): INil { return this; }
-    @override toString(): string { return '∅'; }
+    @override [deriv](c: string): IParser { return this; }
+    @override [equals](other: IParser): boolean { return other[isNil](); }
+    @override [isAtomic](): boolean { return true; }
+    @override [isNil](): this is INil { return true; }
+    @override [nilOrEmpty](): INil { return this; }
+    @override [toString](): string { return '∅'; }
 }
 
 export default Nil;
