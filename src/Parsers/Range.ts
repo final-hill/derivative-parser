@@ -6,8 +6,8 @@
  */
 
 import {deriv, isRange, nilOrEmpty, Parser, toString} from './';
-import {invariant, override, Contract, Contracted} from '@final-hill/decorator-contracts';
-import { IParser } from './Parser';
+import {invariant, override, Contract, Contracted, extend} from '@final-hill/decorator-contracts';
+import { IParser, parserContract } from './Parser';
 
 /**
  * @inheritdoc
@@ -19,6 +19,7 @@ interface IRange extends IParser {
 }
 
 const rangeContract = new Contract<IRange> ({
+    [extend]: parserContract,
     [invariant](self){
         return self.from <= self.to &&
                self.from.length == 1 &&
@@ -28,7 +29,15 @@ const rangeContract = new Contract<IRange> ({
 
 @Contracted(rangeContract)
 class Range extends Parser implements IRange {
-    constructor(readonly from: string, readonly to: string) { super(); }
+    #from: string;
+    #to: string;
+    constructor(from: string, to: string) {
+        super();
+        this.#from = from;
+        this.#to = to;
+    }
+    get from(): string { return this.#from; }
+    get to(): string { return this.#to; }
 
     @override
     [deriv](c: string): Parser {

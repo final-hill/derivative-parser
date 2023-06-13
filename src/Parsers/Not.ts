@@ -51,7 +51,7 @@ class Not extends Parser implements INot {
 
         return lang[isNot]() ? (lang as INot).parser : lang.not();
     }
-    @override toString(): string {
+    @override [toString](): string {
         return `¬${this.parser[isAtomic]() ? this.parser[toString]() : `(${this.parser})`}`;
     }
 }

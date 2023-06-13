@@ -6,7 +6,8 @@
  */
 
 import {Parser, IParser, height, containsEmpty, deriv, toString, nilOrEmpty, isToken} from './';
-import { Contract, Contracted, invariant, override} from '@final-hill/decorator-contracts';
+import { Contract, Contracted, extend, invariant, override} from '@final-hill/decorator-contracts';
+import { parserContract } from './Parser';
 
 /**
  * @inheritdoc
@@ -17,6 +18,7 @@ interface IToken extends IParser {
 }
 
 const tokenContract = new Contract<IToken>({
+    [extend]: parserContract,
     [invariant](self) {
         return self.value.length > 0;
     }

@@ -6,8 +6,8 @@
  */
 
 import {deriv, equals, height, isAtomic, isChar, nilOrEmpty, Parser, toString} from './';
-import {override, invariant, Contract, Contracted} from '@final-hill/decorator-contracts';
-import { IParser } from './Parser';
+import {override, invariant, Contract, Contracted, extend} from '@final-hill/decorator-contracts';
+import { IParser, parserContract } from './Parser';
 
 /**
  * @inheritdoc
@@ -37,12 +37,15 @@ interface IChar extends IParser {
 }
 
 const charContract = new Contract<IChar>({
+    [extend]: parserContract,
     [invariant](self) { return self.value.length == 1; }
 });
 
 @Contracted(charContract)
 class Char extends Parser implements IChar {
-    constructor(readonly value: string) { super(); }
+    #value: string;
+    constructor(value: string) { super(); this.#value = value; }
+    get value(): string { return this.#value; }
     @override get [height](): number { return 0; }
     @override [deriv](c: string): IParser { return c === this.value ? this.empty() : this.nil(); }
     @override [equals](other: IParser): boolean { return other[isChar]() && this.value === (other as IChar).value; }

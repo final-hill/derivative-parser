@@ -62,7 +62,7 @@ class Cat extends Parser implements ICat {
     @override [nilOrEmpty](): INil | IEmpty {
         return this.first[nilOrEmpty]().then(this.second[nilOrEmpty]());
     }
-    @override simplify(): IParser {
+    @override [simplify](): IParser {
         const fst = this.first[simplify](),
               snd = this.second[simplify]();
 

@@ -58,7 +58,7 @@ class Alt extends Parser implements IAlt {
     @override [nilOrEmpty](): IParser {
         return this.left[nilOrEmpty]().or(this.right[nilOrEmpty]());
     }
-    @override simplify(): IParser {
+    @override [simplify](): IParser {
         let left = this.left[simplify](),
             right = this.right[simplify]();
 

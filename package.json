@@ -19,6 +19,21 @@
     "test": "jest --coverage",
     "type-check": "tsc -p tsconfig.json --noEmit"
   },
+  "jest": {
+    "reporters": [
+      "default",
+      [
+        "jest-junit",
+        {
+          "outputDirectory": "./coverage"
+        }
+      ]
+    ],
+    "testEnvironment": "node",
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/final-hill/derivative-parser.git"
@@ -60,6 +75,6 @@
   ],
   "dependencies": {
     "@final-hill/class-tools": "^1.2.3",
-    "@final-hill/decorator-contracts": "^0.20.3"
+    "@final-hill/decorator-contracts": "^0.21.0"
   }
 }

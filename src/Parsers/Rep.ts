@@ -5,8 +5,9 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import { Contract, Contracted, invariant, override} from '@final-hill/decorator-contracts';
+import { Contract, Contracted, extend, invariant, override} from '@final-hill/decorator-contracts';
 import { containsEmpty, deriv, equals, height, IParser, isRep, nilOrEmpty, Parser, toString } from './';
+import { parserContract } from './Parser';
 
 /**
  * The Repetition parser.
@@ -26,6 +27,7 @@ interface IRep extends IParser {
 }
 
 const repContract = new Contract<IRep>({
+    [extend]: parserContract,
     [invariant](self) {
         return Number.isInteger(self.n) && self.n >= 0;
     }

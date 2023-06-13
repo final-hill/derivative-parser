@@ -5,7 +5,7 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import {deriv, equals, height, isAlt, isEmpty, matches, Parser} from './';
+import {deriv, equals, height, isAlt, isEmpty, matches, Parser, toString} from '.';
 
 describe('Empty', () => {
     const p = new Parser();
@@ -34,6 +34,6 @@ describe('Empty', () => {
     });
 
     test('Empty[toString]()', () => {
-        expect(p.empty().toString()).toBe('ε');
+        expect(p.empty()[toString]()).toBe('ε');
     });
 });

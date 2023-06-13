@@ -5,7 +5,7 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import {containsEmpty, deriv, equals, height, IParser, isAtomic, isEmpty, isNil, isStar, nilOrEmpty, Parser, simplify} from './';
+import {containsEmpty, deriv, equals, height, IParser, isAtomic, isEmpty, isNil, isStar, nilOrEmpty, Parser, simplify, toString} from './';
 import {override} from '@final-hill/decorator-contracts';
 
 /**
@@ -53,7 +53,7 @@ class Star extends Parser implements IStar {
 
         return this;
     }
-    @override toString(): string {
+    @override [toString](): string {
         return this.parser[isAtomic]() ? `${this.parser}*` : `(${this.parser})*`;
     }
 }

@@ -8,7 +8,7 @@
 import {Contract, Contracted} from '@final-hill/decorator-contracts';
 import {memo} from '@final-hill/class-tools';
 import {IAlt, Alt, IAny, Any, ICat, Cat, IChar, Char,
-    IEmpty, Empty, INil, Nil, IStar, Star,  IRange, Range,
+    IEmpty, Empty, INil, Nil, IStar, Star, IRange, Range,
     IToken, Token, INot, Not, IRep, Rep} from './';
 
 const containsEmpty = Symbol('containsEmpty'),
@@ -311,7 +311,7 @@ const parserContract = new Contract<IParser>({
 });
 
 @Contracted(parserContract)
-class Parser extends null implements IParser {
+class Parser implements IParser {
     get [height](): number { return 0; }
     @memo any(): IAny { return new Any(); }
     @memo empty(): IEmpty { return new Empty(); }
@@ -349,7 +349,9 @@ class Parser extends null implements IParser {
             this.token(p as string)
         ).reduce((sum,next) => new Cat(sum,next));
     }
-    char(value: string): IChar { return new Char(value); }
+    char(value: string): IChar {
+        return new Char(value);
+    }
     [containsEmpty](): boolean { return false; }
     // TODO: switch to abstract?
     [equals](other: IParser): boolean {
@@ -395,5 +397,5 @@ class Parser extends null implements IParser {
 
 export {IParser, containsEmpty, deriv, equals, height, isAlt, isAny,
     isAtomic, isCat, isChar, isEmpty, isNil, isNot, isRep, isStar,
-    isRange, isToken, matches, nilOrEmpty, simplify, toString};
+    isRange, isToken, matches, nilOrEmpty, parserContract, simplify, toString};
 export default Parser;

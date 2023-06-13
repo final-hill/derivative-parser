@@ -19,7 +19,7 @@ describe('Range', () => {
     });
 
     test('Range[isRange]', () => {
-        expect(digit[isRange    ]()).toBe(true);
+        expect(digit[isRange]()).toBe(true);
     });
 
     test('Range[matches](c)', () => {
