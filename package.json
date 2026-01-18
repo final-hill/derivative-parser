@@ -1,13 +1,16 @@
 {
     "name": "@final-hill/derivative-parser",
-    "version": "0.1.0",
+    "version": "0.5.0",
     "description": "A library for the implementation of lexers and parsers utilizing derivatives",
     "module": "dist/index.mjs",
     "type": "module",
     "scripts": {
-        "clean": "rimraf dist",
-        "dist": "copyfiles -u 1 src/*.mjs dist",
-        "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+        "prebuild": "npm run lint:fix",
+        "build": "webpack",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "pretest": "npm run build",
+        "test": "globstar -- node --experimental-test-coverage --test ./src/tests/*.test.mjs"
     },
     "repository": {
         "type": "git",
@@ -29,12 +32,20 @@
     },
     "homepage": "https://github.com/final-hill/derivative-parser#readme",
     "devDependencies": {
-        "@types/jest": "^29.2.4",
         "copyfiles": "^2.4.1",
-        "jest": "^29.3.1",
         "rimraf": "^3.0.2"
     },
     "dependencies": {
-        "@mlhaufe/brevity": "github:mlhaufe/brevity#webpack-npm"
+        "@eslint/js": "^9.39.1",
+        "@eslint/json": "^0.14.0",
+        "@eslint/markdown": "^7.5.1",
+        "@lapis-lang/lapis-js": "^0.34.0",
+        "@types/node": "^24.10.1",
+        "eslint": "^9.39.1",
+        "eslint-webpack-plugin": "^5.0.2",
+        "globals": "^16.5.0",
+        "globstar": "^1.0.0",
+        "webpack": "^5.102.1",
+        "webpack-cli": "^6.0.1"
     }
 }

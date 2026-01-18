@@ -1,0 +1,1 @@
+export const isChar = (c) => typeof c === 'string' && c.length === 1;
